@@ -45,5 +45,11 @@ namespace Pressford.News.Services
         {
             return _repository.Delete(articleId);
         }
+
+        public Task<Article> UpdateArticle(Article article)
+        {
+            var entityArticle = _mapper.Map<entity.Article>(article);
+            return Task.FromResult(_mapper.Map<Article>(_repository.UpdateAsync(entityArticle).Result));
+        }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Pressford.News.Entities
 {
-    public class Article
+    public class Article : IEntityDate
     {
         public int Id { get; set; }
 
@@ -16,8 +16,8 @@ namespace Pressford.News.Entities
 
         public string AuthorName { get; set; }
 
-        public DateTime DatePublished { get; set; }
+        public virtual DateTime DatePublished { get; set; }
 
-        public DateTime DateModified { get; set; }
+        public virtual DateTime DateModified { get; set; }
     }
 }

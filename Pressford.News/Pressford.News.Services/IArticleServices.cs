@@ -12,6 +12,8 @@ namespace Pressford.News.Services
 
         Task<Article> GetSingleArticle(int articleId);
 
+        Task<Article> UpdateArticle(Article article);
+
         Task<bool> RemoveArticle(int articleId);
     }
 }

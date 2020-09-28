@@ -41,6 +41,13 @@ namespace Pressford.News.API.Controllers
             return Ok(result);
         }
 
+        [HttpPut]
+        public async Task<IActionResult> Update([FromBody] Article article)
+        {
+            var result = await _articleServices.UpdateArticle(article);
+            return Ok(result);
+        }
+
         [HttpDelete("{articleId:int}")]
         public async Task<IActionResult> Delete(int articleId)
         {
