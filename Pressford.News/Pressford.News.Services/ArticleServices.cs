@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -27,10 +28,22 @@ namespace Pressford.News.Services
             return _mapper.Map<Article>(result);
         }
 
+        public Task<Article> GetSingleArticle(int articleId)
+        {
+            Expression<Func<entity.Article, bool>> predicate = (x) => x.Id == articleId;
+            var result = _repository.FindBy(predicate).SingleOrDefault();
+            return Task.FromResult(_mapper.Map<Article>(result));
+        }
+
         public Task<IList<Article>> GetAllArticles()
         {
             var entityArticles = _repository.GetAll().ToList();
             return Task.FromResult(_mapper.Map<IList<Article>>(entityArticles));
+        }
+
+        public Task<bool> RemoveArticle(int articleId)
+        {
+            return _repository.Delete(articleId);
         }
     }
 }

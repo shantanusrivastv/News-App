@@ -25,6 +25,16 @@ namespace Pressford.News.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Secuirty Vulnerability not fit for production
+            services.AddCors(options =>
+            {
+                options.AddPolicy("default", policy =>
+                {
+                    policy.AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
             services.AddControllers();
             ServiceRegistration.ConfigurePersistence(services, Configuration);
             ServiceRegistration.ConfigureLifeCycle(services, Configuration);
@@ -38,8 +48,8 @@ namespace Pressford.News.API
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors("default");
             app.UseRouting();
-
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

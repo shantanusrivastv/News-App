@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -65,6 +66,32 @@ namespace Pressford.News.Data
             {
                 throw new Exception($"{nameof(entity)} could not be updated");
             }
+        }
+
+        public async Task<bool> Delete<UniqueType>(UniqueType uniqueIdentifier)
+        {
+            TEntity entityToDelete = _context.Find<TEntity>(uniqueIdentifier);
+            if (entityToDelete == null)
+            {
+                throw new InvalidOperationException($"{nameof(Delete)} entity not found");
+            }
+
+            try
+            {
+                _context.Remove(entityToDelete);
+                await _context.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception)
+            {
+                throw new Exception($"{nameof(TEntity)} could not be deleted");
+            }
+        }
+
+        public IQueryable<TEntity> FindBy(Expression<Func<TEntity, bool>> predicate)
+        {
+            return _context.Set<TEntity>().Where(predicate);
         }
     }
 }

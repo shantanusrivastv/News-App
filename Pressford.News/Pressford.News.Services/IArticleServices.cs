@@ -9,5 +9,9 @@ namespace Pressford.News.Services
         Task<Article> CreateArticle(Article article);
 
         Task<IList<Article>> GetAllArticles();
+
+        Task<Article> GetSingleArticle(int articleId);
+
+        Task<bool> RemoveArticle(int articleId);
     }
 }

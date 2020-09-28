@@ -27,11 +27,30 @@ namespace Pressford.News.API.Controllers
             return Ok(articles);
         }
 
+        [HttpGet("{articleId:int}")]
+        public async Task<IActionResult> GetById(int articleId)
+        {
+            var article = await _articleServices.GetSingleArticle(articleId);
+            return Ok(article);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Article article)
         {
             var result = await _articleServices.CreateArticle(article);
             return Ok(result);
+        }
+
+        [HttpDelete("{articleId:int}")]
+        public async Task<IActionResult> Delete(int articleId)
+        {
+            if (await _articleServices.RemoveArticle(articleId))
+            {
+                return Ok("Succesfully Deleted Resource");
+            }
+
+            //todo better error message
+            return BadRequest();
         }
     }
 }
