@@ -1,7 +1,18 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.0.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Pressford.News.Data\Pressford.News.Data.csproj" />
+    <ProjectReference Include="..\Pressford.News.Entities\Pressford.News.Entities.csproj" />
+    <ProjectReference Include="..\Pressford.News.Model\Pressford.News.Model.csproj" />
+  </ItemGroup>
 
 </Project>

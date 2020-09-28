@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Pressford.News.Services.Dependencies;
 
 namespace Pressford.News.API
 {
@@ -25,6 +26,8 @@ namespace Pressford.News.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            ServiceRegistration.ConfigurePersistence(services, Configuration);
+            ServiceRegistration.ConfigureLifeCycle(services, Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
