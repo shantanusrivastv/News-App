@@ -27,10 +27,10 @@ namespace Pressford.News.Services
             return _mapper.Map<Article>(result);
         }
 
-        public async Task<IList<Article>> GetAllArticles()
+        public Task<IList<Article>> GetAllArticles()
         {
             var entityArticles = _repository.GetAll().ToList();
-            return _mapper.Map<IList<Article>>(entityArticles);
+            return Task.FromResult(_mapper.Map<IList<Article>>(entityArticles));
         }
     }
 }

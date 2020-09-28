@@ -13,11 +13,18 @@ namespace Pressford.News.API.Controllers
     [ApiController]
     public class ArticleController : ControllerBase
     {
-        private IArticleServices _articleServices;
+        private readonly IArticleServices _articleServices;
 
         public ArticleController(IArticleServices articleServices)
         {
             _articleServices = articleServices;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Get()
+        {
+            var articles = await _articleServices.GetAllArticles();
+            return Ok(articles);
         }
 
         [HttpPost]
