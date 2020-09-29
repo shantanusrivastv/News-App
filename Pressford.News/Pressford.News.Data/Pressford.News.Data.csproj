@@ -19,6 +19,8 @@
     <Compile Remove="Migrations\20200929205651_Seed User data.Designer.cs" />
     <Compile Remove="Migrations\20200929210027_Seed User data.cs" />
     <Compile Remove="Migrations\20200929210027_Seed User data.Designer.cs" />
+    <Compile Remove="Migrations\20200929215254_Added Article Likes.cs" />
+    <Compile Remove="Migrations\20200929215254_Added Article Likes.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -37,7 +37,7 @@ namespace Pressford.News.API
                 });
             });
             services.AddControllers();
-
+			services.AddHttpContextAccessor();
             ApplicationConfigurations.ConfigureAuthentication(services, Configuration);
 
             services.AddSwaggerGen(c =>

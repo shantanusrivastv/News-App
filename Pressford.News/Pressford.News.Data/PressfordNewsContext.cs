@@ -39,6 +39,7 @@ namespace Pressford.News.Data
         public DbSet<Article> Article { get; set; }
         public DbSet<User> User { get; set; }
         public DbSet<UserLogin> UserLogin { get; set; }
+        public DbSet<ArticleLikes> ArticleLikes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
