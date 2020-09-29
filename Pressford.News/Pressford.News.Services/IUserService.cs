@@ -9,6 +9,6 @@ namespace Pressford.News.Services
 {
     public interface IUserService
     {
-        bool Authenticate(Credentials credentials);
+        UserInfo Authenticate(Credentials credentials);
     }
 }

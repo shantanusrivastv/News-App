@@ -27,7 +27,7 @@ namespace Pressford.News.Services.Dependencies
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
             services.AddTransient<IArticleServices, ArticleServices>();
             services.AddTransient<IUserService, UserService>();
-            services.AddAutoMapper(typeof(ArticleMapper));
+            services.AddAutoMapper(typeof(PressfordMapper));
         }
 
         public static void ConfigureAuthentication(IServiceCollection services, IConfiguration Configuration)

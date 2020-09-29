@@ -16,6 +16,7 @@ namespace Pressford.News.Data
 
         Task<TEntity> UpdateAsync(TEntity entity);
 
-        IQueryable<TEntity> FindBy(Expression<Func<TEntity, bool>> predicate);
+        // IQueryable<TEntity> FindBy(Expression<Func<TEntity, bool>> predicate); //todo verify and remove from application
+        IQueryable<TEntity> FindBy(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includes);
     }
 }

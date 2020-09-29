@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Pressford.News.Data
 {
@@ -89,9 +90,16 @@ namespace Pressford.News.Data
             }
         }
 
-        public IQueryable<TEntity> FindBy(Expression<Func<TEntity, bool>> predicate)
+        //public IQueryable<TEntity> FindBy(Expression<Func<TEntity, bool>> predicate)
+        //{
+        //    return _context.Set<TEntity>().Where(predicate);
+        //}
+
+        public IQueryable<TEntity> FindBy(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includes)
         {
-            return _context.Set<TEntity>().Where(predicate);
+            var query = _context.Set<TEntity>().Where(predicate);
+
+            return includes.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
         }
     }
 }

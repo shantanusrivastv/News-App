@@ -1,17 +1,72 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
+using AutoMapper;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using Pressford.News.Data;
 using Pressford.News.Model;
+using entity = Pressford.News.Entities;
 
 namespace Pressford.News.Services
 {
     public class UserService : IUserService
     {
-        public bool Authenticate(Credentials credentials)
+        private readonly IConfiguration _config;
+        private readonly IMapper _mapper;
+        private IRepository<entity.UserLogin> _repository;
+
+        public UserService(IConfiguration config, IMapper mapper, IRepository<entity.UserLogin> repository)
         {
-            return true;
+            _config = config;
+            _mapper = mapper;
+            _repository = repository;
+        }
+
+        public UserInfo Authenticate(Credentials credentials)
+        {
+            var userLogin = VerifyAndGetUserDetails(credentials);
+
+            // return null if user not found
+            if (userLogin == null)
+                return null;
+
+            userLogin.Token = GenerateToken(userLogin);
+            UserInfo userInfo = _mapper.Map<UserInfo>(userLogin);
+
+            return userInfo;
+        }
+
+        public entity.UserLogin VerifyAndGetUserDetails(Credentials credentials)
+        {
+            Expression<Func<entity.UserLogin, bool>> predicate = (x)
+                             => (x.Username == credentials.Username && x.Password == credentials.Password);
+
+            return _repository.FindBy(predicate, x => x.User).SingleOrDefault();
+        }
+
+        private string GenerateToken(entity.UserLogin userLogin)
+        {
+            // authentication successful so generate jwt token
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var appSecret = _config.GetValue<string>("AppSettings:Secret");
+            var key = Encoding.ASCII.GetBytes(appSecret);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.Name, $"{userLogin.User.FirstName} {userLogin.User.LastName}"),
+                    new Claim(ClaimTypes.Role, userLogin.Role.ToString()),
+                    new Claim(ClaimTypes.NameIdentifier, userLogin.Username)
+                }),
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
         }
     }
 }
