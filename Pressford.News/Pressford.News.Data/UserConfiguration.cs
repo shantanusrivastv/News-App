@@ -9,6 +9,7 @@ namespace Pressford.News.Data
         public void Configure(EntityTypeBuilder<User> builder)
         {
             builder.HasIndex(x => x.Email).IsUnique();
+            //builder.Property(x => x.Id).ValueGeneratedOnAdd();
             //builder.HasAlternateKey(x => x.Email); Left for reference
 
             builder.HasOne(x => x.LoginInfo)

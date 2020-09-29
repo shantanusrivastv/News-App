@@ -87,6 +87,8 @@ namespace Pressford.News.API
 
             app.UseCors("default");
             app.UseRouting();
+
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

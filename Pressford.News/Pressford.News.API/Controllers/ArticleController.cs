@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Pressford.News.Model;
@@ -34,6 +35,7 @@ namespace Pressford.News.API.Controllers
             return Ok(article);
         }
 
+        [Authorize(Roles = "Publisher")]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Article article)
         {

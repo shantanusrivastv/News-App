@@ -13,6 +13,12 @@
     <Compile Remove="Migrations\20200929203311_t.Designer.cs" />
     <Compile Remove="Migrations\20200929203409_t.cs" />
     <Compile Remove="Migrations\20200929203409_t.Designer.cs" />
+    <Compile Remove="Migrations\20200929204632_t.cs" />
+    <Compile Remove="Migrations\20200929204632_t.Designer.cs" />
+    <Compile Remove="Migrations\20200929205651_Seed User data.cs" />
+    <Compile Remove="Migrations\20200929205651_Seed User data.Designer.cs" />
+    <Compile Remove="Migrations\20200929210027_Seed User data.cs" />
+    <Compile Remove="Migrations\20200929210027_Seed User data.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
