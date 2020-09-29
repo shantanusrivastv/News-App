@@ -38,6 +38,8 @@ namespace Pressford.News.API
             });
             services.AddControllers();
 
+            ApplicationConfigurations.ConfigureAuthentication(services, Configuration);
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
@@ -64,8 +66,8 @@ namespace Pressford.News.API
 
                 //setupAction.IncludeXmlComments(xmlCommentsFullPath);
             });
-            ServiceRegistration.ConfigurePersistence(services, Configuration);
-            ServiceRegistration.ConfigureLifeCycle(services, Configuration);
+            ApplicationConfigurations.ConfigurePersistence(services, Configuration);
+            ApplicationConfigurations.ConfigureLifeCycle(services, Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
