@@ -43,6 +43,7 @@ namespace Pressford.News.API.Controllers
             return Ok(result);
         }
 
+        [Authorize(Roles = "Publisher")]
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] Article article)
         {
@@ -50,6 +51,7 @@ namespace Pressford.News.API.Controllers
             return Ok(result);
         }
 
+        [Authorize(Roles = "Publisher")]
         [HttpDelete("{articleId:int}")]
         public async Task<IActionResult> Delete(int articleId)
         {

@@ -27,7 +27,7 @@ namespace Pressford.News.API.Controllers
             return Ok("Article Like was successfully updated");
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpDelete("[action]/{articleId:int}")]
         public async Task<IActionResult> UnlikeArticle(int articleId)
         {
