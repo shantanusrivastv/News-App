@@ -25,6 +25,12 @@ namespace Pressford.News.Services
             _mapper = mapper;
         }
 
+        public Task<List<model.Article>> GetAllPublishedArticle()
+        {
+            var allArticles = _repository.GetAll();
+            return Task.FromResult(_mapper.Map<List<model.Article>>(allArticles));
+        }
+
         public Task<List<model.Article>> GetPublishedArticles()
         {
             var userName = _httpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? null;

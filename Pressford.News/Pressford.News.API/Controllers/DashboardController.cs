@@ -33,7 +33,8 @@ namespace Pressford.News.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUserDashboard()
         {
-            return Ok("To do");
+            var publishedArticles = await _dashboardService.GetAllPublishedArticle();
+            return Ok(publishedArticles);
         }
     }
 }
