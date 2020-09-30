@@ -9,6 +9,6 @@ namespace Pressford.News.Services
 {
     public interface IDashboardService
     {
-        ICollection<Article> GetPublishedArticles();
+        Task<List<Article>> GetPublishedArticles();
     }
 }

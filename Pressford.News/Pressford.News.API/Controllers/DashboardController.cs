@@ -25,11 +25,11 @@ namespace Pressford.News.API.Controllers
         [HttpGet("[action]")]
         public async Task<IActionResult> GetPublisherDashboard()
         {
-            ICollection<Article> publishedArticles = _dashboardService.GetPublishedArticles();
-            return Ok("To do");
+            var publishedArticles = await _dashboardService.GetPublishedArticles();
+            return Ok(publishedArticles);
         }
 
-        [Authorize(Roles = "Publisher")]
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetUserDashboard()
         {

@@ -1,38 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using Pressford.News.Data;
-using Pressford.News.Model;
 using entity = Pressford.News.Entities;
+using model = Pressford.News.Model;
 
 namespace Pressford.News.Services
 {
     public class DashboardService : IDashboardService
     {
-        private IRepository<entity.Article> _repository;
+        private readonly IRepository<entity.Article> _repository;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IMapper _mapper;
 
-        public DashboardService(IRepository<entity.Article> repository, IHttpContextAccessor httpContextAccessor)
+        public DashboardService(IRepository<entity.Article> repository,
+                                IHttpContextAccessor httpContextAccessor,
+                                IMapper mapper)
         {
             _repository = repository;
             _httpContextAccessor = httpContextAccessor;
+            _mapper = mapper;
         }
 
-        public ICollection<Article> GetPublishedArticles()
+        public Task<List<model.Article>> GetPublishedArticles()
         {
             var userName = _httpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? null;
-            var allArticles = _repository.FindBy(x => x.Author == userName) as ICollection<Article>;
+            var allArticles = _repository.FindBy(x => x.Author == userName).ToList();
 
-            throw new NotImplementedException();
+            return Task.FromResult(_mapper.Map<List<model.Article>>(allArticles));
         }
     }
 }
