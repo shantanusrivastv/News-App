@@ -1,9 +1,9 @@
 ﻿using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Pressford.News.Data;
 using Pressford.News.Entities;
-using System.Threading.Tasks;
 
 namespace Pressford.News.Services
 {
@@ -20,12 +20,12 @@ namespace Pressford.News.Services
             _httpContextAccessor = httpContext;
         }
 
-        public bool LikeArticle(int articleId)
+        public async Task<bool> LikeArticle(int articleId)
         {
             var userName = _httpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? null;
 
             //Ordering is important if article is already liked then we don't want to perform another DB hit for IsValidArticle
-            if (userName == null || HasAlreadyLikedByUser(userName) || !IsValidArticle(articleId))
+            if (userName == null || AlreadyLiked(userName, articleId) || !IsValidArticle(articleId))
             {
                 return false;
             }
@@ -36,7 +36,7 @@ namespace Pressford.News.Services
                 UserName = userName
             };
 
-            Task.WaitAll(_articleLikesRepository.AddAsync(articleLikes));
+            await _articleLikesRepository.AddAsync(articleLikes);
 
             return true;
         }
@@ -46,14 +46,27 @@ namespace Pressford.News.Services
             return _articleRepository.FindBy(x => x.Id == articleId).Any();
         }
 
-        private bool HasAlreadyLikedByUser(string userName)
+        private bool AlreadyLiked(string userName, int articleId)
         {
-            return _articleLikesRepository.FindBy(x => x.UserName == userName).Any();
+            return _articleLikesRepository.FindBy(x => x.UserName == userName && x.ArticleId == articleId).Any();
         }
 
-        public bool UnLikeArticle(int articleId)
+        public async Task<bool> UnLikeArticle(int articleId)
         {
-            throw new System.NotImplementedException();
+            var userName = _httpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? null;
+
+            if (userName == null || !AlreadyLiked(userName, articleId) || !IsValidArticle(articleId))
+            {
+                return false;
+            }
+
+            int likeId = _articleLikesRepository.FindBy(x => x.UserName == userName && x.ArticleId == articleId)
+                                                .FirstOrDefault()
+                                                .LikeId;
+
+            await _articleLikesRepository.Delete(likeId);
+
+            return true;
         }
     }
 }

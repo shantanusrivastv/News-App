@@ -8,8 +8,8 @@ namespace Pressford.News.Services
 {
     public interface IArticleLikeService
     {
-        bool LikeArticle(int articleId);
+        Task<bool> LikeArticle(int articleId);
 
-        bool UnLikeArticle(int articleId);
+        Task<bool> UnLikeArticle(int articleId);
     }
 }

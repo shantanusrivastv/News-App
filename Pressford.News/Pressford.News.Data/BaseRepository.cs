@@ -43,7 +43,7 @@ namespace Pressford.News.Data
 
                 return entity;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw new Exception($"{nameof(entity)} could not be saved");
             }
@@ -84,7 +84,7 @@ namespace Pressford.News.Data
 
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw new Exception($"{nameof(TEntity)} could not be deleted");
             }

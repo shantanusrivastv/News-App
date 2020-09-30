@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Pressford.News.Services;
@@ -18,10 +19,9 @@ namespace Pressford.News.API.Controllers
 
         [Authorize]
         [HttpPost("[action]/{articleId:int}")]
-        public IActionResult LikeArticle(int articleId)
+        public async Task<IActionResult> LikeArticle(int articleId)
         {
-            var user = _likeService.LikeArticle(articleId);
-
+            var user = await _likeService.LikeArticle(articleId);
             if (!user)
                 return BadRequest();
             return Ok("Article Like was successfully updated");
@@ -29,12 +29,11 @@ namespace Pressford.News.API.Controllers
 
         //[Authorize]
         [HttpDelete("[action]/{articleId:int}")]
-        public IActionResult UnlikeArticle(int articleId)
+        public async Task<IActionResult> UnlikeArticle(int articleId)
         {
-            var user = _likeService.UnLikeArticle(articleId);
-
+            var user = await _likeService.UnLikeArticle(articleId);
             if (!user)
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest();
             return Ok("Article UnLike was successfully updated");
         }
     }
