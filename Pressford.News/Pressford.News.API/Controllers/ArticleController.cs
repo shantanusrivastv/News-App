@@ -22,7 +22,7 @@ namespace Pressford.News.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetAllArticles()
         {
             var articles = await _articleServices.GetAllArticles();
             return Ok(articles);
@@ -59,8 +59,6 @@ namespace Pressford.News.API.Controllers
             {
                 return Ok("Succesfully Deleted Resource");
             }
-
-            //todo better error message
             return BadRequest();
         }
     }
