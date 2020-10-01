@@ -59,7 +59,7 @@ export default function Articles(props) {
                 <Button onClick={() => {
                   //TODO: Calling API
                   dispatch({
-                    type: !row.Like ? actionTypes.LIKE_ARTICLE : actionTypes.DISLIKE_ARTICLE,
+                    type:  actionTypes.TOGGLE_LIKE ,
                     payload: row
                   })
                 }

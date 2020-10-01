@@ -15,11 +15,20 @@ const savePublisherArticles = (state, action) => {
     }
 };
 
+const toggleArticleLike = (state, action) => {
+    return {
+        ...state,
+        publisherArticles: state.publisherArticles.map((t, idx) =>
+            idx === (action.payload.Id - 1) ? { ...t, Like: !t.Like } : t
+        )
+    };
+}
 
 export const reducer = (state, action) => {
-    switch ( action.type ) {
-        case actionTypes.USER_LOGIN: return saveUserInfo( state, action );
-        case actionTypes.LOAD_PUBLISHER_ARTICLES: return savePublisherArticles( state, action );
+    switch (action.type) {
+        case actionTypes.USER_LOGIN: return saveUserInfo(state, action);
+        case actionTypes.LOAD_PUBLISHER_ARTICLES: return savePublisherArticles(state, action);
+        case actionTypes.TOGGLE_LIKE: return toggleArticleLike(state, action);
         default: return state;
     }
 
