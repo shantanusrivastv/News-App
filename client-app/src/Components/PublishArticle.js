@@ -42,26 +42,30 @@ export default function FormDialog(props) {
     });
   }, [dispatch]);
 
-  const onPublishArticle = useCallback(() => {
-    let article = {
+  const publishNewArticle = (article) => {
+    const newArticle = {
+      "title": title,
+      "body": description
+    };
+    axios.post('Article', newArticle)
+      .then(response => {
+        dispatch({
+          type: actionTypes.PUBLISH_ARTICLE,
+          payload: response.data
+        });
+
+      })
+      .catch(error => {
+        console.error(error)
+      });
+  }
+
+  const updateArticle = () => {
+    const article = {
       "id": id,
       "title": title,
       "body": description
-    }
-
-
-    // axios.post('Article', article)
-    //   .then(response => {
-    //     dispatch({
-    //       type: actionTypes.PUBLISH_ARTICLE,
-    //       payload: response.data
-    //     });
-
-    //   })
-    //   .catch(error => {
-    //     console.error(error)
-    //   });
-
+    };
     axios.put('Article', article)
       .then(response => {
         dispatch({
@@ -73,9 +77,15 @@ export default function FormDialog(props) {
       .catch(error => {
         console.error(error)
       });
+  }
+
+  const articleEventHandler = () => {
+
+
+    (editForm) ? updateArticle() : publishNewArticle();
 
     setOpen(false);
-  }, [dispatch, id, title, description]);
+  };
 
   const handleClickOpen = useCallback(() => {
     setOpen(true);
@@ -124,7 +134,7 @@ export default function FormDialog(props) {
         </DialogContent>
         <DialogActions>
           {role === RoleType.PUBLISHER &&
-            <Button onClick={onPublishArticle} color="primary">
+            <Button onClick={articleEventHandler} color="primary">
               {(editForm) ? "Save Changes" : "Publish"}
             </Button>}
           <Button onClick={handleClose} color="primary">

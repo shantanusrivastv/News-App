@@ -13,7 +13,7 @@ const initialState = {
  
   },
   authorised: false,
-  publisherArticles: [],
+  articles: [],
   allArticles: [],
   editForm: null
 };

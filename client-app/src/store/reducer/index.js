@@ -14,21 +14,30 @@ const logOut = () =>{
     
 }
 
-const savePublisherArticles = (state, action) => {
+const saveArticles = (state, action) => {
     return {
         ...state,
-        publisherArticles: action.payload
+        articles: action.payload
+    }
+};
+
+const deleteArticle = (state, action) => {
+    let filteredArticles = state.articles.filter(x=> x.id !== action.payload);
+    return {
+        ...state,
+        articles: filteredArticles
     }
 };
 
 const publishArticles = (state, action) => {
-    const newArticle = state.publisherArticles
+    const newArticle = state.articles
     newArticle.push({
         ...action.payload
     })
     return {
         ...state,
-        publisherArticles: newArticle
+        editForm: null,
+        articles: newArticle
     }
 };
 
@@ -36,10 +45,9 @@ const publishArticles = (state, action) => {
 const toggleArticleLike = (state, action) => {
     return {
         ...state,
-        publisherArticles: state.publisherArticles.map((t, idx) =>
+        articles: state.articles.map((t) =>
            // idx === (action.payload.id - 1) ? { ...t, Like: !t.Like } : t
           t.id === (action.payload.id) ? { ...t, isLiked: !t.isLiked } : t
-          // t.id === (action.payload.id) ? {isLiked: !t.isLiked } : t
         )
     };
 }
@@ -59,14 +67,13 @@ const clearArticle = (state, action) => {
 }
 
 const updateArticle = (state, action)=>{
-        let oArticles = [...state.publisherArticles];
-        for (let article of oArticles) {
-            article = (article.Id === action.payload.Id) ? action.payload : article //Update Article
-        }
+
         return {
             ...state,
-            publisherArticles: oArticles,
-            editForm: null
+            editForm: null,
+            articles: state.articles.map((t) =>
+                t.id === (action.payload.id) ? { ...t, article: action.payload} : t
+            )
         }
     }
 
@@ -74,7 +81,8 @@ const updateArticle = (state, action)=>{
 export const reducer = (state, action) => {
     switch (action.type) {
         case actionTypes.USER_LOGIN: return saveUserInfo(state, action);
-        case actionTypes.LOAD_PUBLISHER_ARTICLES: return savePublisherArticles(state, action);
+        case actionTypes.LOAD_ARTICLES: return saveArticles(state, action);
+        case actionTypes.DELETE_ARTICLE: return deleteArticle(state, action);
         case actionTypes.TOGGLE_LIKE: return toggleArticleLike(state, action);
         case actionTypes.SETUP_DETAILS_VIEW: return setupDetailsView(state, action);
         case actionTypes.PUBLISH_ARTICLE: return publishArticles(state, action);

@@ -17,14 +17,14 @@ const useStyles = makeStyles(() => ({
 
 
 const DashBoard = (props) => {
-    const { userInfo, authorised, publisherArticles, editForm, dispatch } = props;
+    const { userInfo, authorised, articles, editForm, dispatch } = props;
     const classes = useStyles();
 
     const GetPublisherArtciles = useCallback(() => {
         axios.get('Dashboard/GetPublisherDashboard')
             .then(response => {
                 dispatch({
-                    type: actionTypes.LOAD_PUBLISHER_ARTICLES,
+                    type: actionTypes.LOAD_ARTICLES,
                     payload: response.data
                 })
             })
@@ -37,7 +37,7 @@ const DashBoard = (props) => {
         axios.get('Dashboard/')
             .then(response => {
                 dispatch({
-                    type: actionTypes.LOAD_PUBLISHER_ARTICLES,
+                    type: actionTypes.LOAD_ARTICLES,
                     payload: response.data
                 })
             })
@@ -68,7 +68,7 @@ const DashBoard = (props) => {
              <PublishArticle dispatch={dispatch} editForm={editForm} role={userInfo.role} />
 
             }
-            <Articles publisherArticles={publisherArticles} dispatch={dispatch} role={userInfo.role} />
+            <Articles articles={articles} dispatch={dispatch} role={userInfo.role} />
         </div>
     );
 }

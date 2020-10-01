@@ -8,8 +8,8 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
 import { actionTypes, RoleType } from '../Common/constants';
-import { ThumbUp, ThumbDown, Edit, Explore } from '@material-ui/icons';
-// import axios from '../Common/axios-news';
+import { ThumbUp, ThumbDown, Edit, Explore, Delete } from '@material-ui/icons';
+import axios from '../Common/axios-news';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Articles(props) {
-  const { publisherArticles, role, dispatch } = props;
+  const { articles, role, dispatch } = props;
   const classes = useStyles();
 
   const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
@@ -39,7 +39,7 @@ export default function Articles(props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {publisherArticles && publisherArticles.map((row) => (
+          {articles && articles.map((row) => (
             <TableRow key={row.id}>
               <TableCell>{row.id}</TableCell>
               <TableCell>{row.title}</TableCell>
@@ -82,6 +82,28 @@ export default function Articles(props) {
                 } color="primary">{
                     !row.isLiked ? <ThumbUp /> : <ThumbDown />
                   }</Button>
+                <Button onClick={
+                  () => {
+                    axios.delete('Article/' + row.id)
+                      .then(response => {
+                        dispatch({
+                          type: actionTypes.TOGGLE_LIKE,
+                          payload: row
+                        })
+                      })
+                      .catch(error => {
+                        console.error(error)
+                      });
+
+
+                    dispatch({
+                      type: actionTypes.DELETE_ARTICLE,
+                      payload: row.id
+                    })
+                  }
+                } color="primary">
+                  <Delete />
+                </Button>
               </TableCell>
             </TableRow>
           ))}
