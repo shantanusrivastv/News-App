@@ -14,7 +14,6 @@ const initialState = {
   },
   authorised: false,
   articles: [],
-  allArticles: [],
   editForm: null
 };
 

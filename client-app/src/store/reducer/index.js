@@ -8,10 +8,10 @@ const saveUserInfo = (state, action) => {
     }
 };
 
-const logOut = () =>{
+const logOut = () => {
     sessionStorage.clear();
     window.location.href = '/';
-    
+
 }
 
 const saveArticles = (state, action) => {
@@ -22,7 +22,7 @@ const saveArticles = (state, action) => {
 };
 
 const deleteArticle = (state, action) => {
-    let filteredArticles = state.articles.filter(x=> x.id !== action.payload);
+    let filteredArticles = state.articles.filter(x => x.id !== action.payload);
     return {
         ...state,
         articles: filteredArticles
@@ -30,14 +30,10 @@ const deleteArticle = (state, action) => {
 };
 
 const publishArticles = (state, action) => {
-    const newArticle = state.articles
-    newArticle.push({
-        ...action.payload
-    })
     return {
         ...state,
         editForm: null,
-        articles: newArticle
+        articles: [...state.articles, action.payload]
     }
 };
 
@@ -46,8 +42,8 @@ const toggleArticleLike = (state, action) => {
     return {
         ...state,
         articles: state.articles.map((t) =>
-           // idx === (action.payload.id - 1) ? { ...t, Like: !t.Like } : t
-          t.id === (action.payload.id) ? { ...t, isLiked: !t.isLiked } : t
+            // idx === (action.payload.id - 1) ? { ...t, Like: !t.Like } : t
+            t.id === (action.payload.id) ? { ...t, isLiked: !t.isLiked } : t
         )
     };
 }
@@ -66,16 +62,17 @@ const clearArticle = (state, action) => {
     };
 }
 
-const updateArticle = (state, action)=>{
+const updateArticle = (state, action) => {
+    const index = state.articles.findIndex(x => x.id === action.payload.id);
+    let updatedArticle = [...state.articles];
+    updatedArticle[index] = action.payload;
 
-        return {
-            ...state,
-            editForm: null,
-            articles: state.articles.map((t) =>
-                t.id === (action.payload.id) ? { ...t, article: action.payload} : t
-            )
-        }
+    return {
+        ...state,
+        editForm: null,
+        articles: updatedArticle
     }
+}
 
 
 export const reducer = (state, action) => {
