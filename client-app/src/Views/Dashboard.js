@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback  } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Header from '../Components/Header';
 import Articles from '../Components/Articles';
@@ -16,46 +16,57 @@ const useStyles = makeStyles(() => ({
 }));
 
 
-
-const rawArticles = [
-    {
-        Id: 1, Title: "Article-1", Description: "Article-1", Like: false
-    },
-    {
-        Id: 2, Title: "Article-2", Description: "Article-2", Like: false
-    },
-    {
-        Id: 3, Title: "Article-3", Description: "Article-3", Like: false
-    },
-];
-
 const DashBoard = (props) => {
-    const { userInfo,authorised, publisherArticles, editForm,dispatch } = props;
+    const { userInfo, authorised, publisherArticles, editForm, dispatch } = props;
     const classes = useStyles();
 
-    useEffect(() => {
-        axios.get('Dashboard/')
-        .then(response => {
-            dispatch({
-                type: actionTypes.LOAD_PUBLISHER_ARTICLES,
-                payload: response.data
+    const GetPublisherArtciles = useCallback(() => {
+        axios.get('Dashboard/GetPublisherDashboard')
+            .then(response => {
+                dispatch({
+                    type: actionTypes.LOAD_PUBLISHER_ARTICLES,
+                    payload: response.data
+                })
             })
-        })
-        .catch(error => {
-            console.error(error)
-        });
-
+            .catch(error => {
+                console.error(error)
+            })
     }, [dispatch])
+
+    const GetAllArtciles = useCallback(() => {
+        axios.get('Dashboard/')
+            .then(response => {
+                dispatch({
+                    type: actionTypes.LOAD_PUBLISHER_ARTICLES,
+                    payload: response.data
+                })
+            })
+            .catch(error => {
+                console.error(error)
+            });
+    }, [dispatch])
+
+    const loadArticles = useCallback(() => {
+        userInfo.role === RoleType.PUBLISHER ? GetPublisherArtciles()
+        : GetAllArtciles()
+      }, [userInfo.role,GetAllArtciles,GetPublisherArtciles])
+
+      useEffect(() => {
+        loadArticles();
+    }, [loadArticles])
+
 
     if (!authorised) {
         return <Redirect to={"/"} />
     }
 
+
     return (
         <div className={classes.root}>
-            <Header />
+            <Header authorised={authorised} dispatch={dispatch}> </Header>
             {
-               userInfo.role === RoleType.PUBLISHER && <PublishArticle dispatch={dispatch} editForm={editForm} />
+             <PublishArticle dispatch={dispatch} editForm={editForm} role={userInfo.role} />
+
             }
             <Articles publisherArticles={publisherArticles} dispatch={dispatch} role={userInfo.role} />
         </div>

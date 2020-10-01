@@ -7,17 +7,18 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import { actionTypes } from '../Common/constants';
 import axios from '../Common/axios-news'
-
+import { RoleType } from '../Common/constants';
 
 export default function FormDialog(props) {
-  const { dispatch, editForm } = props;
+  const { dispatch, editForm, role } = props;
   const [open, setOpen] = React.useState(false);
   const [id, setId] = React.useState(0);
   const [title, setTitle] = React.useState(null);
   const [description, setDescription] = React.useState(null);
 
-  const isEdit = React.useState(false);
 
+
+  console.log(editForm);
   useEffect(() => {
     if (editForm) {
       setId(editForm.id)
@@ -25,31 +26,54 @@ export default function FormDialog(props) {
       setDescription(editForm.body)
       setOpen(true)
     }
+    else {
+      setId(0)
+      setTitle(null)
+      setDescription(null)
+    }
+
   }, [editForm])
 
 
   const handleClose = useCallback(() => {
     setOpen(false);
-  }, []);
+    dispatch({
+      type: actionTypes.CLEAR_ARTICLE
+    });
+  }, [dispatch]);
 
   const onPublishArticle = useCallback(() => {
     let article = {
-      "ArticleId" : id,
+      "id": id,
       "title": title,
       "body": description
-  }   
-    axios.post('Article',article)
-    .then(response => {
+    }
+
+
+    // axios.post('Article', article)
+    //   .then(response => {
+    //     dispatch({
+    //       type: actionTypes.PUBLISH_ARTICLE,
+    //       payload: response.data
+    //     });
+
+    //   })
+    //   .catch(error => {
+    //     console.error(error)
+    //   });
+
+    axios.put('Article', article)
+      .then(response => {
         dispatch({
-        type: actionTypes.PUBLISH_ARTICLE,
-        payload: response.data
+          type: actionTypes.UPDATE_ARTICLE,
+          payload: response.data
+        });
+
+      })
+      .catch(error => {
+        console.error(error)
       });
 
-    })
-    .catch(error => {
-        console.error(error)
-    });
-  
     setOpen(false);
   }, [dispatch, id, title, description]);
 
@@ -59,13 +83,19 @@ export default function FormDialog(props) {
 
   return (
     <div>
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-        Publish Article
-      </Button>
+      {role === RoleType.PUBLISHER &&
+        <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+          Publish Article
+    </Button>
+      }
+
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
         <DialogContent>
           <DialogContentText>
-            <h3>Edit Article</h3>
+            {role === RoleType.PUBLISHER &&
+              <h3>{
+                (editForm) ? "Edit Article" : "Publish Article"}</h3>
+            }
           </DialogContentText>
           <TextField
             autoFocus
@@ -76,6 +106,7 @@ export default function FormDialog(props) {
             fullWidth
             defaultValue={title}
             onChange={(evtArg) => setTitle(evtArg.target.value)}
+            disabled={role === RoleType.USER}
           />
           <TextField
             autoFocus
@@ -88,17 +119,19 @@ export default function FormDialog(props) {
             rows={5}
             defaultValue={description}
             onChange={(evtArg) => setDescription(evtArg.target.value)}
+            disabled={role === RoleType.USER}
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={onPublishArticle} color="primary">
-            Publish
-           {/* {(isEdit) ? "Edit": "Publish" } */}
-          </Button>
+          {role === RoleType.PUBLISHER &&
+            <Button onClick={onPublishArticle} color="primary">
+              {(editForm) ? "Save Changes" : "Publish"}
+            </Button>}
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
         </DialogActions>
+
       </Dialog>
     </div>
   );

@@ -1,7 +1,7 @@
 import { Button, FormLabel, Grid, makeStyles, Paper, TextField } from '@material-ui/core';
 import React, { useState } from 'react';
-import { withRouter } from 'react-router-dom';
-import { actionTypes, RoleType } from '../Common/constants';
+import { Redirect, withRouter } from 'react-router-dom';
+import { actionTypes} from '../Common/constants';
 import axios from '../Common/axios-news';
 
 const useStyles = makeStyles((theme) => ({
@@ -25,26 +25,37 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-
-
-
 const Login = (props) => {
-    const { history, dispatch } = props;
+    const { dispatch, authorised } = props;
     //const [loginDetails, setValue] = useState({useName:"adminUser@pressford.com",password: "admin"});
     // const [loginDetails, setValue] = useState({useName:"adminUser@pressford.com",password: "admin"});
     const [userName, setUserName] = useState("adminUser@pressford.com");
     const [password, setPassword] = useState("admin");
-    const [message, setMessage] = useState(null)
+    const [message] = useState(null);
+    const [isLogin, setLogin] = useState(false);
     const classes = useStyles();
-    const credentials = {
-        "username": "adminUser@pressford.com",
-        "password": "admin"
-    }   
+
     
-    const credentials2 = {
+    const credentials = {
         "username": userName,
         "password": password
     }
+
+
+    React.useEffect(() => {
+        if( sessionStorage.getItem("userInfo") || isLogin){
+            dispatch({
+                type: actionTypes.USER_LOGIN,
+                userInfo: JSON.parse(sessionStorage.getItem("userInfo"))
+            })
+        }
+
+    }, [dispatch,isLogin])
+
+if(authorised ){
+    return <Redirect to={"/Dashboard"} />
+}
+
     return <div className={classes.root}>
         <Grid
             container
@@ -63,21 +74,14 @@ const Login = (props) => {
                             <TextField label="User Name" 
                             value={userName} 
                              onChange={(e)=> setUserName(e.target.value)}
-                            // onChange={(e)=> setValue (state => ({
-                            //     ...state,
-                            //     useName : e.target.value
-                            // }))}
                             variant="filled" fullWidth />
                         </Grid>       
 
-                                               
-     
                         
                         <Grid item xs={12}  className={classes.input}>
                             <TextField label="Password" 
                             value={password} 
                             onChange={(e)=> setPassword(e.target.value)} 
-  
                             variant="filled" fullWidth />
                         </Grid>
                         <Grid
@@ -92,15 +96,18 @@ const Login = (props) => {
                                 color="primary"
                                 onClick={() => {
 
-                                    axios.post('Account/authenticate',credentials2)
+                                    axios.post('Account/authenticate',credentials)
                                         .then(response => {
-                                            dispatch({
-                                                type: actionTypes.USER_LOGIN,
-                                                userInfo: response.data
+                                            console.log(JSON.stringify( response.data));
+                                            sessionStorage.setItem("userInfo",
+                                            JSON.stringify( response.data));
+                                            setLogin(true);
+                                            // dispatch({
+                                            //     type: actionTypes.USER_LOGIN,
+                                            //     userInfo: response.data
+                                            // })
 
-                                            })
-
-                                            history.push("/dashboard")
+                                            //history.push("/dashboard")
                                         })
                                         .catch(error => {
                                             console.error(error)

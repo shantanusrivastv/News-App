@@ -8,8 +8,8 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
 import { actionTypes, RoleType } from '../Common/constants';
-import { ThumbUp, ThumbDown, Edit } from '@material-ui/icons';
-
+import { ThumbUp, ThumbDown, Edit, Explore } from '@material-ui/icons';
+// import axios from '../Common/axios-news';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -18,13 +18,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Articles(props) {
-  const { publisherArticles,role, dispatch } = props;
+  const { publisherArticles, role, dispatch } = props;
   const classes = useStyles();
-  
+
+  const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+
   return (
     <React.Fragment>
       <Typography variant="h5" color="primary" className={classes.root} >
-        Articles
+        {role === RoleType.PUBLISHER ? "My Published Articles" : "All Articles"}
       </Typography>
       <Table size="small">
         <TableHead>
@@ -43,31 +45,42 @@ export default function Articles(props) {
               <TableCell>{row.title}</TableCell>
               <TableCell>{row.body}</TableCell>
               <TableCell>{row.author}</TableCell>
-              <TableCell>{row.datePublished}</TableCell>
+              <TableCell>{new Date(row.datePublished).toLocaleDateString("en-UK", options)}</TableCell>
               <TableCell>
                 {
-                  role === RoleType.PUBLISHER &&
+
                   <Button onClick={
                     () => {
-                      //TODO: Calling API
                       dispatch({
-                        type: actionTypes.EDIT_ARTICLE,
+                        type: actionTypes.SETUP_DETAILS_VIEW,
                         payload: row
                       })
                     }
                   } color="primary">
-                    <Edit />
+                    {role === RoleType.PUBLISHER ? <Edit /> : <Explore />}
                   </Button>
                 }
                 <Button onClick={() => {
-                  //TODO: Calling API
+                  // const endPoint = row.isLiked? "UnLikeArticle/" :"LikeArticle/"
+                  // axios.post(endPoint + row.id)
+                  // .then(response => {
+                  //   dispatch({
+                  //     type:  actionTypes.TOGGLE_LIKE ,
+                  //     payload: row
+                  //   })
+                  // })
+                  // .catch(error => {
+                  //     console.error(error)
+                  // });
+
                   dispatch({
-                    type:  actionTypes.TOGGLE_LIKE ,
+                    type: actionTypes.TOGGLE_LIKE,
                     payload: row
                   })
+
                 }
                 } color="primary">{
-                    !row.Like ? <ThumbUp /> : <ThumbDown />
+                    !row.isLiked ? <ThumbUp /> : <ThumbDown />
                   }</Button>
               </TableCell>
             </TableRow>
