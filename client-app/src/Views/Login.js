@@ -1,6 +1,8 @@
 import { Button, FormLabel, Grid, makeStyles, Paper, TextField } from '@material-ui/core';
 import React, { useState } from 'react';
-import {withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
+import { actionTypes, RoleType } from '../Common/constants';
+import axios from '../Common/axios-news';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -22,8 +24,13 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-
+const credentials = {
+    "username": "adminUser@pressford.com",
+    "password": "admin"
+}
 const Login = (props) => {
+    const { history, dispatch } = props;
+    const [message, setMessage] = useState(null)
 
     const classes = useStyles();
     return <div className={classes.root}>
@@ -40,10 +47,10 @@ const Login = (props) => {
                     <Grid container>
                         <FormLabel>
                             <h4>Login</h4></FormLabel>
-                        <Grid item xs={12} spacing={2} className={classes.input}>
+                        <Grid item xs={12}  className={classes.input}>
                             <TextField label="User Name" variant="filled" fullWidth />
                         </Grid>
-                        <Grid item xs={12} spacing={2} className={classes.input}>
+                        <Grid item xs={12}  className={classes.input}>
                             <TextField label="Password" variant="filled" fullWidth />
                         </Grid>
                         <Grid
@@ -57,16 +64,30 @@ const Login = (props) => {
                                 variant="contained"
                                 color="primary"
                                 onClick={() => {
-                                    //TODO: Calling API
 
-                                    alert("I am clicked");
+                                    axios.post('Account/authenticate', credentials)
+                                        .then(response => {
+                                            dispatch({
+                                                type: actionTypes.USER_LOGIN,
+                                                userInfo: response.data
 
-                                   
-                                }
-                                }
+                                            })
+
+                                            history.push("/dashboard")
+                                        })
+                                        .catch(error => {
+                                            console.error(error)
+                                        });
+
+                                }}
                             >Login</Button>
                         </Grid>
-
+                        {
+                            message &&
+                            <Grid>
+                                {message}
+                            </Grid>
+                        }
                     </Grid>
                 </Paper>
             </Grid>
