@@ -24,11 +24,19 @@ const toggleArticleLike = (state, action) => {
     };
 }
 
+const editArticle = (state, action) => {
+    return {
+        ...state,
+        editForm: action.payload
+    };
+}
+
 export const reducer = (state, action) => {
     switch (action.type) {
         case actionTypes.USER_LOGIN: return saveUserInfo(state, action);
         case actionTypes.LOAD_PUBLISHER_ARTICLES: return savePublisherArticles(state, action);
         case actionTypes.TOGGLE_LIKE: return toggleArticleLike(state, action);
+        case actionTypes.EDIT_ARTICLE: return editArticle(state, action);
         default: return state;
     }
 
