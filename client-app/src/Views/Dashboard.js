@@ -5,6 +5,7 @@ import Articles from '../Components/Articles';
 import PublishArticle from '../Components/PublishArticle'
 import { Redirect, withRouter } from 'react-router-dom';
 import { actionTypes, RoleType } from '../Common/constants';
+import axios from '../Common/axios-news';
 
 
 const useStyles = makeStyles(() => ({
@@ -33,12 +34,17 @@ const DashBoard = (props) => {
     const classes = useStyles();
 
     useEffect(() => {
-        console.log("I am called");
-        //TODO: Calling API <authToken>
-        dispatch({
-            type: actionTypes.LOAD_PUBLISHER_ARTICLES,
-            payload: rawArticles
+        axios.get('Dashboard/')
+        .then(response => {
+            dispatch({
+                type: actionTypes.LOAD_PUBLISHER_ARTICLES,
+                payload: response.data
+            })
         })
+        .catch(error => {
+            console.error(error)
+        });
+
     }, [dispatch])
 
     if (!authorised) {

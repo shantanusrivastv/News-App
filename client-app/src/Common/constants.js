@@ -1,5 +1,5 @@
 export const Configs ={
-    "URL": "http://localhost:5000/api/"
+    "URL": "http://localhost:63961/api/"
 }
 
 export const actionTypes ={
@@ -8,7 +8,8 @@ export const actionTypes ={
     LOAD_PUBLISHER_ARTICLES: "LOAD_PUBLISHER_ARTICLES",
     EDIT_ARTICLE: "EDIT_ARTICLE",
     UPDATE_ARTICLE: "UPDATE_ARTICLE",
-    TOGGLE_LIKE: "TOGGLE_LIKE"
+    TOGGLE_LIKE: "TOGGLE_LIKE",
+    PUBLISH_ARTICLE: "PUBLISH_ARTICLE"
 }
 
 export const RoleType = {

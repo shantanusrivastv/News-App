@@ -6,6 +6,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import { actionTypes } from '../Common/constants';
+import axios from '../Common/axios-news'
 
 
 export default function FormDialog(props) {
@@ -15,12 +16,13 @@ export default function FormDialog(props) {
   const [title, setTitle] = React.useState(null);
   const [description, setDescription] = React.useState(null);
 
+  const isEdit = React.useState(false);
 
   useEffect(() => {
     if (editForm) {
-      setId(editForm.Id)
-      setTitle(editForm.Title)
-      setDescription(editForm.Description)
+      setId(editForm.id)
+      setTitle(editForm.title)
+      setDescription(editForm.body)
       setOpen(true)
     }
   }, [editForm])
@@ -31,16 +33,23 @@ export default function FormDialog(props) {
   }, []);
 
   const onPublishArticle = useCallback(() => {
-    //TODO: Calling API
-    
-    dispatch({
-      type: id === 0 ? actionTypes.PUBLISH_ARTICLE : actionTypes.UPDATE_ARTICLE,
-      payload: {
-        Id: id,
-        Title: title,
-        Description: description
-      }
+    let article = {
+      "ArticleId" : id,
+      "title": title,
+      "body": description
+  }   
+    axios.post('Article',article)
+    .then(response => {
+        dispatch({
+        type: actionTypes.PUBLISH_ARTICLE,
+        payload: response.data
+      });
+
+    })
+    .catch(error => {
+        console.error(error)
     });
+  
     setOpen(false);
   }, [dispatch, id, title, description]);
 
@@ -56,7 +65,7 @@ export default function FormDialog(props) {
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
         <DialogContent>
           <DialogContentText>
-            <h3>Article</h3>
+            <h3>Edit Article</h3>
           </DialogContentText>
           <TextField
             autoFocus
@@ -84,6 +93,7 @@ export default function FormDialog(props) {
         <DialogActions>
           <Button onClick={onPublishArticle} color="primary">
             Publish
+           {/* {(isEdit) ? "Edit": "Publish" } */}
           </Button>
           <Button onClick={handleClose} color="primary">
             Cancel

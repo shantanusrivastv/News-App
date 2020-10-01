@@ -29,18 +29,21 @@ export default function Articles(props) {
       <Table size="small">
         <TableHead>
           <TableRow>
-            <TableCell>Serial No</TableCell>
+            <TableCell>Article Id</TableCell>
             <TableCell>Title</TableCell>
             <TableCell>Description</TableCell>
-            <TableCell>Action</TableCell>
+            <TableCell>Author</TableCell>
+            <TableCell>DatePublished</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {publisherArticles && publisherArticles.map((row) => (
-            <TableRow key={row.Id}>
-              <TableCell>{row.Id}</TableCell>
-              <TableCell>{row.Title}</TableCell>
-              <TableCell>{row.Description}</TableCell>
+            <TableRow key={row.id}>
+              <TableCell>{row.id}</TableCell>
+              <TableCell>{row.title}</TableCell>
+              <TableCell>{row.body}</TableCell>
+              <TableCell>{row.author}</TableCell>
+              <TableCell>{row.datePublished}</TableCell>
               <TableCell>
                 {
                   role === RoleType.PUBLISHER &&

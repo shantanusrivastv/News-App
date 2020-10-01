@@ -15,11 +15,24 @@ const savePublisherArticles = (state, action) => {
     }
 };
 
+const publishArticles = (state, action) => {
+    const newArticle = state.publisherArticles
+    newArticle.push({
+        ...action.payload
+    })
+    return {
+        ...state,
+        publisherArticles: newArticle
+    }
+};
+
+
 const toggleArticleLike = (state, action) => {
     return {
         ...state,
         publisherArticles: state.publisherArticles.map((t, idx) =>
-            idx === (action.payload.Id - 1) ? { ...t, Like: !t.Like } : t
+           // idx === (action.payload.id - 1) ? { ...t, Like: !t.Like } : t
+           t.id === (action.payload.id) ? { ...t, Like: !t.Like } : t
         )
     };
 }
@@ -37,6 +50,7 @@ export const reducer = (state, action) => {
         case actionTypes.LOAD_PUBLISHER_ARTICLES: return savePublisherArticles(state, action);
         case actionTypes.TOGGLE_LIKE: return toggleArticleLike(state, action);
         case actionTypes.EDIT_ARTICLE: return editArticle(state, action);
+        case actionTypes.PUBLISH_ARTICLE: return publishArticles(state, action);
         default: return state;
     }
 
