@@ -29,6 +29,7 @@ namespace Pressford.News.Data
                         break;
 
                     case EntityState.Modified:
+                        //Update(entity);
                         Entry(entity).Property(x => x.DatePublished).IsModified = false;
                         entity.DateModified = now;
                         break;

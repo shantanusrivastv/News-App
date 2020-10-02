@@ -10,7 +10,11 @@ const getToken =() =>{
 
 const instance = axios.create({
     baseURL: Configs.URL,
-    headers: {'Authorization': 'Bearer '+ getToken()}
+    headers: {
+        'Content-Type' : 'application/json',
+        'Accept' : 'application/json',
+        'Authorization': 'Bearer '+ getToken()
+    }
 });
 
 export default instance;

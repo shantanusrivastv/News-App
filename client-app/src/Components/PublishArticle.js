@@ -10,20 +10,21 @@ import axios from '../Common/axios-news'
 import { RoleType } from '../Common/constants';
 
 export default function FormDialog(props) {
-  const { dispatch, editForm, role } = props;
+  const { dispatch, editForm, role} = props;
   const [open, setOpen] = React.useState(false);
   const [id, setId] = React.useState(0);
   const [title, setTitle] = React.useState(null);
   const [description, setDescription] = React.useState(null);
+  const [datePublished, setPublishedDate] = React.useState(null);
 
 
-
-  console.log(editForm);
   useEffect(() => {
+   // setPublishedDate(editForm.datePublished);
     if (editForm) {
       setId(editForm.id)
       setTitle(editForm.title)
       setDescription(editForm.body)
+      setPublishedDate(editForm.datePublished)
       setOpen(true)
     }
     else {
@@ -64,7 +65,8 @@ export default function FormDialog(props) {
     const article = {
       "id": id,
       "title": title,
-      "body": description
+      "body": description,
+      "datePublished": datePublished
     };
     axios.put('Article', article)
       .then(response => {
@@ -88,8 +90,11 @@ export default function FormDialog(props) {
   };
 
   const handleClickOpen = useCallback(() => {
+    dispatch({
+      type: actionTypes.CLEAR_ARTICLE
+    });
     setOpen(true);
-  }, []);
+  }, [dispatch]);
 
   return (
     <div>
