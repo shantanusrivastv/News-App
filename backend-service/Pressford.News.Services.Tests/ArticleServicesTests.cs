@@ -9,7 +9,9 @@ using NUnit.Framework;
 using Pressford.News.Data;
 using Pressford.News.Entities;
 using Pressford.News.Services.Mapper;
+
 using entity = Pressford.News.Entities;
+
 using model = Pressford.News.Model;
 
 namespace Pressford.News.Services.Tests

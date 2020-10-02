@@ -12,8 +12,8 @@ namespace Pressford.News.Entities
 
         public string Author { get; set; }
 
-        public  DateTime DatePublished { get; set; }
+        public DateTime DatePublished { get; set; }
 
-        public  DateTime DateModified { get; set; }
+        public DateTime DateModified { get; set; }
     }
 }
