@@ -17,6 +17,7 @@
  3. run update-database
  4. Run the application (ctrl + F5)
  5. By default appliaction will run in localhost:63961
+ 6. By default application start will load Swagger UI at http://localhost:63961/index.html
  6. The same address is used in client app  
   **Optional** Change the connection string in appsettings.json to Instance of Sql Server.
    By default it will run using localdb
