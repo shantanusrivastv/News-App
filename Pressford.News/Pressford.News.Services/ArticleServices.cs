@@ -65,7 +65,7 @@ namespace Pressford.News.Services
             var userName = _httpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? null;
             if (userName == null || !IsArticleOwner(userName, article.Id))
             {
-                throw new InvalidOperationException();
+                return Task.FromResult<Article>(null); ;
             }
             var entityArticle = _mapper.Map<entity.Article>(article);
             entityArticle.Author = userName;

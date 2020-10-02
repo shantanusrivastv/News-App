@@ -29,37 +29,42 @@ namespace Pressford.News.API.Controllers
         }
 
         [HttpGet("{articleId:int}")]
-        public async Task<IActionResult> GetById(int articleId)
+        public async Task<IActionResult> GetSingleArticle(int articleId)
         {
             var article = await _articleServices.GetSingleArticle(articleId);
+            if (article == null)
+                return NotFound();
             return Ok(article);
         }
 
         [Authorize(Roles = "Publisher")]
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Article article)
+        public async Task<IActionResult> CreateNewArticle([FromBody] Article article)
         {
             var result = await _articleServices.CreateArticle(article);
+            //return CreatedAtAction(nameof(GetSingleArticle), new { articleId = result.Id }, article);
             return Ok(result);
         }
 
         [Authorize(Roles = "Publisher")]
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] Article article)
+        public async Task<IActionResult> UpdateArticle([FromBody] Article article)
         {
             var result = await _articleServices.UpdateArticle(article);
+            if (result == null)
+                return Unauthorized("Either the article does not exist or user does not have required privileges ");
             return Ok(result);
         }
 
         [Authorize(Roles = "Publisher")]
         [HttpDelete("{articleId:int}")]
-        public async Task<IActionResult> Delete(int articleId)
+        public async Task<IActionResult> DeleteArticle(int articleId)
         {
             if (await _articleServices.RemoveArticle(articleId))
             {
-                return Ok("Succesfully Deleted Resource");
+                return Accepted("Succesfully Deleted Resource");
             }
-            return BadRequest();
+            return Unauthorized("Either the article does not exist or user does not have required privileges ");
         }
     }
 }
