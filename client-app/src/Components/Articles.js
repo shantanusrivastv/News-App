@@ -82,28 +82,30 @@ export default function Articles(props) {
                 } color="primary">{
                     !row.isLiked ? <ThumbUp /> : <ThumbDown />
                   }</Button>
-                <Button onClick={
-                  () => {
-                    axios.delete('Article/' + row.id)
-                      .then(response => {
-                        dispatch({
-                          type: actionTypes.TOGGLE_LIKE,
-                          payload: row
+
+                {role === RoleType.PUBLISHER &&
+                  <Button onClick={
+                    () => {
+                      axios.delete('Article/' + row.id)
+                        .then(response => {
+                          dispatch({
+                            type: actionTypes.TOGGLE_LIKE,
+                            payload: row
+                          })
                         })
+                        .catch(error => {
+                          console.error(error)
+                        });
+
+
+                      dispatch({
+                        type: actionTypes.DELETE_ARTICLE,
+                        payload: row.id
                       })
-                      .catch(error => {
-                        console.error(error)
-                      });
-
-
-                    dispatch({
-                      type: actionTypes.DELETE_ARTICLE,
-                      payload: row.id
-                    })
-                  }
-                } color="primary">
-                  <Delete />
-                </Button>
+                    }
+                  } color="primary">
+                    <Delete />
+                  </Button>}
               </TableCell>
             </TableRow>
           ))}
