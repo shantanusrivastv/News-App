@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Pressford.News.API\Pressford.News.API.csproj" />
-    <ProjectReference Include="..\Pressford.News.Model\Pressford.News.Model.csproj" />
   </ItemGroup>
 
 </Project>
