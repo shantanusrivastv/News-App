@@ -1,14 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Pressford.News.Services.Dependencies;
 
@@ -26,7 +21,7 @@ namespace Pressford.News.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //Secuirty Vulnerability not fit for production
+            //Security Vulnerability not fit for production
             services.AddCors(options =>
             {
                 options.AddPolicy("default", policy =>
@@ -38,7 +33,7 @@ namespace Pressford.News.API
             });
             services.AddControllers();
 			services.AddHttpContextAccessor();
-            ApplicationConfigurations.ConfigureAuthentication(services, Configuration);
+            ServiceConfigurationManager.ConfigureAuthentication(services, Configuration);
 
             services.AddSwaggerGen(c =>
             {
@@ -66,8 +61,8 @@ namespace Pressford.News.API
 
                 //setupAction.IncludeXmlComments(xmlCommentsFullPath);
             });
-            ApplicationConfigurations.ConfigurePersistence(services, Configuration);
-            ApplicationConfigurations.ConfigureLifeCycle(services, Configuration);
+            ServiceConfigurationManager.ConfigurePersistence(services, Configuration);
+            ServiceConfigurationManager.ConfigureServiceLifeTime(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

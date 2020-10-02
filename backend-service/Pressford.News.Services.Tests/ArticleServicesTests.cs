@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
@@ -11,9 +9,7 @@ using NUnit.Framework;
 using Pressford.News.Data;
 using Pressford.News.Entities;
 using Pressford.News.Services.Mapper;
-
 using entity = Pressford.News.Entities;
-
 using model = Pressford.News.Model;
 
 namespace Pressford.News.Services.Tests
@@ -33,13 +29,13 @@ namespace Pressford.News.Services.Tests
             _httpContextAccessor = new Mock<IHttpContextAccessor>();
 
             var configuration = new MapperConfiguration(cfg => cfg.AddProfile(new PressfordMapper()));
-            //Seeting Up Automppaer Profile to easy setup and we don't have to mock all mappings
+            //Seeing Up AutoMapper Profile to easy setup and we don't have to mock all mappings
             _mapper = new AutoMapper.Mapper(configuration);
             _sut = new ArticleServices(_repository.Object, _mapper, _httpContextAccessor.Object);
         }
 
         [Test]
-        public async Task Sould_Create_New_Article()
+        public async Task Should_Create_New_Article()
         {
             // Arrange
             var nameIdentifierClaim = new Claim(ClaimTypes.NameIdentifier, "Username");
@@ -61,7 +57,7 @@ namespace Pressford.News.Services.Tests
             Assert.AreEqual(result.Author, "Author1");
         }
 
-        private List<model.Article> MockArticleModels()
+        private static IEnumerable<model.Article> MockArticleModels()
         {
             return new List<model.Article>()
             {
@@ -70,7 +66,7 @@ namespace Pressford.News.Services.Tests
             };
         }
 
-        private List<entity.Article> MockEntityArticleModels()
+        private static IEnumerable<Article> MockEntityArticleModels()
         {
             return new List<entity.Article>()
             {

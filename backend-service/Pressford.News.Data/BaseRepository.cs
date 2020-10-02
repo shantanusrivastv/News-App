@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
@@ -43,7 +41,7 @@ namespace Pressford.News.Data
 
                 return entity;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw new Exception($"{nameof(entity)} could not be saved");
             }
@@ -69,7 +67,7 @@ namespace Pressford.News.Data
             }
         }
 
-        public async Task<bool> Delete<UniqueType>(UniqueType uniqueIdentifier)
+        public async Task<bool> Delete<TUniqueType>(TUniqueType uniqueIdentifier)
         {
             TEntity entityToDelete = _context.Find<TEntity>(uniqueIdentifier);
             if (entityToDelete == null)
@@ -84,16 +82,11 @@ namespace Pressford.News.Data
 
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw new Exception($"{nameof(TEntity)} could not be deleted");
             }
         }
-
-        //public IQueryable<TEntity> FindBy(Expression<Func<TEntity, bool>> predicate)
-        //{
-        //    return _context.Set<TEntity>().Where(predicate);
-        //}
 
         public IQueryable<TEntity> FindBy(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includes)
         {

@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Pressford.News.Model;
-using Pressford.News.Services;
+using Pressford.News.Services.Interfaces;
 
 namespace Pressford.News.API.Controllers
 {
@@ -62,7 +58,7 @@ namespace Pressford.News.API.Controllers
         {
             if (await _articleServices.RemoveArticle(articleId))
             {
-                return Accepted("Succesfully Deleted Resource");
+                return Accepted("Successfully Deleted Resource");
             }
             return Unauthorized("Either the article does not exist or user does not have required privileges ");
         }

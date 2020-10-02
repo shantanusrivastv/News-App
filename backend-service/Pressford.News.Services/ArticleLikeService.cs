@@ -4,13 +4,14 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Pressford.News.Data;
 using Pressford.News.Entities;
+using Pressford.News.Services.Interfaces;
 
 namespace Pressford.News.Services
 {
     public class ArticleLikeService : IArticleLikeService
     {
-        private IRepository<Article> _articleRepository;
-        private IRepository<ArticleLikes> _articleLikesRepository;
+        private readonly IRepository<Article> _articleRepository;
+        private readonly IRepository<ArticleLikes> _articleLikesRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         public ArticleLikeService(IRepository<Article> articleRepository, IRepository<ArticleLikes> articleLikesRepository, IHttpContextAccessor httpContext)
@@ -22,7 +23,7 @@ namespace Pressford.News.Services
 
         public async Task<bool> LikeArticle(int articleId)
         {
-            var userName = _httpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? null;
+            var userName = _httpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             //Ordering is important if article is already liked then we don't want to perform another DB hit for IsValidArticle
             if (userName == null || AlreadyLiked(userName, articleId) || !IsValidArticle(articleId))
@@ -53,7 +54,7 @@ namespace Pressford.News.Services
 
         public async Task<bool> UnLikeArticle(int articleId)
         {
-            var userName = _httpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? null;
+            var userName = _httpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (userName == null || !AlreadyLiked(userName, articleId) || !IsValidArticle(articleId))
             {

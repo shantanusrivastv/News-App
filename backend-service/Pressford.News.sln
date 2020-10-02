@@ -3,25 +3,23 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30204.135
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pressford.News.API", "Pressford.News.API\Pressford.News.API.csproj", "{1F006470-3E2F-4CFF-8FBA-6BCA36A7D769}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pressford.News.API", "Pressford.News.API\Pressford.News.API.csproj", "{1F006470-3E2F-4CFF-8FBA-6BCA36A7D769}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pressford.News.Common", "Pressford.News.Common\Pressford.News.Common.csproj", "{A63221DE-6D36-4DED-AD11-D2F16F3241F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pressford.News.Data", "Pressford.News.Data\Pressford.News.Data.csproj", "{866B7B0E-8F13-4375-807B-E4D07C7EA069}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pressford.News.Data", "Pressford.News.Data\Pressford.News.Data.csproj", "{866B7B0E-8F13-4375-807B-E4D07C7EA069}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pressford.News.Entities", "Pressford.News.Entities\Pressford.News.Entities.csproj", "{F99EB73B-1B8F-4465-80F7-D92C0E7EA7D7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pressford.News.Entities", "Pressford.News.Entities\Pressford.News.Entities.csproj", "{F99EB73B-1B8F-4465-80F7-D92C0E7EA7D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pressford.News.Model", "Pressford.News.Model\Pressford.News.Model.csproj", "{1DD0C827-626C-4331-8EF7-EBA5903F84A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pressford.News.Model", "Pressford.News.Model\Pressford.News.Model.csproj", "{1DD0C827-626C-4331-8EF7-EBA5903F84A9}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pressford.News.Services", "Pressford.News.Services\Pressford.News.Services.csproj", "{A4D779F5-5B1A-49C1-BE8A-73C75EDE72AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pressford.News.Services", "Pressford.News.Services\Pressford.News.Services.csproj", "{A4D779F5-5B1A-49C1-BE8A-73C75EDE72AC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{B6576D5F-DE6D-4CC4-A00F-5B440423EC44}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pressford.News.API.Tests", "Pressford.News.API.Tests\Pressford.News.API.Tests.csproj", "{CF160290-DB68-43AF-8FB9-89D4E92B3F0E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pressford.News.API.Tests", "Pressford.News.API.Tests\Pressford.News.API.Tests.csproj", "{CF160290-DB68-43AF-8FB9-89D4E92B3F0E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pressford.News.Data.Tests", "Pressford.News.Data.Tests\Pressford.News.Data.Tests.csproj", "{703C6A6B-3ACB-4823-B958-C2457E1D8DA6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pressford.News.Data.Tests", "Pressford.News.Data.Tests\Pressford.News.Data.Tests.csproj", "{703C6A6B-3ACB-4823-B958-C2457E1D8DA6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pressford.News.Services.Tests", "Pressford.News.Services.Tests\Pressford.News.Services.Tests.csproj", "{A51B69A6-8B11-4599-98A9-34B16791202C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pressford.News.Services.Tests", "Pressford.News.Services.Tests\Pressford.News.Services.Tests.csproj", "{A51B69A6-8B11-4599-98A9-34B16791202C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,10 +31,6 @@ Global
 		{1F006470-3E2F-4CFF-8FBA-6BCA36A7D769}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1F006470-3E2F-4CFF-8FBA-6BCA36A7D769}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1F006470-3E2F-4CFF-8FBA-6BCA36A7D769}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A63221DE-6D36-4DED-AD11-D2F16F3241F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A63221DE-6D36-4DED-AD11-D2F16F3241F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A63221DE-6D36-4DED-AD11-D2F16F3241F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A63221DE-6D36-4DED-AD11-D2F16F3241F8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{866B7B0E-8F13-4375-807B-E4D07C7EA069}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{866B7B0E-8F13-4375-807B-E4D07C7EA069}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{866B7B0E-8F13-4375-807B-E4D07C7EA069}.Release|Any CPU.ActiveCfg = Release|Any CPU

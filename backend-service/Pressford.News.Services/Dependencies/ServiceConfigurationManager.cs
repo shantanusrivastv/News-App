@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -10,11 +6,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Pressford.News.Data;
+using Pressford.News.Services.Interfaces;
 using Pressford.News.Services.Mapper;
 
 namespace Pressford.News.Services.Dependencies
 {
-    public class ApplicationConfigurations
+    public static class ServiceConfigurationManager
     {
         public static void ConfigurePersistence(IServiceCollection services, IConfiguration config)
         {
@@ -22,7 +19,7 @@ namespace Pressford.News.Services.Dependencies
                         options.UseSqlServer(config.GetConnectionString("PressfordNewsContext")));
         }
 
-        public static void ConfigureLifeCycle(IServiceCollection services, IConfiguration config)
+        public static void ConfigureServiceLifeTime(IServiceCollection services)
         {
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
             services.AddTransient<IArticleServices, ArticleServices>();
@@ -32,9 +29,9 @@ namespace Pressford.News.Services.Dependencies
             services.AddAutoMapper(typeof(PressfordMapper));
         }
 
-        public static void ConfigureAuthentication(IServiceCollection services, IConfiguration Configuration)
+        public static void ConfigureAuthentication(IServiceCollection services, IConfiguration configuration)
         {
-            var appSecret = Configuration.GetValue<string>("AppSettings:Secret");
+            var appSecret = configuration.GetValue<string>("AppSettings:Secret");
             var key = Encoding.ASCII.GetBytes(appSecret);
             services.AddAuthentication(x =>
             {

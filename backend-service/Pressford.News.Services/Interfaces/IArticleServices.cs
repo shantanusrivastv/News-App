@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Pressford.News.Model;
 
-namespace Pressford.News.Services
+namespace Pressford.News.Services.Interfaces
 {
     public interface IArticleServices
     {

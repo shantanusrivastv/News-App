@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Pressford.News.Data;
 using Pressford.News.Model;
+using Pressford.News.Services.Interfaces;
 using entity = Pressford.News.Entities;
 
 namespace Pressford.News.Services
@@ -17,7 +18,7 @@ namespace Pressford.News.Services
     {
         private readonly IConfiguration _config;
         private readonly IMapper _mapper;
-        private IRepository<entity.UserLogin> _repository;
+        private readonly IRepository<entity.UserLogin> _repository;
 
         public UserService(IConfiguration config, IMapper mapper, IRepository<entity.UserLogin> repository)
         {
@@ -40,7 +41,7 @@ namespace Pressford.News.Services
             return userInfo;
         }
 
-        public entity.UserLogin VerifyAndGetUserDetails(Credentials credentials)
+        private entity.UserLogin VerifyAndGetUserDetails(Credentials credentials)
         {
             Expression<Func<entity.UserLogin, bool>> predicate = (x)
                              => (x.Username == credentials.Username && x.Password == credentials.Password);
@@ -50,7 +51,7 @@ namespace Pressford.News.Services
 
         private string GenerateToken(entity.UserLogin userLogin)
         {
-            // authentication successful so generate jwt token
+            // authentication successful hence generating JWT token
             var tokenHandler = new JwtSecurityTokenHandler();
             var appSecret = _config.GetValue<string>("AppSettings:Secret");
             var key = Encoding.ASCII.GetBytes(appSecret);

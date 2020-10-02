@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Pressford.News.Model;
 
-namespace Pressford.News.Services
+namespace Pressford.News.Services.Interfaces
 {
     public interface IDashboardService
     {

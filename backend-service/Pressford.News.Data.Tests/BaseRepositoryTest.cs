@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using Pressford.News.Entities;
@@ -41,7 +38,7 @@ namespace Pressford.News.Data.Tests
                 Author = "Mr Pressford",
                 Id = 1,
                 Body = "Sample New",
-                Title = "In Memeory testing"
+                Title = "In Memory testing"
             });
 
             context.Article.Add(new Article()

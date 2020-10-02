@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Pressford.News.Data;
+using Pressford.News.Services.Interfaces;
 using entity = Pressford.News.Entities;
 using model = Pressford.News.Model;
 
@@ -33,7 +34,7 @@ namespace Pressford.News.Services
 
         public Task<List<model.Article>> GetPublishedArticles()
         {
-            var userName = _httpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? null;
+            var userName = _httpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var allArticles = _repository.FindBy(x => x.Author == userName).ToList();
 
             return Task.FromResult(_mapper.Map<List<model.Article>>(allArticles));

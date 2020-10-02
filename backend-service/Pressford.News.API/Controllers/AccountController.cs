@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Pressford.News.Model;
-using Pressford.News.Services;
+using Pressford.News.Services.Interfaces;
 
 namespace Pressford.News.API.Controllers
 {
@@ -9,7 +9,7 @@ namespace Pressford.News.API.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private IUserService _userService;
+        private readonly IUserService _userService;
 
         public AccountController(IUserService userService)
         {

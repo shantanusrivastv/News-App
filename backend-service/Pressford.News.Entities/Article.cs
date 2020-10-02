@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pressford.News.Entities
 {
@@ -16,8 +12,8 @@ namespace Pressford.News.Entities
 
         public string Author { get; set; }
 
-        public virtual DateTime DatePublished { get; set; }
+        public  DateTime DatePublished { get; set; }
 
-        public virtual DateTime DateModified { get; set; }
+        public  DateTime DateModified { get; set; }
     }
 }

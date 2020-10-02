@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +7,7 @@ using Moq;
 using NUnit.Framework;
 using Pressford.News.API.Controllers;
 using Pressford.News.Model;
-using Pressford.News.Services;
+using Pressford.News.Services.Interfaces;
 
 namespace Pressford.News.API.Tests.Controllers
 {
@@ -27,7 +25,7 @@ namespace Pressford.News.API.Tests.Controllers
         }
 
         [Test]
-        public async Task Sould_Return_All_Articles()
+        public async Task Should_Return_All_Articles()
         {
             // Arrange
             _articleServices.Setup(x => x.GetAllArticles())
@@ -44,7 +42,7 @@ namespace Pressford.News.API.Tests.Controllers
         }
 
         [Test]
-        public async Task Sould_Return_Single_Articles()
+        public async Task Should_Return_Single_Articles()
         {
             // Arrange
             _articleServices.Setup(x => x.GetSingleArticle(It.IsAny<int>()))
@@ -61,7 +59,7 @@ namespace Pressford.News.API.Tests.Controllers
         }
 
         [Test]
-        public async Task Sould_Return_NotFound_For_Non_Existing_Articles()
+        public async Task Should_Return_NotFound_For_Non_Existing_Articles()
         {
             // Arrange
             _articleServices.Setup(x => x.GetSingleArticle(It.IsAny<int>()))
@@ -78,14 +76,14 @@ namespace Pressford.News.API.Tests.Controllers
         }
 
         [Test]
-        public async Task Sould_Create_New_Article()
+        public async Task Should_Create_New_Article()
         {
             // Arrange
             _articleServices.Setup(x => x.CreateArticle(It.IsAny<Article>()))
                             .ReturnsAsync(MockArticleResults().First());
 
             //Act
-            var result = await _sut.CreateNewArticle(MockArticleResults().First()) as ObjectResult; ;
+            var result = await _sut.CreateNewArticle(MockArticleResults().First()) as ObjectResult;
 
             //Assert
             _articleServices.Verify(x => x.CreateArticle(It.IsAny<Article>()), Times.Once);
@@ -96,7 +94,7 @@ namespace Pressford.News.API.Tests.Controllers
         }
 
         [Test]
-        public async Task Sould_Update_Exsiting_Article()
+        public async Task Should_Update_Existing_Article()
         {
             // Arrange
             var updatedArticle = MockArticleResults().First();
@@ -116,7 +114,7 @@ namespace Pressford.News.API.Tests.Controllers
         }
 
         [Test]
-        public async Task Sould_Not_Update_For_UnAuthorised_Request()
+        public async Task Should_Not_Update_For_UnAuthorised_Request()
         {
             // Arrange
             _articleServices.Setup(x => x.UpdateArticle(It.IsAny<Article>()))
@@ -133,14 +131,14 @@ namespace Pressford.News.API.Tests.Controllers
         }
 
         [Test]
-        public async Task Sould_Accept_Valid_Delete_Request()
+        public async Task Should_Accept_Valid_Delete_Request()
         {
             // Arrange
             _articleServices.Setup(x => x.RemoveArticle(It.IsAny<int>()))
                             .ReturnsAsync(true);
 
             //Act
-            var result = await _sut.DeleteArticle(2) as AcceptedResult; ;
+            var result = await _sut.DeleteArticle(2) as AcceptedResult;
 
             //Assert
             _articleServices.Verify(x => x.RemoveArticle(It.IsAny<int>()), Times.Once);
@@ -149,7 +147,7 @@ namespace Pressford.News.API.Tests.Controllers
         }
 
         [Test]
-        public async Task Sould_Reject_InValid_Delete_Request()
+        public async Task Should_Reject_InValid_Delete_Request()
         {
             // Arrange
             _articleServices.Setup(x => x.RemoveArticle(It.IsAny<int>()))
@@ -164,7 +162,7 @@ namespace Pressford.News.API.Tests.Controllers
             result.Should().BeOfType<UnauthorizedObjectResult>().Which.StatusCode.Should().Be(401);
         }
 
-        private List<Article> MockArticleResults()
+        private static List<Article> MockArticleResults()
         {
             return new List<Article>()
             {

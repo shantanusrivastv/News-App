@@ -8,13 +8,14 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Pressford.News.Data;
 using Pressford.News.Model;
+using Pressford.News.Services.Interfaces;
 using entity = Pressford.News.Entities;
 
 namespace Pressford.News.Services
 {
     public class ArticleServices : IArticleServices
     {
-        private IRepository<entity.Article> _repository;
+        private readonly IRepository<entity.Article> _repository;
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
@@ -28,7 +29,7 @@ namespace Pressford.News.Services
 
         public async Task<Article> CreateArticle(Article article)
         {
-            var userName = _httpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? null;
+            var userName = _httpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var authorEntity = _mapper.Map<entity.Article>(article);
             authorEntity.Author = userName ?? throw new ApplicationException("User is not logged in");
 
@@ -61,10 +62,10 @@ namespace Pressford.News.Services
 
         public Task<Article> UpdateArticle(Article article)
         {
-            var userName = _httpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? null;
+            var userName = _httpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userName == null || !IsArticleOwner(userName, article.Id))
             {
-                return Task.FromResult<Article>(null); ;
+                return Task.FromResult<Article>(null);
             }
             var entityArticle = _mapper.Map<entity.Article>(article);
             entityArticle.Author = userName;

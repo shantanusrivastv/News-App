@@ -6,7 +6,7 @@ using Pressford.News.Entities;
 
 namespace Pressford.News.Data
 {
-    public class PressfordNewsContext : DbContext
+    public sealed class PressfordNewsContext : DbContext
     {
         public PressfordNewsContext(DbContextOptions<PressfordNewsContext> options) : base(options)
         {
@@ -44,7 +44,9 @@ namespace Pressford.News.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //It searches for all the configuration of all entities
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
             modelBuilder.Entity<User>().HasData(
                     new User { Id = 1, FirstName = "W", LastName = "Pressford ", Email = "w.Pressford@pressford.com" },
                     new User { Id = 2, FirstName = "Admin", LastName = "User", Email = "adminUser@pressford.com" },
