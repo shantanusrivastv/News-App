@@ -1,0 +1,548 @@
+{
+	"info": {
+		"_postman_id": "a76bba0f-bc55-4e92-b6a5-439d79781b3a",
+		"name": "KPMG-News-Assignment",
+		"description": "KPMG Coding Test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Articles",
+			"item": [
+				{
+					"name": "Get All Article",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6c832728-afc8-4716-892f-c679d33867fa",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:63961/api/Article",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "63961",
+							"path": [
+								"api",
+								"Article"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deleted Article",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6c832728-afc8-4716-892f-c679d33867fa",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IlcgUHJlc3Nmb3JkICIsInJvbGUiOiJQdWJsaXNoZXIiLCJuYW1laWQiOiJ3LlByZXNzZm9yZEBwcmVzc2ZvcmQuY29tIiwibmJmIjoxNjAxNjUzOTMwLCJleHAiOjE2MDIyNTg3MzAsImlhdCI6MTYwMTY1MzkzMH0.6tIx_zEmWXCg9V0F5LOXysvCo9JOebDMPzuUTg5J3wA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:63961/api/Article/79",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "63961",
+							"path": [
+								"api",
+								"Article",
+								"79"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:63961/api/Article/79",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "63961",
+							"path": [
+								"api",
+								"Article",
+								"79"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Article",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6c832728-afc8-4716-892f-c679d33867fa",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IlcgUHJlc3Nmb3JkICIsInJvbGUiOiJQdWJsaXNoZXIiLCJuYW1laWQiOiJ3LlByZXNzZm9yZEBwcmVzc2ZvcmQuY29tIiwibmJmIjoxNjAxNjUzOTMwLCJleHAiOjE2MDIyNTg3MzAsImlhdCI6MTYwMTY1MzkzMH0.6tIx_zEmWXCg9V0F5LOXysvCo9JOebDMPzuUTg5J3wA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"New title\",\r\n    \"body\": \"New body\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:63961/api/Article",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "63961",
+							"path": [
+								"api",
+								"Article"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Article",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IlcgUHJlc3Nmb3JkICIsInJvbGUiOiJQdWJsaXNoZXIiLCJuYW1laWQiOiJ3LlByZXNzZm9yZEBwcmVzc2ZvcmQuY29tIiwibmJmIjoxNjAxNjUzOTMwLCJleHAiOjE2MDIyNTg3MzAsImlhdCI6MTYwMTY1MzkzMH0.6tIx_zEmWXCg9V0F5LOXysvCo9JOebDMPzuUTg5J3wA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\" : 80,\r\n    \"title\": \"Updated Title\",\r\n    \"body\": \"Updated body\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:63961/api/Article",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "63961",
+							"path": [
+								"api",
+								"Article"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Token",
+			"item": [
+				{
+					"name": "Get Admin Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5d26ad5e-f5f2-47b9-8346-8cd8b165011a",
+								"exec": [
+									"// var jsonData = pm.response.json();\r",
+									"// pm.environment.set(token, jsonData.token);\r",
+									"var data = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable('token', data.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"adminUser@pressford.com\",\r\n    \"password\": \"admin\" \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:63961/api/account/authenticate",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "63961",
+							"path": [
+								"api",
+								"account",
+								"authenticate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Token Mr Pressford",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"w.Pressford@pressford.com\",\r\n    \"password\": \"admin\" \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:63961/api/account/authenticate",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "63961",
+							"path": [
+								"api",
+								"account",
+								"authenticate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Token for Normal User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"normalUser@pressford.com\",\r\n    \"password\": \"user\" \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:63961/api/account/authenticate",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "63961",
+							"path": [
+								"api",
+								"account",
+								"authenticate"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Article-Likes",
+			"item": [
+				{
+					"name": "Like An Article",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6Ik5vcm1hbCBVc2VyIiwicm9sZSI6IlVzZXIiLCJuYW1laWQiOiJub3JtYWxVc2VyQHByZXNzZm9yZC5jb20iLCJuYmYiOjE2MDE0MTc3MDQsImV4cCI6MTYwMjAyMjUwNCwiaWF0IjoxNjAxNDE3NzA0fQ.ht93oYt-Y8caZCpR26CJ4-yGLVRFy8dagkVKH6ISkr0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:63961/api/LikeArticle/37",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "63961",
+							"path": [
+								"api",
+								"LikeArticle",
+								"37"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unlike article",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IlcgUHJlc3Nmb3JkICIsInJvbGUiOiJQdWJsaXNoZXIiLCJuYW1laWQiOiJ3LlByZXNzZm9yZEBwcmVzc2ZvcmQuY29tIiwibmJmIjoxNjAxNDIyMzU0LCJleHAiOjE2MDIwMjcxNTQsImlhdCI6MTYwMTQyMjM1NH0.d8j65rBY3j9kEsUIGCINhdThYu3EeSmeGWfpUYogaUc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:63961/api/UnLikeArticle/6",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "63961",
+							"path": [
+								"api",
+								"UnLikeArticle",
+								"6"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Dashboard",
+			"item": [
+				{
+					"name": "Get Publisher Dashboard",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IkFkbWluIFVzZXIiLCJyb2xlIjoiUHVibGlzaGVyIiwibmFtZWlkIjoiYWRtaW5Vc2VyQHByZXNzZm9yZC5jb20iLCJuYmYiOjE2MDE1NTQ1MTUsImV4cCI6MTYwMjE1OTMxNSwiaWF0IjoxNjAxNTU0NTE1fQ.prFftzzj8nAFWllvoVnromwFuiJOn_X85n479DD8E-s",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:63961/api/Dashboard/GetPublisherDashboard",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "63961",
+							"path": [
+								"api",
+								"Dashboard",
+								"GetPublisherDashboard"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Dashboard",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IkFkbWluIFVzZXIiLCJyb2xlIjoiUHVibGlzaGVyIiwibmFtZWlkIjoiYWRtaW5Vc2VyQHByZXNzZm9yZC5jb20iLCJuYmYiOjE2MDE1NTQ1MTUsImV4cCI6MTYwMjE1OTMxNSwiaWF0IjoxNjAxNTU0NTE1fQ.prFftzzj8nAFWllvoVnromwFuiJOn_X85n479DD8E-s",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:63961/api/Dashboard/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "63961",
+							"path": [
+								"api",
+								"Dashboard",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Publisher Dashboard  Mr Pressford",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IlcgUHJlc3Nmb3JkICIsInJvbGUiOiJQdWJsaXNoZXIiLCJuYW1laWQiOiJ3LlByZXNzZm9yZEBwcmVzc2ZvcmQuY29tIiwibmJmIjoxNjAxNTcwNDQxLCJleHAiOjE2MDIxNzUyNDEsImlhdCI6MTYwMTU3MDQ0MX0.SDEYGDt5H67zrlRK30cDYrneVEI1s1f70XsOtYA-ugg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:63961/api/Dashboard/GetPublisherDashboard",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "63961",
+							"path": [
+								"api",
+								"Dashboard",
+								"GetPublisherDashboard"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
