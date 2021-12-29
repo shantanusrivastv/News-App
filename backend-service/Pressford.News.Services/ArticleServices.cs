@@ -60,16 +60,17 @@ namespace Pressford.News.Services
             return _repository.Delete(articleId);
         }
 
-        public Task<Article> UpdateArticle(Article article)
+        public async Task<Article> UpdateArticle(Article article)
         {
             var userName = _httpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userName == null || !IsArticleOwner(userName, article.Id))
             {
-                return Task.FromResult<Article>(null);
+                return null;
             }
             var entityArticle = _mapper.Map<entity.Article>(article);
             entityArticle.Author = userName;
-            return Task.FromResult(_mapper.Map<Article>(_repository.UpdateAsync(entityArticle).Result));
+            var dbreturn = await _repository.UpdateAsync(entityArticle);
+            return _mapper.Map<Article>(dbreturn);
         }
 
         private bool IsArticleOwner(string userName, int articleId)

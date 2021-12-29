@@ -30,7 +30,8 @@ namespace Pressford.News.Data
 
                     case EntityState.Modified:
                         //Update(entity);
-                        Entry(entity).Property(x => x.DatePublished).IsModified = false;
+                        //Entry(entity).Property(x => x.DatePublished).IsModified = false;
+                        entity.DatePublished = e.Entry.GetDatabaseValues().GetValue<DateTime>(nameof(entity.DatePublished));
                         entity.DateModified = now;
                         break;
                 }
