@@ -1,4 +1,12 @@
-import { Button, FormLabel, Grid, makeStyles, Paper, TextField } from '@material-ui/core';
+import {
+  Button,
+  FormLabel,
+  Grid,
+  makeStyles,
+  Paper,
+  TextField,
+} from "@material-ui/core";
+import Alert from "@material-ui/lab/Alert";
 import React, { useState } from "react";
 import { Redirect, withRouter } from "react-router-dom";
 import { actionTypes } from "../Common/constants";
@@ -28,7 +36,7 @@ const Login = (props) => {
   const { dispatch, authorised } = props;
   const [userName, setUserName] = useState("adminUser@pressford.com");
   const [password, setPassword] = useState("admin");
-  const [errorMessage, setMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
   const [isLogin, setLogin] = useState(false);
   const classes = useStyles();
 
@@ -54,7 +62,7 @@ const Login = (props) => {
     <div className={classes.root}>
       <Grid
         container
-        justify="center"
+        justifyContent="center"
         alignItems="center"
         alignContent="center"
         className={classes.rootContainer}
@@ -82,42 +90,38 @@ const Login = (props) => {
                   onChange={(e) => setPassword(e.target.value)}
                   variant="filled"
                   fullWidth
+                  type="password"
                 />
               </Grid>
-              <Grid
-                item
-                xs={12}
-                spacing={2}
-                alignContent="flex-end"
-                className={classes.button}
-              >
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => {
-                    axios
-                      .post("Account/authenticate", credentials)
-                      .then((response) => {
-                        sessionStorage.setItem(
-                          "userInfo",
-                          JSON.stringify(response.data)
-                        );
-                        setLogin(true);
-                        // dispatch({
-                        //     type: actionTypes.USER_LOGIN,
-                        //     userInfo: response.data
-                        // })
-                      })
-                      .catch((error) => {
-                        console.error(error);
-                        setMessage(error);
-                      });
-                  }}
-                >
-                  Login
-                </Button>
+
+              <Grid container alignContent="flex-end" spacing={2}>
+                <Grid item xs={12} className={classes.button}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                      axios
+                        .post("Account/authenticate", credentials)
+                        .then((response) => {
+                          sessionStorage.setItem(
+                            "userInfo",
+                            JSON.stringify(response.data)
+                          );
+                          setErrorMessage(null);
+                          setLogin(true);
+                        })
+                        .catch((error) => {
+                          console.error(error);
+                          setErrorMessage(error.message);
+                        });
+                    }}
+                  >
+                    Login
+                  </Button>
+                </Grid>
               </Grid>
-              {errorMessage && <Grid>{errorMessage}</Grid>}
+
+              {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
             </Grid>
           </Paper>
         </Grid>
