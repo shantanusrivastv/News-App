@@ -1,5 +1,10 @@
 import React, { useReducer } from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Redirect,
+} from "react-router-dom";
 import "./App.css";
 import Dashboard from "./Views/Dashboard";
 import Login from "./Views/Login";
@@ -30,9 +35,10 @@ function App(props) {
             render={() => <Login {...store} dispatch={dispatch} />}
           />
           <Route
-            path="/dashboard"
+            path="/Dashboard"
             render={() => <Dashboard {...store} dispatch={dispatch} />}
           />
+          <Redirect from="/" to="/Dashboard" />
         </Switch>
       </Router>
     </div>
