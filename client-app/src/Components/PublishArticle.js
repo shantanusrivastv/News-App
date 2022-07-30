@@ -5,6 +5,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from '@material-ui/core//DialogTitle';
 import { actionTypes } from "../Common/constants";
 import axios from "../Common/axios-news";
 import { RoleType } from "../Common/constants";
@@ -103,11 +104,17 @@ export default function FormDialog(props) {
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
       >
+		<DialogTitle>{
+		role === RoleType.PUBLISHER && (
+			editForm ? "Edit Article" : "Publish Article"
+            )}
+		</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            {role === RoleType.PUBLISHER && (
-              <h3>{editForm ? "Edit Article" : "Publish Article"}</h3>
-            )}
+			{ role === RoleType.PUBLISHER && (
+				 editForm ? "Update Article " : "Add Title an Description "
+			)}
+			then click on Publish to save the changes
           </DialogContentText>
           <TextField
             autoFocus
