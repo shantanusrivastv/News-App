@@ -5,9 +5,7 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App  appTitle="Pressford News App"/>
-  </React.StrictMode>,
+    <App  appTitle="Pressford News App"/>,
   document.getElementById('root')
 );
 

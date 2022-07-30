@@ -112,7 +112,7 @@ export default function FormDialog(props) {
         <DialogContent>
           <DialogContentText>
 			{ role === RoleType.PUBLISHER && (
-				 editForm ? "Update Article " : "Add Title an Description "
+				 editForm ? "Update Article " : "Add Title and Description "
 			)}
 			then click on Publish to save the changes
           </DialogContentText>
@@ -135,7 +135,7 @@ export default function FormDialog(props) {
             type="text"
             fullWidth
             multiline
-            rows={5}
+            minRows={5}
             defaultValue={description}
             onChange={(evtArg) => setDescription(evtArg.target.value)}
             disabled={role === RoleType.USER}
