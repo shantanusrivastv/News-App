@@ -107,6 +107,7 @@ const Login = (props) => {
                             "userInfo",
                             JSON.stringify(response.data)
                           );
+						  axios.defaults.headers.Authorization = `Bearer ${response.data.token}`;
                           setErrorMessage(null);
                           setLogin(true);
                         })
