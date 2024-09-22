@@ -35,7 +35,7 @@ namespace Pressford.News.API.Controllers
 
         [Authorize(Roles = "Publisher")]
         [HttpPost]
-        public async Task<IActionResult> CreateNewArticle([FromBody] Article article)
+        public async Task<IActionResult> CreateNewArticle([FromBody] ArticleBase article)
         {
             var result = await _articleServices.CreateArticle(article);
             return CreatedAtRoute("GetArticle", new { articleId = result.Id }, result);
@@ -43,7 +43,7 @@ namespace Pressford.News.API.Controllers
 
         [Authorize(Roles = "Publisher")]
         [HttpPut]
-        public async Task<IActionResult> UpdateArticle([FromBody] Article article)
+        public async Task<IActionResult> UpdateArticle([FromBody] UpdateArticle article)
         {
             var result = await _articleServices.UpdateArticle(article);
             if (result == null)

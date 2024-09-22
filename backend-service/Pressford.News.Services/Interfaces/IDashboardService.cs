@@ -6,8 +6,8 @@ namespace Pressford.News.Services.Interfaces
 {
     public interface IDashboardService
     {
-        Task<List<Article>> GetPublishedArticles();
+        Task<List<ReadArticle>> GetPublishedArticles();
 
-        Task<List<Article>> GetAllPublishedArticle();
+        Task<List<ReadArticle>> GetAllPublishedArticle();
     }
 }

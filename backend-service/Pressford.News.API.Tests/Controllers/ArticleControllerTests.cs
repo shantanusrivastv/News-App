@@ -28,16 +28,18 @@ namespace Pressford.News.API.Tests.Controllers
         public async Task Should_Return_All_Articles()
         {
             // Arrange
-            _articleServices.Setup(x => x.GetAllArticles())
-                             .ReturnsAsync(MockArticleResults());
+           _articleServices.Setup(x => x.GetAllArticles()).ReturnsAsync(MockArticleResults());
 
-            //Act
+			
+	
+			
+			//Act
             var result = await _sut.GetAllArticles() as OkObjectResult;
 
             //Assert
             _articleServices.Verify(x => x.GetAllArticles(), Times.Once);
             Assert.IsNotNull(result);
-            result.Value.Should().BeOfType<List<Article>>().Which.Count.Should().Be(2);
+            result.Value.Should().BeOfType<List<ReadArticle>>().Which.Count.Should().Be(2);
             result.Should().BeOfType<OkObjectResult>().Which.StatusCode.Should().Be(200);
         }
 
@@ -54,7 +56,7 @@ namespace Pressford.News.API.Tests.Controllers
             //Assert
             _articleServices.Verify(x => x.GetSingleArticle(It.IsAny<int>()), Times.Once);
             Assert.IsNotNull(result);
-            result.Value.Should().BeOfType<Article>();
+            result.Value.Should().BeOfType<ReadArticle>();
             result.Should().BeOfType<OkObjectResult>().Which.StatusCode.Should().Be(200);
         }
 
@@ -63,7 +65,7 @@ namespace Pressford.News.API.Tests.Controllers
         {
             // Arrange
             _articleServices.Setup(x => x.GetSingleArticle(It.IsAny<int>()))
-                            .ReturnsAsync((Article)null);
+                            .ReturnsAsync((ReadArticle)null);
 
             //Act
             var result = await _sut.GetSingleArticle(222) as NotFoundResult;
@@ -71,7 +73,7 @@ namespace Pressford.News.API.Tests.Controllers
             //Assert
             _articleServices.Verify(x => x.GetSingleArticle(It.IsAny<int>()), Times.Once);
             Assert.IsNotNull(result);
-            result.Should().NotBeOfType<Article>();
+            result.Should().NotBeOfType<ReadArticle>();
             result.Should().BeOfType<NotFoundResult>().Which.StatusCode.Should().Be(404);
         }
 
@@ -79,18 +81,18 @@ namespace Pressford.News.API.Tests.Controllers
         public async Task Should_Create_New_Article()
         {
             // Arrange
-            _articleServices.Setup(x => x.CreateArticle(It.IsAny<Article>()))
+            _articleServices.Setup(x => x.CreateArticle(It.IsAny<ReadArticle>()))
                             .ReturnsAsync(MockArticleResults().First());
 
             //Act
             var result = await _sut.CreateNewArticle(MockArticleResults().First()) as ObjectResult;
 
             //Assert
-            _articleServices.Verify(x => x.CreateArticle(It.IsAny<Article>()), Times.Once);
+            _articleServices.Verify(x => x.CreateArticle(It.IsAny<ReadArticle>()), Times.Once);
             Assert.IsNotNull(result);
-            result.Value.Should().BeOfType<Article>();
+            result.Value.Should().BeOfType<ReadArticle>();
             //Ideally the status code should be 201 , some implementation code is commented for reference
-            result.Should().BeOfType<OkObjectResult>().Which.StatusCode.Should().Be(200);
+            result.Should().BeOfType<CreatedAtRouteResult>().Which.StatusCode.Should().Be(201);
         }
 
         [Test]
@@ -99,32 +101,32 @@ namespace Pressford.News.API.Tests.Controllers
             // Arrange
             var updatedArticle = MockArticleResults().First();
             updatedArticle.Title = "New Title";
-            _articleServices.Setup(x => x.UpdateArticle(It.IsAny<Article>()))
+            _articleServices.Setup(x => x.UpdateArticle(It.IsAny<UpdateArticle>()))
                             .ReturnsAsync(updatedArticle);
 
             //Act
-            var result = await _sut.UpdateArticle(MockArticleResults().First()) as ObjectResult;
+            var result = await _sut.UpdateArticle(MockUpdateArticleResults().First()) as ObjectResult;
 
             //Assert
-            _articleServices.Verify(x => x.UpdateArticle(It.IsAny<Article>()), Times.Once);
+            _articleServices.Verify(x => x.UpdateArticle(It.IsAny<UpdateArticle>()), Times.Once);
             Assert.IsNotNull(result);
             //Ideally the status code should be 201 , some implementation code is commented for reference
             result.Should().BeOfType<OkObjectResult>().Which.StatusCode.Should().Be(200);
-            result.Value.Should().BeOfType<Article>().Which.Title.Should().Be("New Title");
+            result.Value.Should().BeOfType<ReadArticle>().Which.Title.Should().Be("New Title");
         }
 
         [Test]
         public async Task Should_Not_Update_For_UnAuthorised_Request()
         {
             // Arrange
-            _articleServices.Setup(x => x.UpdateArticle(It.IsAny<Article>()))
-                            .ReturnsAsync((Article)null);
+            _articleServices.Setup(x => x.UpdateArticle(It.IsAny<UpdateArticle>()))
+                            .ReturnsAsync((ReadArticle)null);
 
             //Act
-            var result = await _sut.UpdateArticle(MockArticleResults().First()) as UnauthorizedObjectResult;
+            var result = await _sut.UpdateArticle(MockUpdateArticleResults().First()) as UnauthorizedObjectResult;
 
             //Assert
-            _articleServices.Verify(x => x.UpdateArticle(It.IsAny<Article>()), Times.Once);
+            _articleServices.Verify(x => x.UpdateArticle(It.IsAny<UpdateArticle>()), Times.Once);
             Assert.IsNotNull(result);
             //Ideally the status code should be 201 , some implementation code is commented for reference
             result.Should().BeOfType<UnauthorizedObjectResult>().Which.StatusCode.Should().Be(401);
@@ -162,12 +164,21 @@ namespace Pressford.News.API.Tests.Controllers
             result.Should().BeOfType<UnauthorizedObjectResult>().Which.StatusCode.Should().Be(401);
         }
 
-        private static List<Article> MockArticleResults()
+        private static List<ReadArticle> MockArticleResults()
         {
-            return new List<Article>()
+            return new List<ReadArticle>()
             {
-               new Article() { Id =1, Author = "Author1"},
-               new Article() { Id =2, Author = "Author2"}
+               new ReadArticle() { Id =1, Author = "Author1"},
+               new ReadArticle() { Id =2, Author = "Author2"}
+            };
+        }
+		
+		private static List<UpdateArticle> MockUpdateArticleResults()
+        {
+            return new List<UpdateArticle>()
+            {
+               new UpdateArticle() { Id =1, Title = "Author1"},
+               new UpdateArticle() { Id =2, Title = "Author2"}
             };
         }
     }

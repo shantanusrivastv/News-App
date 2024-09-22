@@ -59,12 +59,12 @@ namespace Pressford.News.Services.Tests
             Assert.AreEqual(result.Author, "Author1");
         }
 
-        private static IEnumerable<model.Article> MockArticleModels()
+        private static IEnumerable<model.ReadArticle> MockArticleModels()
         {
-            return new List<model.Article>()
+            return new List<model.ReadArticle>()
             {
-               new model.Article() { Id =1, Author = "Author1"},
-               new model.Article() { Id =2, Author = "Author2"}
+               new model.ReadArticle() { Id =1, Author = "Author1"},
+               new model.ReadArticle() { Id =2, Author = "Author2"}
             };
         }
 

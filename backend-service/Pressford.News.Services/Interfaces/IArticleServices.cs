@@ -4,16 +4,16 @@ using Pressford.News.Model;
 
 namespace Pressford.News.Services.Interfaces
 {
-    public interface IArticleServices
-    {
-        Task<Article> CreateArticle(Article article);
+	public interface IArticleServices
+	{
+		Task<ReadArticle> CreateArticle(ArticleBase article);
 
-        Task<IList<Article>> GetAllArticles();
+		Task<IList<ReadArticle>> GetAllArticles();
 
-        Task<Article> GetSingleArticle(int articleId);
+		Task<ReadArticle> GetSingleArticle(int articleId);
 
-        Task<Article> UpdateArticle(Article article);
+		Task<ReadArticle> UpdateArticle(UpdateArticle article);
 
-        Task<bool> RemoveArticle(int articleId);
-    }
+		Task<bool> RemoveArticle(int articleId);
+	}
 }

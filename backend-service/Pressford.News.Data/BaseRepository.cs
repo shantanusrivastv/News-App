@@ -41,7 +41,7 @@ namespace Pressford.News.Data
 
                 return entity;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw new Exception($"{nameof(entity)} could not be saved");
             }

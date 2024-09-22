@@ -26,18 +26,18 @@ namespace Pressford.News.Services
             _mapper = mapper;
         }
 
-        public Task<List<model.Article>> GetAllPublishedArticle()
+        public Task<List<model.ReadArticle>> GetAllPublishedArticle()
         {
             var allArticles = _repository.GetAll();
-            return Task.FromResult(_mapper.Map<List<model.Article>>(allArticles));
+            return Task.FromResult(_mapper.Map<List<model.ReadArticle>>(allArticles));
         }
 
-        public Task<List<model.Article>> GetPublishedArticles()
+        public Task<List<model.ReadArticle>> GetPublishedArticles()
         {
             var userName = _httpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var allArticles = _repository.FindBy(x => x.Author == userName).ToList();
 
-            return Task.FromResult(_mapper.Map<List<model.Article>>(allArticles));
+            return Task.FromResult(_mapper.Map<List<model.ReadArticle>>(allArticles));
         }
     }
 }
