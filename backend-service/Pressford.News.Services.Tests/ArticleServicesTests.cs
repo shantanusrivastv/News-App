@@ -33,6 +33,10 @@ namespace Pressford.News.Services.Tests
 			var configuration = new MapperConfiguration(cfg => cfg.AddProfile(new PressfordMapper()));
 			//Seeing Up AutoMapper Profile to easy setup and we don't have to mock all mappings
 			_mapper = new AutoMapper.Mapper(configuration);
+			var nameIdentifierClaim = new Claim(ClaimTypes.NameIdentifier, "Username");
+			_httpContextAccessor.Setup(x => x.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier))
+							.Returns(nameIdentifierClaim)
+							.Verifiable();
 			_sut = new ArticleServices(_repository.Object, _mapper, _httpContextAccessor.Object);
 		}
 
@@ -40,10 +44,6 @@ namespace Pressford.News.Services.Tests
 		public async Task Should_Create_New_Article()
 		{
 			// Arrange
-			var nameIdentifierClaim = new Claim(ClaimTypes.NameIdentifier, "Username");
-			_httpContextAccessor.Setup(x => x.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier))
-								.Returns(nameIdentifierClaim)
-								.Verifiable();
 
 			_repository.Setup(x => x.AddAsync(It.IsAny<entity.Article>()))
 						.ReturnsAsync(MockEntityArticleModels().First())

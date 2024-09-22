@@ -25,7 +25,7 @@ namespace Pressford.News.Services
 		{
 			_repository = repository;
 			_mapper = mapper;
-			_userName = httpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+			_userName = httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 		}
 
 		public async Task<ReadArticle> CreateArticle(ArticleBase article)
