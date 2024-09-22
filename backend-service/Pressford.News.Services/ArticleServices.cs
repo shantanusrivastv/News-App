@@ -17,22 +17,21 @@ namespace Pressford.News.Services
 	{
 		private readonly IRepository<entity.Article> _repository;
 		private readonly IMapper _mapper;
-		private readonly IHttpContextAccessor _httpContextAccessor;
+		private readonly string _userName = string.Empty;
 
 		public ArticleServices(IRepository<entity.Article> repository,
-							   IMapper mapper, IHttpContextAccessor httpContextAccessor)
+							   IMapper mapper, 
+							   IHttpContextAccessor httpContextAccessor)
 		{
 			_repository = repository;
 			_mapper = mapper;
-			_httpContextAccessor = httpContextAccessor;
+			_userName = httpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 		}
 
 		public async Task<ReadArticle> CreateArticle(ArticleBase article)
 		{
-			var userName = _httpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
 			var authorEntity = _mapper.Map<entity.Article>(article);
-			authorEntity.Author = userName ?? throw new ApplicationException("User is not logged in");
+			authorEntity.Author = _userName ?? throw new ApplicationException("User is not logged in");
 			var result = await _repository.AddAsync(authorEntity);
 			return _mapper.Map<ReadArticle>(result);
 		}
@@ -52,8 +51,7 @@ namespace Pressford.News.Services
 
 		public Task<bool> RemoveArticle(int articleId)
 		{
-			var userName = _httpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-			if (!IsArticleOwner(userName, articleId))
+			if (!IsArticleOwner(_userName, articleId))
 			{
 				return Task.FromResult(false);
 			}
@@ -62,13 +60,12 @@ namespace Pressford.News.Services
 
 		public async Task<ReadArticle> UpdateArticle(UpdateArticle article)
 		{
-			var userName = _httpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-			if (userName == null || !IsArticleOwner(userName, article.Id))
+			if (_userName == null || !IsArticleOwner(_userName, article.Id))
 			{
 				return null;
 			}
 			var entityArticle = _mapper.Map<entity.Article>(article);
-			entityArticle.Author = userName;
+			entityArticle.Author = _userName;
 			var dbreturn = await _repository.UpdateAsync(entityArticle);
 			return _mapper.Map<ReadArticle>(dbreturn);
 		}
