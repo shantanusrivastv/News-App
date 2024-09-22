@@ -20,7 +20,7 @@ namespace Pressford.News.Services
 		private readonly string _userName = string.Empty;
 
 		public ArticleServices(IRepository<entity.Article> repository,
-							   IMapper mapper, 
+							   IMapper mapper,
 							   IHttpContextAccessor httpContextAccessor)
 		{
 			_repository = repository;

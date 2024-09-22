@@ -11,45 +11,46 @@ using Pressford.News.Services.Mapper;
 
 namespace Pressford.News.Services.Dependencies
 {
-    public static class ServiceConfigurationManager
-    {
-        public static void ConfigurePersistence(IServiceCollection services, IConfiguration config)
-        {
-            services.AddDbContext<PressfordNewsContext>(options =>
-                        options.UseSqlServer(config.GetConnectionString("PressfordNewsContext")));
-        }
+	public static class ServiceConfigurationManager
+	{
+		public static void ConfigurePersistence(IServiceCollection services, IConfiguration config)
+		{
+			services.AddDbContext<PressfordNewsContext>(options =>
+						options.UseSqlServer(config.GetConnectionString("PressfordNewsContext")));
+		}
 
-        public static void ConfigureServiceLifeTime(IServiceCollection services)
-        {
+		public static void ConfigureServiceLifeTime(IServiceCollection services)
+		{
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
-            services.AddTransient<IArticleServices, ArticleServices>();
-            services.AddTransient<IUserService, UserService>();
-            services.AddTransient<IArticleLikeService, ArticleLikeService>();
-            services.AddTransient<IDashboardService, DashboardService>();
-            services.AddAutoMapper(typeof(PressfordMapper));
-        }
+			services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+			services.AddTransient<IArticleServices, ArticleServices>();
+			services.AddTransient<IUserService, UserService>();
+			services.AddTransient<IArticleLikeService, ArticleLikeService>();
+			services.AddTransient<IDashboardService, DashboardService>();
+			services.AddAutoMapper(typeof(PressfordMapper));
+		}
 
-        public static void ConfigureAuthentication(IServiceCollection services, IConfiguration configuration)
-        {
-            var appSecret = configuration.GetValue<string>("AppSettings:Secret");
-            var key = Encoding.ASCII.GetBytes(appSecret);
-            services.AddAuthentication(x =>
-            {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(x =>
-            {
-                x.RequireHttpsMetadata = false;
-                x.SaveToken = true;
-                x.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
-                };
-            });
-        }
-    }
+		public static void ConfigureAuthentication(IServiceCollection services, IConfiguration configuration)
+		{
+			var appSecret = configuration.GetValue<string>("AppSettings:Secret");
+			var key = Encoding.ASCII.GetBytes(appSecret);
+			services.AddAuthentication(x =>
+			{
+				x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+				x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+			})
+			.AddJwtBearer(x =>
+			{
+				x.RequireHttpsMetadata = false;
+				x.SaveToken = true;
+				x.TokenValidationParameters = new TokenValidationParameters
+				{
+					ValidateIssuerSigningKey = true,
+					IssuerSigningKey = new SymmetricSecurityKey(key),
+					ValidateIssuer = false,
+					ValidateAudience = false
+				};
+			});
+		}
+	}
 }

@@ -2,8 +2,8 @@
 
 namespace Pressford.News.Services.Interfaces
 {
-    public interface IUserService
-    {
-        UserInfo Authenticate(Credentials credentials);
-    }
+	public interface IUserService
+	{
+		UserInfo Authenticate(Credentials credentials);
+	}
 }

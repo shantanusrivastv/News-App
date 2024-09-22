@@ -5,16 +5,16 @@ using System.Threading.Tasks;
 
 namespace Pressford.News.Data
 {
-    public interface IRepository<TEntity> where TEntity : class, new()
-    {
-        Task<TEntity> AddAsync(TEntity entity);
+	public interface IRepository<TEntity> where TEntity : class, new()
+	{
+		Task<TEntity> AddAsync(TEntity entity);
 
-        Task<bool> Delete<TUniqueType>(TUniqueType uniqueIdentifier);
+		Task<bool> Delete<TUniqueType>(TUniqueType uniqueIdentifier);
 
-        IQueryable<TEntity> GetAll();
+		IQueryable<TEntity> GetAll();
 
-        Task<TEntity> UpdateAsync(TEntity entity);
+		Task<TEntity> UpdateAsync(TEntity entity);
 
-        IQueryable<TEntity> FindBy(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includes);
-    }
+		IQueryable<TEntity> FindBy(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includes);
+	}
 }

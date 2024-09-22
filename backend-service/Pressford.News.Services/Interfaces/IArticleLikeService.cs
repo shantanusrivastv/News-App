@@ -2,10 +2,10 @@
 
 namespace Pressford.News.Services.Interfaces
 {
-    public interface IArticleLikeService
-    {
-        Task<bool> LikeArticle(int articleId);
+	public interface IArticleLikeService
+	{
+		Task<bool> LikeArticle(int articleId);
 
-        Task<bool> UnLikeArticle(int articleId);
-    }
+		Task<bool> UnLikeArticle(int articleId);
+	}
 }

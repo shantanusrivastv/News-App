@@ -14,95 +14,95 @@ using Pressford.News.Model;
 
 namespace Pressford.News.Functional.Tests
 {
-    [TestFixture]
-    public class BasicTests
-    {
-        private HttpClient _client;
-        private APIWebApplicationFactory _factory;
+	[TestFixture]
+	public class BasicTests
+	{
+		private HttpClient _client;
+		private APIWebApplicationFactory _factory;
 
-        [OneTimeSetUp]
-        public void Init()
-        {
-            _factory = new APIWebApplicationFactory();
-            _client = _factory.CreateClient();
-        }
+		[OneTimeSetUp]
+		public void Init()
+		{
+			_factory = new APIWebApplicationFactory();
+			_client = _factory.CreateClient();
+		}
 
-        [Test]
-        public async Task Should_Return_All_Articles()
-        {
-            // Act
-            var response = await _client.GetAsync("api/Article");
-            var stringResponse = await response.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<ArticleBase[]>(stringResponse);
+		[Test]
+		public async Task Should_Return_All_Articles()
+		{
+			// Act
+			var response = await _client.GetAsync("api/Article");
+			var stringResponse = await response.Content.ReadAsStringAsync();
+			var result = JsonConvert.DeserializeObject<ArticleBase[]>(stringResponse);
 
-            // Assert
-            response.EnsureSuccessStatusCode();
-        }
+			// Assert
+			response.EnsureSuccessStatusCode();
+		}
 
-        [Test]
-        public async Task Should_Authenticate()
-        {
-            // Arrange
+		[Test]
+		public async Task Should_Authenticate()
+		{
+			// Arrange
 
-            var client = _factory.WithWebHostBuilder(builder =>
-            {
-                builder.ConfigureTestServices(services =>
-                {
-                    services.AddAuthentication("Test")
-                        .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(
-                            "Test", options => { });
-                });
-            })
-                .CreateClient(new WebApplicationFactoryClientOptions
-                {
-                    AllowAutoRedirect = false,
-                });
+			var client = _factory.WithWebHostBuilder(builder =>
+			{
+				builder.ConfigureTestServices(services =>
+				{
+					services.AddAuthentication("Test")
+						.AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(
+							"Test", options => { });
+				});
+			})
+				.CreateClient(new WebApplicationFactoryClientOptions
+				{
+					AllowAutoRedirect = false,
+				});
 
-            client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Test");
+			client.DefaultRequestHeaders.Authorization =
+				new AuthenticationHeaderValue("Test");
 
-            _client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Test");
+			_client.DefaultRequestHeaders.Authorization =
+				new AuthenticationHeaderValue("Test");
 
-            var article = new ArticleBase()
-            {
-                Title = "Test Title",
-                Body = "Test Body"
-            };
+			var article = new ArticleBase()
+			{
+				Title = "Test Title",
+				Body = "Test Body"
+			};
 
-            var stringContent = new FormUrlEncodedContent(new[]
-                        {
-                            new KeyValuePair<string, string>("Title", "Test Title"),
-                            new KeyValuePair<string, string>("Body", "Test Body"),
-                        });
+			var stringContent = new FormUrlEncodedContent(new[]
+						{
+							new KeyValuePair<string, string>("Title", "Test Title"),
+							new KeyValuePair<string, string>("Body", "Test Body"),
+						});
 
-            var payload = new Dictionary<string, string>
-            {
-              {"Title", "Test Title"},
-              {"Body", "Test Body"}
-            };
+			var payload = new Dictionary<string, string>
+			{
+			  {"Title", "Test Title"},
+			  {"Body", "Test Body"}
+			};
 
-            string strPayload = JsonConvert.SerializeObject(payload);
-            HttpContent content = new StringContent(strPayload, Encoding.UTF8, "application/json");
+			string strPayload = JsonConvert.SerializeObject(payload);
+			HttpContent content = new StringContent(strPayload, Encoding.UTF8, "application/json");
 
-            // Act
-            var response = await client.GetAsync("api/Article");
-            var stringResponse = await response.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<ArticleBase[]>(stringResponse);
+			// Act
+			var response = await client.GetAsync("api/Article");
+			var stringResponse = await response.Content.ReadAsStringAsync();
+			var result = JsonConvert.DeserializeObject<ArticleBase[]>(stringResponse);
 
-            // Assert
-            response.EnsureSuccessStatusCode();
-        }
+			// Assert
+			response.EnsureSuccessStatusCode();
+		}
 
-        [OneTimeTearDown]
-        public void TearDown()
-        {
-            _client.Dispose();
-            _factory.Dispose();
-        }
-    }
+		[OneTimeTearDown]
+		public void TearDown()
+		{
+			_client.Dispose();
+			_factory.Dispose();
+		}
+	}
 
-    public class APIWebApplicationFactory : WebApplicationFactory<Startup>
-    {
-    }
+	public class APIWebApplicationFactory : WebApplicationFactory<Startup>
+	{
+	}
 }

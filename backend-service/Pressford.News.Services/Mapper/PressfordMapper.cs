@@ -11,7 +11,7 @@ namespace Pressford.News.Services.Mapper
 			//we probbably need to add some ignore like.ForMember(dest => dest.Id, opt => opt.Ignore());
 			CreateMap<model.ReadArticle, entity.Article>()
 			.ReverseMap();
-			
+
 			CreateMap<model.ArticleBase, entity.Article>()
 			.ReverseMap();
 

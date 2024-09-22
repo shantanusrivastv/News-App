@@ -31,5 +31,4 @@ namespace Pressford.News.Functional.Tests
 			return Task.FromResult(result);
 		}
 	}
-
 }

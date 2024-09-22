@@ -8,6 +8,7 @@ namespace Pressford.News.Model
 		[Required]
 		[MaxLength(200)]
 		public string Title { get; set; }
+
 		public string Body { get; set; }
 	}
 
@@ -18,7 +19,7 @@ namespace Pressford.News.Model
 		public DateTime DatePublished { get; set; }
 		public DateTime DateModified { get; set; }
 	}
-	
+
 	public class UpdateArticle : ArticleBase
 	{
 		public int Id { get; set; }
