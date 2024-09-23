@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -36,6 +37,7 @@ namespace Pressford.News.Functional.Tests
 			var result = JsonConvert.DeserializeObject<ArticleBase[]>(stringResponse);
 
 			// Assert
+			result.Should().NotBeNull();
 			response.EnsureSuccessStatusCode();
 		}
 
@@ -43,14 +45,12 @@ namespace Pressford.News.Functional.Tests
 		public async Task Should_Authenticate()
 		{
 			// Arrange
-
 			var client = _factory.WithWebHostBuilder(builder =>
 			{
 				builder.ConfigureTestServices(services =>
 				{
 					services.AddAuthentication("Test")
-						.AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(
-							"Test", options => { });
+							.AddScheme<AuthenticationSchemeOptions, TestAuthHandler>("Test", options => { });
 				});
 			})
 				.CreateClient(new WebApplicationFactoryClientOptions
@@ -58,11 +58,7 @@ namespace Pressford.News.Functional.Tests
 					AllowAutoRedirect = false,
 				});
 
-			client.DefaultRequestHeaders.Authorization =
-				new AuthenticationHeaderValue("Test");
-
-			_client.DefaultRequestHeaders.Authorization =
-				new AuthenticationHeaderValue("Test");
+			client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Test");
 
 			var article = new ArticleBase()
 			{
@@ -70,11 +66,11 @@ namespace Pressford.News.Functional.Tests
 				Body = "Test Body"
 			};
 
-			var stringContent = new FormUrlEncodedContent(new[]
-						{
-							new KeyValuePair<string, string>("Title", "Test Title"),
-							new KeyValuePair<string, string>("Body", "Test Body"),
-						});
+			//var stringContent = new FormUrlEncodedContent(new[]
+			//			{
+			//				new KeyValuePair<string, string>("Title", "Test Title"),
+			//				new KeyValuePair<string, string>("Body", "Test Body"),
+			//			});
 
 			var payload = new Dictionary<string, string>
 			{
@@ -91,6 +87,7 @@ namespace Pressford.News.Functional.Tests
 			var result = JsonConvert.DeserializeObject<ArticleBase[]>(stringResponse);
 
 			// Assert
+			result.Should().NotBeNull();
 			response.EnsureSuccessStatusCode();
 		}
 
