@@ -3,6 +3,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
+using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Moq;
 using NUnit.Framework;
@@ -55,8 +56,8 @@ namespace Pressford.News.Services.Tests
 			//Assert
 			_httpContextAccessor.Verify();
 			_repository.Verify(x => x.AddAsync(It.IsAny<entity.Article>()), Times.Once);
-			Assert.IsNotNull(result);
-			Assert.AreEqual(result.Author, "Author1");
+			result.Should().NotBeNull();
+			result.Author.Should().Be("Author1");
 		}
 
 		private static IEnumerable<model.ReadArticle> MockArticleModels()

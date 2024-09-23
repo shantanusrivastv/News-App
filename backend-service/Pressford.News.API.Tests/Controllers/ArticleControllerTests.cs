@@ -35,7 +35,7 @@ namespace Pressford.News.API.Tests.Controllers
 
 			//Assert
 			_articleServices.Verify(x => x.GetAllArticles(), Times.Once);
-			Assert.IsNotNull(result);
+			result.Should().NotBeNull();
 			result.Value.Should().BeOfType<List<ReadArticle>>().Which.Count.Should().Be(2);
 			result.Should().BeOfType<OkObjectResult>().Which.StatusCode.Should().Be(200);
 		}
@@ -52,7 +52,7 @@ namespace Pressford.News.API.Tests.Controllers
 
 			//Assert
 			_articleServices.Verify(x => x.GetSingleArticle(It.IsAny<int>()), Times.Once);
-			Assert.IsNotNull(result);
+			result.Should().NotBeNull();
 			result.Value.Should().BeOfType<ReadArticle>();
 			result.Should().BeOfType<OkObjectResult>().Which.StatusCode.Should().Be(200);
 		}
@@ -69,7 +69,7 @@ namespace Pressford.News.API.Tests.Controllers
 
 			//Assert
 			_articleServices.Verify(x => x.GetSingleArticle(It.IsAny<int>()), Times.Once);
-			Assert.IsNotNull(result);
+			result.Should().NotBeNull();
 			result.Should().NotBeOfType<ReadArticle>();
 			result.Should().BeOfType<NotFoundResult>().Which.StatusCode.Should().Be(404);
 		}
@@ -86,7 +86,7 @@ namespace Pressford.News.API.Tests.Controllers
 
 			//Assert
 			_articleServices.Verify(x => x.CreateArticle(It.IsAny<ReadArticle>()), Times.Once);
-			Assert.IsNotNull(result);
+			result.Should().NotBeNull();
 			result.Value.Should().BeOfType<ReadArticle>();
 			//Ideally the status code should be 201 , some implementation code is commented for reference
 			result.Should().BeOfType<CreatedAtRouteResult>().Which.StatusCode.Should().Be(201);
@@ -106,7 +106,7 @@ namespace Pressford.News.API.Tests.Controllers
 
 			//Assert
 			_articleServices.Verify(x => x.UpdateArticle(It.IsAny<UpdateArticle>()), Times.Once);
-			Assert.IsNotNull(result);
+			result.Should().NotBeNull();
 			//Ideally the status code should be 201 , some implementation code is commented for reference
 			result.Should().BeOfType<OkObjectResult>().Which.StatusCode.Should().Be(200);
 			result.Value.Should().BeOfType<ReadArticle>().Which.Title.Should().Be("New Title");
@@ -124,7 +124,7 @@ namespace Pressford.News.API.Tests.Controllers
 
 			//Assert
 			_articleServices.Verify(x => x.UpdateArticle(It.IsAny<UpdateArticle>()), Times.Once);
-			Assert.IsNotNull(result);
+			result.Should().NotBeNull();
 			//Ideally the status code should be 201 , some implementation code is commented for reference
 			result.Should().BeOfType<UnauthorizedObjectResult>().Which.StatusCode.Should().Be(401);
 		}
@@ -141,7 +141,7 @@ namespace Pressford.News.API.Tests.Controllers
 
 			//Assert
 			_articleServices.Verify(x => x.RemoveArticle(It.IsAny<int>()), Times.Once);
-			Assert.IsNotNull(result);
+			result.Should().NotBeNull();
 			result.Should().BeOfType<AcceptedResult>().Which.StatusCode.Should().Be(202);
 		}
 
@@ -157,7 +157,7 @@ namespace Pressford.News.API.Tests.Controllers
 
 			//Assert
 			_articleServices.Verify(x => x.RemoveArticle(It.IsAny<int>()), Times.Once);
-			Assert.IsNotNull(result);
+			result.Should().NotBeNull();
 			result.Should().BeOfType<UnauthorizedObjectResult>().Which.StatusCode.Should().Be(401);
 		}
 
