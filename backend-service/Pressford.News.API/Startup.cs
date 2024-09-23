@@ -61,7 +61,7 @@ namespace Pressford.News.API
 				//var xmlCommentsFullPath = Path.Combine(AppContext.BaseDirectory, xmlCommentsFile);
 
 				//setupAction.IncludeXmlComments(xmlCommentsFullPath);
-			});
+			}));
 			ServiceConfigurationManager.ConfigurePersistence(services, Configuration);
 			ServiceConfigurationManager.ConfigureServiceLifeTime(services);
 		}

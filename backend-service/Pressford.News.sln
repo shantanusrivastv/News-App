@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pressford.News.Data.Tests",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pressford.News.Services.Tests", "Pressford.News.Services.Tests\Pressford.News.Services.Tests.csproj", "{A51B69A6-8B11-4599-98A9-34B16791202C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pressford.News.Functional.Tests", "Pressford.News.Functional.Tests\Pressford.News.Functional.Tests.csproj", "{079AC38C-161B-41E9-BBE3-74976F200ABE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pressford.News.Functional.Tests", "Pressford.News.Functional.Tests\Pressford.News.Functional.Tests.csproj", "{079AC38C-161B-41E9-BBE3-74976F200ABE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
