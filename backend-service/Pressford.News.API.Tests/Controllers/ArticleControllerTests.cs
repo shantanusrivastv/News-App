@@ -163,20 +163,20 @@ namespace Pressford.News.API.Tests.Controllers
 
 		private static List<ReadArticle> MockArticleResults()
 		{
-			return new List<ReadArticle>()
-			{
+			return
+			[
 			   new ReadArticle() { Id =1, Author = "Author1"},
 			   new ReadArticle() { Id =2, Author = "Author2"}
-			};
+			];
 		}
 
 		private static List<UpdateArticle> MockUpdateArticleResults()
 		{
-			return new List<UpdateArticle>()
-			{
+			return
+			[
 			   new UpdateArticle() { Id =1, Title = "Author1"},
 			   new UpdateArticle() { Id =2, Title = "Author2"}
-			};
+			];
 		}
 	}
 }

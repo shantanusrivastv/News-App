@@ -28,7 +28,7 @@ namespace Pressford.News.Data.Tests
 			result.Id.Should().Be(1);
 		}
 
-		private PressfordNewsContext GetContext()
+		private static PressfordNewsContext GetContext()
 		{
 			var options = new DbContextOptionsBuilder<PressfordNewsContext>()
 							 .UseInMemoryDatabase(Guid.NewGuid().ToString())
