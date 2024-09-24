@@ -1,5 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Pressford.News.Model;
 using Pressford.News.Services.Interfaces;
@@ -51,6 +54,23 @@ namespace Pressford.News.API.Controllers
 			return Ok(result);
 		}
 
+		//It is suggested to passing the id in the URL,I am not doing it since I don't want to change
+		// since it matches with eixsting Update method need to think again
+		[Authorize(Roles = "Publisher")]
+		[HttpPatch]
+		public async Task<IActionResult> PatchArticle([FromBody] JsonPatchDocument<UpdateArticle> patchArticle)
+		{
+			var idOperation = patchArticle.Operations.FirstOrDefault(op => op.path.Equals("/Id", StringComparison.OrdinalIgnoreCase));
+			if (idOperation == null || !int.TryParse(idOperation.value?.ToString(), out int id))
+				return BadRequest("Article ID not provided or invalid");
+
+			var result = await _articleServices.PatchArticle(id, patchArticle);
+			if (result == null)
+				return Unauthorized("Either the article does not exist or user does not have required privileges ");
+
+			return Ok(result);
+		}
+
 		[Authorize(Roles = "Publisher")]
 		[HttpDelete("{articleId:int}")]
 		public async Task<IActionResult> DeleteArticle(int articleId)
@@ -60,6 +80,13 @@ namespace Pressford.News.API.Controllers
 				return Accepted("Successfully Deleted Resource");
 			}
 			return Unauthorized("Either the article does not exist or user does not have required privileges ");
+		}
+
+		[HttpOptions]
+		public IActionResult GetArticleOptions()
+		{
+			Response.Headers.Add("Allow", "GET,OPTIONS,POST");
+			return Ok();
 		}
 	}
 }

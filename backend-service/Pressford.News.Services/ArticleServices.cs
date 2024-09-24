@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Pressford.News.Data;
 using Pressford.News.Model;
 using Pressford.News.Services.Interfaces;
@@ -66,8 +67,28 @@ namespace Pressford.News.Services
 			}
 			var entityArticle = _mapper.Map<entity.Article>(article);
 			entityArticle.Author = _userName;
-			var dbreturn = await _repository.UpdateAsync(entityArticle);
-			return _mapper.Map<ReadArticle>(dbreturn);
+			var updatedArticle = await _repository.UpdateAsync(entityArticle);
+			return _mapper.Map<ReadArticle>(updatedArticle);
+		}
+		public async Task<ReadArticle> PatchArticle(int articleId, JsonPatchDocument<UpdateArticle> patchDoc)
+		{
+			if (_userName == null || !IsArticleOwner(_userName, articleId))
+			{
+				return null;
+			}
+
+			Expression<Func<entity.Article, bool>> predicate = (x) => x.Id == articleId;
+			var existingArticle = _repository.FindBy(predicate).SingleOrDefault();
+
+			if (existingArticle == null)
+				return null;
+
+			var articleToUpdate =  _mapper.Map<UpdateArticle>(existingArticle);
+			patchDoc.ApplyTo(articleToUpdate);
+
+			_mapper.Map(articleToUpdate, existingArticle);
+			var updatedArticle = await _repository.UpdateAsync(existingArticle);
+			return _mapper.Map<ReadArticle>(updatedArticle);
 		}
 
 		private bool IsArticleOwner(string userName, int articleId)

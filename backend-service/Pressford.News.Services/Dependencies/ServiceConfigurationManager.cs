@@ -16,7 +16,10 @@ namespace Pressford.News.Services.Dependencies
 		public static void ConfigurePersistence(IServiceCollection services, IConfiguration config)
 		{
 			services.AddDbContext<PressfordNewsContext>(options =>
-						options.UseSqlServer(config.GetConnectionString("PressfordNewsContext")));
+						{
+						options.EnableSensitiveDataLogging();//Disable in production
+						options.UseSqlServer(config.GetConnectionString("PressfordNewsContext"));
+				});
 		}
 
 		public static void ConfigureServiceLifeTime(IServiceCollection services)

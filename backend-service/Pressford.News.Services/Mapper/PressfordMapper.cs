@@ -16,6 +16,16 @@ namespace Pressford.News.Services.Mapper
 			.ReverseMap();
 
 			CreateMap<model.UpdateArticle, entity.Article>()
+			 .ForMember(dest => dest.DateModified,
+						opt => opt.Ignore());
+			
+			CreateMap<model.UpdateArticle, entity.Article>()
+			 .ForMember(dest => dest.DatePublished,
+						opt => opt.Ignore());
+			
+			CreateMap<entity.Article, model.UpdateArticle>();
+
+			CreateMap<model.ReadArticle, model.UpdateArticle>()
 			.ReverseMap();
 
 			CreateMap<entity.UserLogin, model.UserInfo>()

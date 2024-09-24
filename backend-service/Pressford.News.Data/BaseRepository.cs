@@ -88,6 +88,7 @@ namespace Pressford.News.Data
 			}
 		}
 
+		//todo: Make Async
 		public IQueryable<TEntity> FindBy(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includes)
 		{
 			var query = _context.Set<TEntity>().Where(predicate);

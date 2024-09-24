@@ -31,7 +31,7 @@ namespace Pressford.News.API
 						.AllowAnyMethod();
 				});
 			});
-			services.AddControllers();
+			services.AddControllers().AddNewtonsoftJson();
 			services.AddHttpContextAccessor();
 			ServiceConfigurationManager.ConfigureAuthentication(services, Configuration);
 

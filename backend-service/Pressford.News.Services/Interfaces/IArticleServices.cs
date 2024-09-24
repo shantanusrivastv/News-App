@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.JsonPatch;
 using Pressford.News.Model;
 
 namespace Pressford.News.Services.Interfaces
@@ -15,5 +16,6 @@ namespace Pressford.News.Services.Interfaces
 		Task<ReadArticle> UpdateArticle(UpdateArticle article);
 
 		Task<bool> RemoveArticle(int articleId);
+		Task<ReadArticle> PatchArticle(int articleId, JsonPatchDocument<UpdateArticle> patchDoc);
 	}
 }
