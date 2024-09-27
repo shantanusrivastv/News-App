@@ -64,7 +64,26 @@ namespace Pressford.News.API.Controllers
 			if (idOperation == null || !int.TryParse(idOperation.value?.ToString(), out int id))
 				return BadRequest("Article ID not provided or invalid");
 
-			var result = await _articleServices.PatchArticle(id, patchArticle);
+			var (result, validationErrors) = await _articleServices.PatchArticle(id, patchArticle);
+
+			if (validationErrors.Any())
+			{
+				var errorsByField = validationErrors
+										.GroupBy(error => error.MemberNames.Any() ? error.MemberNames.First() : "General")
+										.ToDictionary(
+											group => group.Key,
+											group => group.Select(error => error.ErrorMessage).ToArray()
+										);
+
+				var validationProblem = new ValidationProblemDetails
+				{
+					Detail = "Please refer to the  property errors for additional details",
+					Errors = errorsByField
+				};
+
+				return ValidationProblem(validationProblem);
+			}
+
 			if (result == null)
 				return Unauthorized("Either the article does not exist or user does not have required privileges ");
 
