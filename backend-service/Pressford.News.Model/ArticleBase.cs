@@ -6,7 +6,7 @@ namespace Pressford.News.Model
 	public class ArticleBase
 	{
 		[Required(ErrorMessage = "Article Name is required.")]
-		[StringLength(20, MinimumLength = 5, ErrorMessage = "Article Name must be between 5 and 10 characters long.")]
+		//[StringLength(20, MinimumLength = 5, ErrorMessage = "Article Name must be between 5 and 10 characters long.")]
 		//[RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Name can only contain alphabetic characters.")]
 		public string Title { get; set; }
 

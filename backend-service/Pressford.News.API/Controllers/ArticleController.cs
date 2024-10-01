@@ -1,16 +1,18 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Pressford.News.Model;
 using Pressford.News.Services.Interfaces;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Pressford.News.API.Controllers
 {
-	[Route("api/[controller]")]
 	[ApiController]
+	[Route("api/[controller]")]
+	[Produces("application/json")]
 	public class ArticleController : ControllerBase
 	{
 		private readonly IArticleServices _articleServices;
@@ -20,6 +22,10 @@ namespace Pressford.News.API.Controllers
 			_articleServices = articleServices;
 		}
 
+		/// <summary>
+		/// Get all articles
+		/// </summary>
+		/// <returns></returns>
 		[HttpGet]
 		public async Task<IActionResult> GetAllArticles()
 		{
@@ -36,8 +42,26 @@ namespace Pressford.News.API.Controllers
 			return Ok(article);
 		}
 
+		/// <summary>
+		/// Create a new article
+		/// </summary>
+		/// <param name="article"></param>
+		/// <returns>Newly created article</returns>
+		/// <remarks>
+		/// Sample request:
+		///
+		///     POST /Article
+		///     {
+		///        "title": "New title",
+		///        "body": "New body"
+		///     }
+		/// </remarks>
+		/// <response code="201">Returns the newly created item</response>
+		/// <response code="400">For Invalid Input</response>
 		[Authorize(Roles = "Publisher")]
 		[HttpPost]
+		[ProducesResponseType(StatusCodes.Status201Created)]
+		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		public async Task<IActionResult> CreateNewArticle([FromBody] ArticleBase article)
 		{
 			var result = await _articleServices.CreateArticle(article);
@@ -55,7 +79,7 @@ namespace Pressford.News.API.Controllers
 		}
 
 		//It is suggested to passing the id in the URL,I am not doing it since I don't want to change
-		// since it matches with eixsting Update method need to think again
+		// since it matches with existing Update method need to think again
 		[Authorize(Roles = "Publisher")]
 		[HttpPatch]
 		public async Task<IActionResult> PatchArticle([FromBody] JsonPatchDocument<UpdateArticle> patchArticle)

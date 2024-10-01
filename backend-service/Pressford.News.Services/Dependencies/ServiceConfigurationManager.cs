@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -24,7 +23,7 @@ namespace Pressford.News.Services.Dependencies
 
 		public static void ConfigureServiceLifeTime(IServiceCollection services)
 		{
-            services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+			services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
 			services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
 			services.AddTransient<IArticleServices, ArticleServices>();
 			services.AddTransient<IUserService, UserService>();
