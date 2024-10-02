@@ -14,11 +14,24 @@ namespace Pressford.News.Services.Dependencies
 	{
 		public static void ConfigurePersistence(IServiceCollection services, IConfiguration config)
 		{
-			services.AddDbContext<PressfordNewsContext>(options =>
-						{
-							options.EnableSensitiveDataLogging();//Disable in production
-							options.UseSqlServer(config.GetConnectionString("PressfordNewsContext"));
-						});
+			string envt = config.GetValue<string>("ASPNETCORE_ENVIRONMENT");
+
+			if (envt.Trim().ToUpper() == "DEVELOPMENT")
+			{
+				services.AddDbContext<PressfordNewsContext>(options =>
+								{
+									options.EnableSensitiveDataLogging();//Disable in production
+									options.UseSqlServer(config.GetConnectionString("PressfordNewsContext"));
+								}); 
+			}
+			else
+			{
+				services.AddDbContext<PressfordNewsContext>(options =>
+				{
+					
+					options.UseSqlite(config.GetConnectionString("DefaultConnection"));
+				});
+			}
 		}
 
 		public static void ConfigureServiceLifeTime(IServiceCollection services)
