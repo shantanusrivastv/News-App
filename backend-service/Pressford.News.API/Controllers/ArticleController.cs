@@ -12,7 +12,7 @@ namespace Pressford.News.API.Controllers
 {
 	[ApiController]
 	[Route("api/[controller]")]
-	[Produces("application/json")]
+	[Produces("application/json", "application/xml")]
 	public class ArticleController : ControllerBase
 	{
 		private readonly IArticleServices _articleServices;
@@ -62,6 +62,7 @@ namespace Pressford.News.API.Controllers
 		[HttpPost]
 		[ProducesResponseType(StatusCodes.Status201Created)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
+		[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ReadArticle))]
 		public async Task<IActionResult> CreateNewArticle([FromBody] ArticleBase article)
 		{
 			var result = await _articleServices.CreateArticle(article);

@@ -1,12 +1,14 @@
-using System;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Pressford.News.Services.Dependencies;
+using System;
+using System.Collections.Generic;
 
 namespace Pressford.News.API
 {
@@ -32,7 +34,16 @@ namespace Pressford.News.API
 						.AllowAnyMethod();
 				});
 			});
-			services.AddControllers().AddNewtonsoftJson();
+
+			services.AddControllers(setupAction =>
+			{
+				// Return 406 Not Acceptable if the client requests a format the server does not support
+				setupAction.ReturnHttpNotAcceptable = true;
+				//setupAction.Conventions.Add(new ProducesAttributeConvention());
+
+			}).AddNewtonsoftJson()
+			  .AddXmlDataContractSerializerFormatters();
+
 			services.AddHttpContextAccessor();
 			ServiceConfigurationManager.ConfigureAuthentication(services, Configuration);
 
@@ -88,7 +99,6 @@ namespace Pressford.News.API
 						 new List<string>()
 					}
 				});
-
 			});
 
 			ServiceConfigurationManager.ConfigurePersistence(services, Configuration);
@@ -120,6 +130,14 @@ namespace Pressford.News.API
 			{
 				endpoints.MapControllers();
 			});
+		}
+	}
+	//TODO: Add this globally and check if Swagger shows it
+	public class ProducesAttributeConvention : IControllerModelConvention
+	{
+		public void Apply(ControllerModel controller)
+		{
+			controller.Filters.Add(new ProducesAttribute("application/json", "application/xml"));
 		}
 	}
 }
