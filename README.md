@@ -3,6 +3,7 @@
 ## Setup Instruction ##
 
 ### Client App ###
+
  1. Open terminal/Command line
  2. Go to the folder location
  3. run npm install
@@ -11,6 +12,7 @@
  6. By default app will run on <http://localhost:3000/>
 
 ### Service App ###
+
  1. Open the solution inside backend-service in Visual Studio
  2. Open Package Manager Console
  3. run update-database
@@ -31,6 +33,7 @@
  1. Build in Release mode -> dotnet build --configuration Release
  2. Navigate to release folder -> cd Pressford.News.API\bin\Release\net8.0\
  3. Run in the port UI expects ->  dotnet Pressford.News.API.dll --urls "<http://localhost:63961>"
+ 4. Update the databse -> dotnet ef database update
 
 ### Login Information ##
 
