@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -15,13 +14,31 @@ namespace Pressford.News.Services.Dependencies
 	{
 		public static void ConfigurePersistence(IServiceCollection services, IConfiguration config)
 		{
-			services.AddDbContext<PressfordNewsContext>(options =>
-						options.UseSqlServer(config.GetConnectionString("PressfordNewsContext")));
+			string envt = config.GetValue<string>("ASPNETCORE_ENVIRONMENT");
+
+			if (envt.Trim().ToUpper() == "DEVELOPMENT")
+			{
+				services.AddDbContext<PressfordNewsContext>(options =>
+								{
+									options.EnableSensitiveDataLogging();//Disable in production
+									options.UseSqlServer(config.GetConnectionString("PressfordNewsContext"));
+								}); 
+			}
+			else
+			{
+				services.AddDbContext<PressfordNewsContext>(options =>
+				{
+					
+					options.UseSqlite(config.GetConnectionString("DefaultConnection"));
+				});
+			}
 		}
 
 		public static void ConfigureServiceLifeTime(IServiceCollection services)
 		{
-            services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+			//We want to share the same DbContext instance throughout a single HTTP request.
+			services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+			//The service layer is stateless hence transient
 			services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
 			services.AddTransient<IArticleServices, ArticleServices>();
 			services.AddTransient<IUserService, UserService>();

@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using Pressford.News.Entities;
 
+using FluentAssertions;
+
 namespace Pressford.News.Data.Tests
 {
 	[TestFixture]
@@ -22,11 +24,11 @@ namespace Pressford.News.Data.Tests
 		{
 			var result = _sut.FindBy(x => x.Author == "Mr Pressford").Single();
 
-			Assert.IsNotNull(result);
-			Assert.AreEqual(result.Id, 1);
+			result.Should().NotBeNull();
+			result.Id.Should().Be(1);
 		}
 
-		private PressfordNewsContext GetContext()
+		private static PressfordNewsContext GetContext()
 		{
 			var options = new DbContextOptionsBuilder<PressfordNewsContext>()
 							 .UseInMemoryDatabase(Guid.NewGuid().ToString())

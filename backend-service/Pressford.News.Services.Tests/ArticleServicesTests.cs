@@ -3,6 +3,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
+using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Moq;
 using NUnit.Framework;
@@ -10,9 +11,10 @@ using Pressford.News.Data;
 using Pressford.News.Entities;
 using Pressford.News.Services.Mapper;
 
+#pragma warning disable CS8981 // The type name only contains lower-cased ascii characters. Such names may become reserved for the language.
 using entity = Pressford.News.Entities;
-
 using model = Pressford.News.Model;
+#pragma warning restore CS8981 // The type name only contains lower-cased ascii characters. Such names may become reserved for the language.
 
 namespace Pressford.News.Services.Tests
 {
@@ -55,26 +57,26 @@ namespace Pressford.News.Services.Tests
 			//Assert
 			_httpContextAccessor.Verify();
 			_repository.Verify(x => x.AddAsync(It.IsAny<entity.Article>()), Times.Once);
-			Assert.IsNotNull(result);
-			Assert.AreEqual(result.Author, "Author1");
+			result.Should().NotBeNull();
+			result.Author.Should().Be("Author1");
 		}
 
 		private static IEnumerable<model.ReadArticle> MockArticleModels()
 		{
-			return new List<model.ReadArticle>()
-			{
+			return
+			[
 			   new model.ReadArticle() { Id =1, Author = "Author1"},
 			   new model.ReadArticle() { Id =2, Author = "Author2"}
-			};
+			];
 		}
 
 		private static IEnumerable<Article> MockEntityArticleModels()
 		{
-			return new List<entity.Article>()
-			{
+			return
+			[
 			  new entity.Article() { Id =1, Author = "Author1"},
 			  new entity.Article() { Id =2, Author = "Author2"},
-			};
+			];
 		}
 	}
 }

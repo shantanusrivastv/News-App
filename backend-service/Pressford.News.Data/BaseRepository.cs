@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -88,11 +89,21 @@ namespace Pressford.News.Data
 			}
 		}
 
+		//todo: Check if async is better or if IQueryable is more performant
 		public IQueryable<TEntity> FindBy(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includes)
 		{
 			var query = _context.Set<TEntity>().Where(predicate);
 
 			return includes.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
 		}
+
+		public async Task<List<TEntity>> FindByAsync(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includes)
+		{
+			var query = _context.Set<TEntity>().Where(predicate);
+			query = includes.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
+
+			return await query.ToListAsync();
+		}
+
 	}
 }

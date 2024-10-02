@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Pressford.News.Entities;
@@ -13,9 +15,10 @@ namespace Pressford.News.Data
 			ChangeTracker.Tracked += ChangeTracker_Tracked;
 		}
 
+		//todo Move the logic to SaveChangesAsync
 		private void ChangeTracker_Tracked(object sender, EntityTrackedEventArgs e)
 		{
-			DateTime now = DateTime.Now;
+			DateTime now = DateTime.UtcNow;
 			if (e.Entry.Entity is IEntityDate entity)
 			{
 				switch (e.Entry.State)
@@ -38,6 +41,24 @@ namespace Pressford.News.Data
 			}
 		}
 
+		public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+		{
+			//foreach (var entry in ChangeTracker.Entries<IEntityDate>())
+			//{
+			//	if (entry.State == EntityState.Added)
+			//	{
+			//		entry.Entity.DatePublished = DateTime.UtcNow;
+			//		entry.Entity.DateModified = DateTime.UtcNow;
+			//	}
+			//	else if (entry.State == EntityState.Modified)
+			//	{
+			//		entry.Entity.DateModified = DateTime.UtcNow;
+			//	}
+			//}
+
+			return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+		}
+
 		public DbSet<Article> Article { get; set; }
 		public DbSet<User> User { get; set; }
 		public DbSet<UserLogin> UserLogin { get; set; }
@@ -48,6 +69,8 @@ namespace Pressford.News.Data
 			//It searches for all the configuration of all entities
 			modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
+			
+
 			modelBuilder.Entity<User>().HasData(
 					new User { Id = 1, FirstName = "W", LastName = "Pressford ", Email = "w.Pressford@pressford.com" },
 					new User { Id = 2, FirstName = "Admin", LastName = "User", Email = "adminUser@pressford.com" },
@@ -57,6 +80,7 @@ namespace Pressford.News.Data
 					new UserLogin { Username = "w.Pressford@pressford.com", Password = "admin", Role = RoleType.Publisher },
 					new UserLogin { Username = "adminUser@pressford.com", Password = "admin", Role = RoleType.Publisher },
 					new UserLogin { Username = "normalUser@pressford.com", Password = "user", Role = RoleType.User });
+			
 		}
 	}
 }
