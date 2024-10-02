@@ -16,14 +16,16 @@ namespace Pressford.News.Services.Dependencies
 		{
 			services.AddDbContext<PressfordNewsContext>(options =>
 						{
-						options.EnableSensitiveDataLogging();//Disable in production
-						options.UseSqlServer(config.GetConnectionString("PressfordNewsContext"));
-				});
+							options.EnableSensitiveDataLogging();//Disable in production
+							options.UseSqlServer(config.GetConnectionString("PressfordNewsContext"));
+						});
 		}
 
 		public static void ConfigureServiceLifeTime(IServiceCollection services)
 		{
-			services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+			//We want to share the same DbContext instance throughout a single HTTP request.
+			services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+			//The service layer is stateless hence transient
 			services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
 			services.AddTransient<IArticleServices, ArticleServices>();
 			services.AddTransient<IUserService, UserService>();
