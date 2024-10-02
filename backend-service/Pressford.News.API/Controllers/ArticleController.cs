@@ -13,6 +13,7 @@ namespace Pressford.News.API.Controllers
 	[ApiController]
 	[Route("api/[controller]")]
 	[Produces("application/json", "application/xml")]
+	//TOOD: Add versioning of the API
 	public class ArticleController : ControllerBase
 	{
 		private readonly IArticleServices _articleServices;
@@ -60,9 +61,9 @@ namespace Pressford.News.API.Controllers
 		/// <response code="400">For Invalid Input</response>
 		[Authorize(Roles = "Publisher")]
 		[HttpPost]
-		[ProducesResponseType(StatusCodes.Status201Created)]
-		[ProducesResponseType(StatusCodes.Status400BadRequest)]
-		[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ReadArticle))]
+		[ProducesResponseType(typeof(ReadArticle), StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
+		[Consumes("application/json")]
 		public async Task<IActionResult> CreateNewArticle([FromBody] ArticleBase article)
 		{
 			var result = await _articleServices.CreateArticle(article);
@@ -83,6 +84,7 @@ namespace Pressford.News.API.Controllers
 		// since it matches with existing Update method need to think again
 		[Authorize(Roles = "Publisher")]
 		[HttpPatch]
+		[ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
 		public async Task<IActionResult> PatchArticle([FromBody] JsonPatchDocument<UpdateArticle> patchArticle)
 		{
 			var idOperation = patchArticle.Operations.FirstOrDefault(op => op.path.Equals("/Id", StringComparison.OrdinalIgnoreCase));
