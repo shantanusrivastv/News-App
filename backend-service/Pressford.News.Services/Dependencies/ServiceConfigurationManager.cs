@@ -14,6 +14,7 @@ namespace Pressford.News.Services.Dependencies
 	{
 		public static void ConfigurePersistence(IServiceCollection services, IConfiguration config)
 		{
+			
 			string envt = config.GetValue<string>("ASPNETCORE_ENVIRONMENT");
 
 			if (envt.Trim().ToUpper() == "DEVELOPMENT")
@@ -34,8 +35,20 @@ namespace Pressford.News.Services.Dependencies
 			{
 				services.AddDbContext<PressfordNewsContext>(options =>
 				{
+
+					services.AddDbContext<PressfordNewsContext>(options =>
+					{
+						options.EnableSensitiveDataLogging();//Disable in production
+						options.UseSqlServer(config.GetConnectionString("PressfordNewsContext"));
+						options.LogTo(System.Console.WriteLine,
+								new[]
+								{
+												DbLoggerCategory.Database.Command.Name,
+												DbLoggerCategory.ChangeTracking.Name
+								}, Microsoft.Extensions.Logging.LogLevel.Information);
+					});
 					
-					options.UseSqlite(config.GetConnectionString("DefaultConnection"));
+					//options.UseSqlite(config.GetConnectionString("DefaultConnection"));
 				});
 			}
 		}

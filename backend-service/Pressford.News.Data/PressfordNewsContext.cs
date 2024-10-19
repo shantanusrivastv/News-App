@@ -63,6 +63,8 @@ namespace Pressford.News.Data
 		public DbSet<User> User { get; set; }
 		public DbSet<UserLogin> UserLogin { get; set; }
 		public DbSet<ArticleLikes> ArticleLikes { get; set; }
+		public DbSet<Artist> Artist { get; set; }
+		public DbSet<Cover> Cover{ get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
