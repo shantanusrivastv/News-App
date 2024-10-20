@@ -9,7 +9,7 @@ namespace Pressford.News.Data
 {
 	public class Repository<TEntity> : IRepository<TEntity> where TEntity : class, new()
 	{
-		private readonly PressfordNewsContext _context;
+		protected readonly PressfordNewsContext _context;
 
 		public Repository(PressfordNewsContext context)
 		{

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -5,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
@@ -101,5 +103,10 @@ namespace Pressford.News.Functional.Tests
 
 	public class APIWebApplicationFactory : WebApplicationFactory<Startup>
 	{
+		protected override void ConfigureWebHost(IWebHostBuilder builder)
+		{
+			Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "DEVELOPMENT");
+			builder.UseEnvironment("DEVELOPMENT");
+		}
 	}
 }

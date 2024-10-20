@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Pressford.News.Data;
+using Pressford.News.Entities;
 using Pressford.News.Services.Interfaces;
 using Pressford.News.Services.Mapper;
 
@@ -57,8 +58,9 @@ namespace Pressford.News.Services.Dependencies
 		{
 			//We want to share the same DbContext instance throughout a single HTTP request.
 			services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+			services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
 			//The service layer is stateless hence transient
-			services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+			//services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
 			services.AddTransient<IArticleServices, ArticleServices>();
 			services.AddTransient<IUserService, UserService>();
 			services.AddTransient<IArticleLikeService, ArticleLikeService>();

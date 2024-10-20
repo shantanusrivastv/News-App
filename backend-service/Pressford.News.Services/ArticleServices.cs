@@ -9,6 +9,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Pressford.News.Data;
+using Pressford.News.Entities;
 using Pressford.News.Model;
 using Pressford.News.Services.Interfaces;
 using entity = Pressford.News.Entities;
@@ -19,14 +20,17 @@ namespace Pressford.News.Services
 	public class ArticleServices : IArticleServices
 	{
 		private readonly IRepository<entity.Article> _repository;
+		private readonly IUserRepository _userRepository;
 		private readonly IMapper _mapper;
 		private readonly string _userName = string.Empty;
 
 		public ArticleServices(IRepository<entity.Article> repository,
+							   IUserRepository userRepository,
 							   IMapper mapper,
 							   IHttpContextAccessor httpContextAccessor)
 		{
 			_repository = repository;
+			_userRepository = userRepository;
 			_mapper = mapper;
 			_userName = httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 		}
@@ -48,8 +52,15 @@ namespace Pressford.News.Services
 
 		public async Task<IList<ReadArticle>> GetAllArticles()
 		{
+			// GetAuthorWithinRange();
 			var entityArticles = await _repository.GetAll().ToListAsync();
 			return _mapper.Map<IList<ReadArticle>>(entityArticles);
+		}	
+		
+		public async Task<IList<User>> GetAuthorWithinRange()
+		{
+			var res = await _userRepository.GetPublishedArticleWithinRange(DateTime.Now.AddYears(-5), DateTime.Now);
+			return res;
 		}
 
 		public async Task<bool> RemoveArticle(int articleId)
