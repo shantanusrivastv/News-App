@@ -66,11 +66,14 @@ namespace Pressford.News.Data
 		public DbSet<ArticleLikes> ArticleLikes { get; set; }
 		public DbSet<Artist> Artist { get; set; }
 		public DbSet<Cover> Cover { get; set; }
+		public DbSet<AuthorWithArticles> AuthorWithArticles { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			//It searches for all the configuration of all entities
 			modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+			modelBuilder.Entity<AuthorWithArticles>().HasNoKey().ToView(nameof(AuthorWithArticles));
 
 			modelBuilder.Entity<User>().HasData(
 				new User { Id = 1, FirstName = "W", LastName = "Pressford ", Email = "w.Pressford@pressford.com" },

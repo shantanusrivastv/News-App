@@ -14,5 +14,12 @@ namespace Pressford.News.Data
 		{
 			return await _context.User.FromSql($"AuthorsArticlesInYearRange {startDtm},{endDtm} ").ToListAsync();
 		}
+
+		public async Task<List<AuthorWithArticles>> GetAuthorView()
+		{
+			return await _context.AuthorWithArticles.ToListAsync();
+		}
 	}
+
+
 }

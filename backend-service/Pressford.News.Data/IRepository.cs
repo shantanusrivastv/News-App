@@ -15,7 +15,7 @@ namespace Pressford.News.Data
 		IQueryable<TEntity> FindBy(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includes);
 		Task<List<TEntity>> FindByAsync(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includes);
 
-		//todo will this work, the aboce is still usefule for  eager loading actually
+		//todo will this work, the above is still useful for  eager loading actually
 
 		// Usage:
 		//var authorsWithArticles = await authorRepository.FindByAsync(

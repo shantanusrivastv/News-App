@@ -53,6 +53,7 @@ namespace Pressford.News.Services
 		public async Task<IList<ReadArticle>> GetAllArticles()
 		{
 			// GetAuthorWithinRange();
+			await GetAuthorWithTitle();
 			var entityArticles = await _repository.GetAll().ToListAsync();
 			return _mapper.Map<IList<ReadArticle>>(entityArticles);
 		}	
@@ -60,6 +61,12 @@ namespace Pressford.News.Services
 		public async Task<IList<User>> GetAuthorWithinRange()
 		{
 			var res = await _userRepository.GetPublishedArticleWithinRange(DateTime.Now.AddYears(-5), DateTime.Now);
+			return res;
+		}
+		
+		public async Task<IList<AuthorWithArticles>> GetAuthorWithTitle()
+		{
+			var res = await _userRepository.GetAuthorView();
 			return res;
 		}
 
