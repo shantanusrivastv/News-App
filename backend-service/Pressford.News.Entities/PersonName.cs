@@ -6,13 +6,11 @@ using System.Threading.Tasks;
 
 namespace Pressford.News.Entities
 {
-	public class Artist
+	public class PersonName
 	{
-		public int ArtistId { get; set; }
 		public string FirstName { get; set; }
 		public string LastName { get; set; }
-
-		//public ContactDetails Contact { get; set; }
-		public List<Cover> Covers { get; set; } = new();
+		public string FullName => $"{FirstName} {LastName}";
+		public string ReverseName => $"{LastName}, {FirstName}";
 	}
 }

@@ -24,12 +24,13 @@ namespace Pressford.News.Services.Dependencies
 								{
 									options.EnableSensitiveDataLogging();//Disable in production
 									options.UseSqlServer(config.GetConnectionString("PressfordNewsContext"));
-									options.LogTo(System.Console.WriteLine, 
-											new[]
-											{
-												DbLoggerCategory.Database.Command.Name,
-												DbLoggerCategory.ChangeTracking.Name
-											}, Microsoft.Extensions.Logging.LogLevel.Information);
+									//Moved the logic to appsettings.Development.json
+									//options.LogTo(System.Console.WriteLine, 
+									//		new[]
+									//		{
+									//			DbLoggerCategory.Database.Command.Name,
+									//			DbLoggerCategory.ChangeTracking.Name
+									//		}, Microsoft.Extensions.Logging.LogLevel.Information);
 								}); 
 			}
 			else
@@ -41,12 +42,6 @@ namespace Pressford.News.Services.Dependencies
 					{
 						options.EnableSensitiveDataLogging();//Disable in production
 						options.UseSqlServer(config.GetConnectionString("PressfordNewsContext"));
-						options.LogTo(System.Console.WriteLine,
-								new[]
-								{
-												DbLoggerCategory.Database.Command.Name,
-												DbLoggerCategory.ChangeTracking.Name
-								}, Microsoft.Extensions.Logging.LogLevel.Information);
 					});
 					
 					//options.UseSqlite(config.GetConnectionString("DefaultConnection"));
