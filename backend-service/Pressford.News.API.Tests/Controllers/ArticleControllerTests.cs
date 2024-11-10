@@ -165,8 +165,8 @@ namespace Pressford.News.API.Tests.Controllers
 		{
 			return
 			[
-			   new ReadArticle() { Id =1, Author = "Author1"},
-			   new ReadArticle() { Id =2, Author = "Author2"}
+			   new ReadArticle() { ArticleId =1, Author = "Author1"},
+			   new ReadArticle() { ArticleId =2, Author = "Author2"}
 			];
 		}
 
@@ -174,8 +174,8 @@ namespace Pressford.News.API.Tests.Controllers
 		{
 			return
 			[
-			   new UpdateArticle() { Id =1, Title = "Author1"},
-			   new UpdateArticle() { Id =2, Title = "Author2"}
+			   new UpdateArticle() { ArticleId =1, Title = "Author1"},
+			   new UpdateArticle() { ArticleId =2, Title = "Author2"}
 			];
 		}
 	}

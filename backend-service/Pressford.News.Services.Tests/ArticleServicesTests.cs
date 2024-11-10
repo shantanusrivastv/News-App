@@ -67,8 +67,8 @@ namespace Pressford.News.Services.Tests
 		{
 			return
 			[
-			   new model.ReadArticle() { Id =1, Author = "Author1"},
-			   new model.ReadArticle() { Id =2, Author = "Author2"}
+			   new model.ReadArticle() { ArticleId =1, Author = "Author1"},
+			   new model.ReadArticle() { ArticleId =2, Author = "Author2"}
 			];
 		}
 

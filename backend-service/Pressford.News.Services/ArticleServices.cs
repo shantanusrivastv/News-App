@@ -81,7 +81,7 @@ namespace Pressford.News.Services
 
 		public async Task<ReadArticle> UpdateArticle(UpdateArticle article)
 		{
-			if (_userName == null || !await IsArticleOwner(_userName, article.Id))
+			if (_userName == null || !await IsArticleOwner(_userName, article.ArticleId))
 			{
 				return null;
 			}

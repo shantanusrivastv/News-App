@@ -31,3 +31,6 @@ https://jasonwatmore.com/post/2020/01/03/aspnet-core-ef-core-migrations-for-mult
 	1. We can also use a library like PagedList to implement pagination
 13. Need a Serilog for logging along with Kibana and Elastic Search
 14. Need to start using xunit with NSubistitute for testing but it would be least priority for now
+15. Use Autofixture for fake data.
+16. This might not be in near future but maybe BenchmarkDotNet 
+	https://github.com/dotnet/BenchmarkDotNet

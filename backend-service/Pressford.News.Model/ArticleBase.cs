@@ -17,7 +17,7 @@ namespace Pressford.News.Model
 
 	public class ReadArticle : ArticleBase
 	{
-		public int Id { get; set; }
+		public int ArticleId { get; set; }
 		public string Author { get; set; }
 		public DateTime DatePublished { get; set; }
 		public DateTime DateModified { get; set; }
@@ -25,7 +25,7 @@ namespace Pressford.News.Model
 
 	public class UpdateArticle : ArticleBase
 	{
-		public int Id { get; set; }
+		public int ArticleId { get; set; }
 	}
 
 	//todo think about better model design here is an example
