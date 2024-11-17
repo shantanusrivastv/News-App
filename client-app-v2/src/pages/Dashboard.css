@@ -1,0 +1,18 @@
+/* Dashboard.css */
+.dashboard-root {
+	flex-grow: 1;
+	padding: 16px;
+}
+
+
+.dashboard-fab {
+	position: static;
+	bottom: 499px;
+	right: 16px;
+}
+
+.dashboard-articles {
+	width: 100%;
+	max-width: 1200px;
+	margin-top: 16px;
+}
