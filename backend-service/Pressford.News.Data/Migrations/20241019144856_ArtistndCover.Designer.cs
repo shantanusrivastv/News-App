@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pressford.News.Data;
 
@@ -11,9 +12,11 @@ using Pressford.News.Data;
 namespace Pressford.News.Data.Migrations
 {
     [DbContext(typeof(PressfordNewsContext))]
-    partial class PressfordNewsContextModelSnapshot : ModelSnapshot
+    [Migration("20241019144856_ArtistndCover")]
+    partial class ArtistndCover
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -101,39 +104,6 @@ namespace Pressford.News.Data.Migrations
                     b.HasKey("ArtistId");
 
                     b.ToTable("Artist");
-
-                    b.HasData(
-                        new
-                        {
-                            ArtistId = 1,
-                            FirstName = "John",
-                            LastName = "Doe"
-                        },
-                        new
-                        {
-                            ArtistId = 2,
-                            FirstName = "Jane",
-                            LastName = "Smith"
-                        },
-                        new
-                        {
-                            ArtistId = 3,
-                            FirstName = "Michael",
-                            LastName = "Johnson"
-                        });
-                });
-
-            modelBuilder.Entity("Pressford.News.Entities.AuthorWithArticles", b =>
-                {
-                    b.Property<string>("Articles")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Author")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.ToTable((string)null);
-
-                    b.ToView("AuthorWithArticles", (string)null);
                 });
 
             modelBuilder.Entity("Pressford.News.Entities.Cover", b =>
@@ -153,26 +123,6 @@ namespace Pressford.News.Data.Migrations
                     b.HasKey("CoverId");
 
                     b.ToTable("Cover");
-
-                    b.HasData(
-                        new
-                        {
-                            CoverId = 1,
-                            DesignIdeas = "Left hand in dark",
-                            DigitalOnly = true
-                        },
-                        new
-                        {
-                            CoverId = 2,
-                            DesignIdeas = "Add a clock",
-                            DigitalOnly = true
-                        },
-                        new
-                        {
-                            CoverId = 3,
-                            DesignIdeas = "Massive Cloud in dark background",
-                            DigitalOnly = false
-                        });
                 });
 
             modelBuilder.Entity("Pressford.News.Entities.User", b =>

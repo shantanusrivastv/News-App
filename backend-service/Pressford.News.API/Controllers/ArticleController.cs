@@ -67,7 +67,7 @@ namespace Pressford.News.API.Controllers
 		public async Task<IActionResult> CreateNewArticle([FromBody] ArticleBase article)
 		{
 			var result = await _articleServices.CreateArticle(article);
-			return CreatedAtRoute("GetArticle", new { articleId = result.Id }, result);
+			return CreatedAtRoute("GetArticle", new { articleId = result.ArticleId }, result);
 		}
 
 		[Authorize(Roles = "Publisher")]
@@ -87,7 +87,7 @@ namespace Pressford.News.API.Controllers
 		[ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
 		public async Task<IActionResult> PatchArticle([FromBody] JsonPatchDocument<UpdateArticle> patchArticle)
 		{
-			var idOperation = patchArticle.Operations.FirstOrDefault(op => op.path.Equals("/Id", StringComparison.OrdinalIgnoreCase));
+			var idOperation = patchArticle.Operations.FirstOrDefault(op => op.path.Equals("/articleId", StringComparison.OrdinalIgnoreCase));
 			if (idOperation == null || !int.TryParse(idOperation.value?.ToString(), out int id))
 				return BadRequest("Article ID not provided or invalid");
 

@@ -10,6 +10,8 @@ namespace Pressford.News.Services.Mapper
 		{
 			//we probbably need to add some ignore like.ForMember(dest => dest.Id, opt => opt.Ignore());
 			CreateMap<model.ReadArticle, entity.Article>()
+				.ForMember(dest => dest.Id,
+					  opt => opt.MapFrom(readArticle => readArticle.ArticleId))
 			.ReverseMap();
 
 			CreateMap<model.ArticleBase, entity.Article>()
@@ -17,13 +19,16 @@ namespace Pressford.News.Services.Mapper
 
 			CreateMap<model.UpdateArticle, entity.Article>()
 			 .ForMember(dest => dest.DateModified,
-						opt => opt.Ignore());
-			
-			CreateMap<model.UpdateArticle, entity.Article>()
+						opt => opt.Ignore())
+		
+		     .ForMember(dest => dest.Id,
+						opt => opt.MapFrom(updatedArticle => updatedArticle.ArticleId))
+
 			 .ForMember(dest => dest.DatePublished,
-						opt => opt.Ignore());
+						opt => opt.Ignore())
+						.ReverseMap();
 			
-			CreateMap<entity.Article, model.UpdateArticle>();
+			//CreateMap<entity.Article, model.UpdateArticle>();
 
 			CreateMap<model.ReadArticle, model.UpdateArticle>()
 			.ReverseMap();

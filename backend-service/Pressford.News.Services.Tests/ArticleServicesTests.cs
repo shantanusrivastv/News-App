@@ -22,6 +22,7 @@ namespace Pressford.News.Services.Tests
 	public class ArticleServicesTests
 	{
 		private Mock<IRepository<Article>> _repository;
+		private Mock<IUserRepository> _usrRepository;
 		private IMapper _mapper;
 		private Mock<IHttpContextAccessor> _httpContextAccessor;
 		private ArticleServices _sut;
@@ -30,6 +31,7 @@ namespace Pressford.News.Services.Tests
 		public void Setup()
 		{
 			_repository = new Mock<IRepository<Article>>();
+			_usrRepository = new Mock<IUserRepository>();
 			_httpContextAccessor = new Mock<IHttpContextAccessor>();
 
 			var configuration = new MapperConfiguration(cfg => cfg.AddProfile(new PressfordMapper()));
@@ -39,7 +41,7 @@ namespace Pressford.News.Services.Tests
 			_httpContextAccessor.Setup(x => x.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier))
 							.Returns(nameIdentifierClaim)
 							.Verifiable();
-			_sut = new ArticleServices(_repository.Object, _mapper, _httpContextAccessor.Object);
+			_sut = new ArticleServices(_repository.Object, _usrRepository.Object, _mapper, _httpContextAccessor.Object);
 		}
 
 		[Test]
@@ -65,8 +67,8 @@ namespace Pressford.News.Services.Tests
 		{
 			return
 			[
-			   new model.ReadArticle() { Id =1, Author = "Author1"},
-			   new model.ReadArticle() { Id =2, Author = "Author2"}
+			   new model.ReadArticle() { ArticleId =1, Author = "Author1"},
+			   new model.ReadArticle() { ArticleId =2, Author = "Author2"}
 			];
 		}
 

@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Pressford.News.Data;
+using Pressford.News.Entities;
 using Pressford.News.Services.Interfaces;
 using Pressford.News.Services.Mapper;
 
@@ -14,6 +15,7 @@ namespace Pressford.News.Services.Dependencies
 	{
 		public static void ConfigurePersistence(IServiceCollection services, IConfiguration config)
 		{
+			
 			string envt = config.GetValue<string>("ASPNETCORE_ENVIRONMENT");
 
 			if (envt.Trim().ToUpper() == "DEVELOPMENT")
@@ -22,20 +24,27 @@ namespace Pressford.News.Services.Dependencies
 								{
 									options.EnableSensitiveDataLogging();//Disable in production
 									options.UseSqlServer(config.GetConnectionString("PressfordNewsContext"));
-									options.LogTo(System.Console.WriteLine, 
-											new[]
-											{
-												DbLoggerCategory.Database.Command.Name,
-												DbLoggerCategory.ChangeTracking.Name
-											}, Microsoft.Extensions.Logging.LogLevel.Information);
+									//Moved the logic to appsettings.Development.json
+									//options.LogTo(System.Console.WriteLine, 
+									//		new[]
+									//		{
+									//			DbLoggerCategory.Database.Command.Name,
+									//			DbLoggerCategory.ChangeTracking.Name
+									//		}, Microsoft.Extensions.Logging.LogLevel.Information);
 								}); 
 			}
 			else
 			{
 				services.AddDbContext<PressfordNewsContext>(options =>
 				{
+
+					services.AddDbContext<PressfordNewsContext>(options =>
+					{
+						options.EnableSensitiveDataLogging();//Disable in production
+						options.UseSqlServer(config.GetConnectionString("PressfordNewsContext"));
+					});
 					
-					options.UseSqlite(config.GetConnectionString("DefaultConnection"));
+					//options.UseSqlite(config.GetConnectionString("DefaultConnection"));
 				});
 			}
 		}
@@ -44,8 +53,9 @@ namespace Pressford.News.Services.Dependencies
 		{
 			//We want to share the same DbContext instance throughout a single HTTP request.
 			services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+			services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
 			//The service layer is stateless hence transient
-			services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+			//services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
 			services.AddTransient<IArticleServices, ArticleServices>();
 			services.AddTransient<IUserService, UserService>();
 			services.AddTransient<IArticleLikeService, ArticleLikeService>();

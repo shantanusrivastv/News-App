@@ -14,6 +14,7 @@ namespace Pressford.News.Entities
 
 		public string Author { get; set; }
 
+		//TOdo Convert to DateOnly we dont need time
 		public DateTime DatePublished { get; set; }
 
 		public DateTime DateModified { get; set; }
