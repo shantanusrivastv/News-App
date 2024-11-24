@@ -37,13 +37,8 @@ namespace Pressford.News.Services.Dependencies
 			{
 				services.AddDbContext<PressfordNewsContext>(options =>
 				{
-
-					services.AddDbContext<PressfordNewsContext>(options =>
-					{
-						options.EnableSensitiveDataLogging();//Disable in production
-						options.UseSqlServer(config.GetConnectionString("PressfordNewsContext"));
-					});
-					
+					options.EnableSensitiveDataLogging();//Disable in production
+					options.UseSqlServer(config.GetConnectionString("SqlLocalDb"), b => b.MigrationsAssembly("Pressford.News.Data"));
 					//options.UseSqlite(config.GetConnectionString("DefaultConnection"));
 				});
 			}

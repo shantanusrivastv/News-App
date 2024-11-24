@@ -1,0 +1,54 @@
+﻿apiVersion: v1
+kind: Service
+metadata:
+  name: pressford-news-api
+spec:
+  type: NodePort
+  ports:
+    - name: 'http'
+      port: 5000
+      nodePort: 31961
+      targetPort: 5000
+      protocol: TCP
+  selector:
+    app: pressford-news-api
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pressford-news-api
+spec:
+  selector:
+    matchLabels:
+      app: pressford-news-api
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: pressford-news-api
+    spec:
+      imagePullSecrets:
+        - name: registrycreds
+      containers:
+        - name: pressford-news-api
+          image: pressford-news-api:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5000
+              protocol: TCP
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: development
+            - name: ASPNETCORE_URLS
+              value: http://+:5000
+            - name: ConnectionStrings__PressfordNewsContext
+              value: "Data Source=host.docker.internal,1433;Initial Catalog=PressfordNews-PROD;User ID=sa;Password=Passw0rd;Connect Timeout=30;Encrypt=False;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False"
+
+          volumeMounts:
+            - name: data-protection-keys
+              mountPath: /home/app/.aspnet/DataProtection-Keys
+      volumes:
+        - name: data-protection-keys
+          emptyDir: {}
