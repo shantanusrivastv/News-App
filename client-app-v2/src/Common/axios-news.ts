@@ -1,8 +1,6 @@
 import axios, { AxiosInstance, InternalAxiosRequestConfig, AxiosResponse } from 'axios';
 import { Configs } from "./constants";
 
-
-
 const axiosInstance: AxiosInstance = axios.create({
 	baseURL: Configs.URL,
 	timeout: 10000,

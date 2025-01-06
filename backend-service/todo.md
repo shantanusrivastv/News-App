@@ -34,3 +34,4 @@ https://jasonwatmore.com/post/2020/01/03/aspnet-core-ef-core-migrations-for-mult
 15. Use Autofixture for fake data.
 16. This might not be in near future but maybe BenchmarkDotNet 
 	https://github.com/dotnet/BenchmarkDotNet
+17. Add warning as error

@@ -18,12 +18,12 @@
 		},
 		"Pressford.News.API": {
 			"commandName": "Project",
+			"dotnetRunMessages": true,
 			"launchBrowser": true,
-			"launchUrl": "",
 			"environmentVariables": {
 				"ASPNETCORE_ENVIRONMENT": "Development"
 			},
-			"applicationUrl": "http://localhost:63961"
+			"applicationUrl": "http://localhost:31960"
 		}
 	}
 }

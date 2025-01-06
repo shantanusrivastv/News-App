@@ -1,5 +1,5 @@
 export const Configs = {
-  URL: "http://localhost:63961/api/",
+  URL: window.REACT_APP_CONFIG?.API_URL || "http://localhost:63961/api/",
 };
 
 export enum ActionTypes {

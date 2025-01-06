@@ -1,0 +1,58 @@
+# service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: pressford-news-client
+spec:
+  type: NodePort
+  selector:
+    app: pressford-news-client
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30005 #This port will be accessible from outside
+
+---
+# configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pressford-news-client-config
+data:
+  config.js: |
+    window.REACT_APP_CONFIG = {
+      API_URL: "http://host.docker.internal:31961/api"
+    };
+---
+# deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pressford-news-client
+spec:
+  selector:
+    matchLabels:
+      app: pressford-news-client
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: pressford-news-client
+    spec:
+      containers:
+      - name: pressford-news-client
+        image: pressford-news-client:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: config-volume
+          mountPath: /usr/share/nginx/html/config.js
+          subPath: config.js
+      volumes:
+      - name: config-volume
+        configMap:
+          name: pressford-news-client-config
+
