@@ -27,15 +27,15 @@ namespace Pressford.News.API.Controllers
 		/// Get all articles
 		/// </summary>
 		/// <returns></returns>
-		[HttpGet]
-		public async Task<IActionResult> GetAllArticles()
+		[HttpGet, HttpHead] // GET /api/article
+        public async Task<IActionResult> GetAllArticles()
 		{
 			var articles = await _articleServices.GetAllArticles();
 			return Ok(articles);
 		}
 
-		[HttpGet("{articleId:int}", Name = "GetArticle")]
-		public async Task<IActionResult> GetSingleArticle(int articleId)
+		[HttpGet("{articleId:int}", Name = "GetArticle")] // GET /api/article/1
+        public async Task<IActionResult> GetSingleArticle(int articleId)
 		{
 			var article = await _articleServices.GetSingleArticle(articleId);
 			if (article == null)

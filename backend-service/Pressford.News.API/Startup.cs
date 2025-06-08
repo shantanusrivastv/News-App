@@ -9,6 +9,8 @@ using Microsoft.OpenApi.Models;
 using Pressford.News.Services.Dependencies;
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
+using Microsoft.AspNetCore.Http;
 
 namespace Pressford.News.API
 {
@@ -112,8 +114,23 @@ namespace Pressford.News.API
 			{
 				app.UseDeveloperExceptionPage();
 			}
+            app.UseExceptionHandler(app =>
+            {
+                app.Run(async context =>
+                {
+                    context.Response.StatusCode = 500;
+                    context.Response.ContentType = "application/json";
+                    var errorResponse = new
+                    {
+                        error = "Something unexpected happened, please try again"
+                    };
+                    var json = JsonSerializer.Serialize(errorResponse);
 
-			app.UseSwagger();
+                    await context.Response.WriteAsync(json, default);
+                });
+            });
+
+            app.UseSwagger();
 			app.UseSwaggerUI(c =>
 			{
 				c.SwaggerEndpoint("/swagger/v1/swagger.json", "News API v1");

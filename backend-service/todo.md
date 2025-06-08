@@ -35,3 +35,5 @@ https://jasonwatmore.com/post/2020/01/03/aspnet-core-ef-core-migrations-for-mult
 16. This might not be in near future but maybe BenchmarkDotNet 
 	https://github.com/dotnet/BenchmarkDotNet
 17. Add warning as error
+18. We need to define hierarchical routing if we want to structure endpoints for authors and their articles,such as: 
+	[Route("api/author/{authorId}/article")]
