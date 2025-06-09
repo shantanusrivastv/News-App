@@ -7,103 +7,126 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Pressford.News.Data
 {
-	public class Repository<TEntity> : IRepository<TEntity> where TEntity : class, new()
-	{
-		protected readonly PressfordNewsContext _context;
+    public class Repository<TEntity> : IRepository<TEntity> where TEntity : class, new()
+    {
+        protected readonly PressfordNewsContext _context;
 
-		public Repository(PressfordNewsContext context)
-		{
-			_context = context;
-		}
+        public Repository(PressfordNewsContext context)
+        {
+            _context = context;
+        }
 
-		public IQueryable<TEntity> GetAll()
-		{
-			try
-			{
-				return _context.Set<TEntity>();
-			}
-			catch (Exception)
-			{
-				throw new Exception("Couldn't retrieve entities");
-			}
-		}
+        public IQueryable<TEntity> GetAll()
+        {
+            try
+            {
+                return _context.Set<TEntity>();
+            }
+            catch (Exception)
+            {
+                throw new Exception("Couldn't retrieve entities");
+            }
+        }
 
-		public async Task<TEntity> AddAsync(TEntity entity)
-		{
-			if (entity == null)
-			{
-				throw new ArgumentNullException($"{nameof(AddAsync)} entity must not be null");
-			}
+        public async Task<TEntity> AddAsync(TEntity entity)
+        {
+            if (entity == null)
+            {
+                throw new ArgumentNullException($"{nameof(AddAsync)} entity must not be null");
+            }
 
-			try
-			{
-				await _context.AddAsync(entity);
-				await _context.SaveChangesAsync();
+            try
+            {
+                await _context.AddAsync(entity);
+                await _context.SaveChangesAsync();
 
-				return entity;
-			}
-			catch (Exception ex)
-			{
-				throw new Exception($"{nameof(entity)} could not be saved");
-			}
-		}
+                return entity;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"{nameof(entity)} could not be saved");
+            }
+        }
 
-		public async Task<TEntity> UpdateAsync(TEntity entity)
-		{
-			if (entity == null)
-			{
-				throw new ArgumentNullException($"{nameof(UpdateAsync)} entity must not be null");
-			}
+        public async Task<IEnumerable<TEntity>> AddListAsync(IEnumerable<TEntity> entities)
+        {
+            if (entities == null)
+            {
+                throw new ArgumentNullException($"{nameof(AddAsync)} entity must not be null");
+            }
 
-			try
-			{
-				_context.Update(entity);
-				await _context.SaveChangesAsync();
+            try
+            {
+                foreach (var entity in entities)
+                {
+                    await _context.AddAsync(entity);
+                }
 
-				return entity;
-			}
-			catch (Exception)
-			{
-				throw new Exception($"{nameof(entity)} could not be updated");
-			}
-		}
+                await _context.SaveChangesAsync();
+                return entities;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"{nameof(entities)} could not be saved");
+            }
+        }
 
-		public async Task<bool> Delete<TUniqueType>(TUniqueType uniqueIdentifier)
-		{
-			TEntity entityToDelete = _context.Find<TEntity>(uniqueIdentifier);
-			if (entityToDelete == null)
-			{
-				throw new InvalidOperationException($"{nameof(Delete)} entity not found");
-			}
+        public async Task<TEntity> UpdateAsync(TEntity entity)
+        {
+            if (entity == null)
+            {
+                throw new ArgumentNullException($"{nameof(UpdateAsync)} entity must not be null");
+            }
 
-			try
-			{
-				_context.Remove(entityToDelete);
-				await _context.SaveChangesAsync();
+            try
+            {
+                _context.Update(entity);
+                await _context.SaveChangesAsync();
 
-				return true;
-			}
-			catch (Exception)
-			{
-				throw new Exception($"{nameof(TEntity)} could not be deleted");
-			}
-		}
+                return entity;
+            }
+            catch (Exception)
+            {
+                throw new Exception($"{nameof(entity)} could not be updated");
+            }
+        }
 
-		//todo: Check if async is better or if IQueryable is more performant
-		public IQueryable<TEntity> FindBy(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includes)
-		{
-			var query = _context.Set<TEntity>().Where(predicate);
+        public async Task<bool> Delete<TUniqueType>(TUniqueType uniqueIdentifier)
+        {
+            TEntity entityToDelete = _context.Find<TEntity>(uniqueIdentifier);
+            if (entityToDelete == null)
+            {
+                throw new InvalidOperationException($"{nameof(Delete)} entity not found");
+            }
 
-			return includes.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
-		}
+            try
+            {
+                _context.Remove(entityToDelete);
+                await _context.SaveChangesAsync();
 
-		public async Task<List<TEntity>> FindByAsync(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includes)
-		{
-			var query = _context.Set<TEntity>().Where(predicate);
-			query = includes.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
+                return true;
+            }
+            catch (Exception)
+            {
+                throw new Exception($"{nameof(TEntity)} could not be deleted");
+            }
+        }
 
-			return await query.ToListAsync();
-		}
+        //todo: Check if async is better or if IQueryable is more performant
+        public IQueryable<TEntity> FindBy(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includes)
+        {
+            var query = _context.Set<TEntity>().Where(predicate);
 
-	}
+            return includes.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
+        }
+
+        public async Task<List<TEntity>> FindByAsync(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includes)
+        {
+            var query = _context.Set<TEntity>().Where(predicate);
+            query = includes.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
+
+            return await query.ToListAsync();
+        }
+
+    }
 }

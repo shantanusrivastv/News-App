@@ -19,5 +19,9 @@ namespace Pressford.News.Services.Interfaces
 		Task<bool> RemoveArticle(int articleId);
 
 		Task<(ReadArticle, IEnumerable<ValidationResult>)> PatchArticle(int articleId, JsonPatchDocument<UpdateArticle> patchDoc);
-	}
+
+		//Todo refactor to its own svc 
+        Task<IEnumerable<ReadArticle>> CreateArticlCollection(IEnumerable<ArticleBase> articlecollection);
+        Task<IList<ReadArticle>> GetArticleCollection(IEnumerable<int> articleIds);
+    }
 }

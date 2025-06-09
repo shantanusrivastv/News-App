@@ -9,5 +9,6 @@ namespace Pressford.News.Data
 	{
 		Task<List<AuthorWithArticles>> GetAuthorView();
 		Task<List<User>> GetPublishedArticleWithinRange(DateTime startDtm, DateTime endDtm);
-	}
+        Task<List<Article>> GetArticleCollection(IEnumerable<int> articleIds);
+    }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Pressford.News.Entities;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,7 +20,15 @@ namespace Pressford.News.Data
 		{
 			return await _context.AuthorWithArticles.ToListAsync();
 		}
-	}
 
+		//Refactor to its own repo
+		public async Task<List<Article>> GetArticleCollection(IEnumerable<int> articleIds)
+		{
+			return await _context.Article.Where(x=> articleIds.Contains(x.Id))
+                            .OrderBy(a => a.Author)
+							.OrderBy(a => a.DatePublished)
+							.ToListAsync();
+        }
+	}
 
 }

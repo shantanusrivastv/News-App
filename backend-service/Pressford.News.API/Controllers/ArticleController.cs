@@ -61,7 +61,7 @@ namespace Pressford.News.API.Controllers
 		/// <response code="400">For Invalid Input</response>
 		[Authorize(Roles = "Publisher")]
 		[HttpPost]
-		[ProducesResponseType(typeof(ReadArticle), StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(ReadArticle), StatusCodes.Status201Created)]
 		[ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
 		[Consumes("application/json")]
 		public async Task<IActionResult> CreateNewArticle([FromBody] ArticleBase article)

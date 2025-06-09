@@ -17,7 +17,7 @@ using JsonPatchArticle = Microsoft.AspNetCore.JsonPatch.JsonPatchDocument<Pressf
 
 namespace Pressford.News.Services
 {
-	public class ArticleServices : IArticleServices
+    public class ArticleServices : IArticleServices
 	{
 		private readonly IRepository<entity.Article> _repository;
 		private readonly IUserRepository _userRepository;
@@ -37,10 +37,22 @@ namespace Pressford.News.Services
 
 		public async Task<ReadArticle> CreateArticle(ArticleBase article)
 		{
-			var authorEntity = _mapper.Map<entity.Article>(article);
-			authorEntity.Author = _userName ?? throw new ApplicationException("User is not logged in");
-			var result = await _repository.AddAsync(authorEntity);
+			var articleEntity = _mapper.Map<entity.Article>(article);
+			articleEntity.Author = _userName ?? throw new ApplicationException("User is not logged in");
+			var result = await _repository.AddAsync(articleEntity);
 			return _mapper.Map<ReadArticle>(result);
+		}
+
+		public async Task<IEnumerable<ReadArticle>> CreateArticlCollection(IEnumerable<ArticleBase> articlecollection)
+		{
+			var articleEntity = _mapper.Map<IEnumerable<entity.Article>>(articlecollection);
+			if(_userName  == null)
+				throw new ApplicationException("User is not logged in");
+
+			Parallel.ForEach(articleEntity, article => article.Author = _userName);
+
+			var articleEntitities = await _repository.AddListAsync(articleEntity);
+			return _mapper.Map<IEnumerable<ReadArticle>>(articleEntitities);
 		}
 
 		public async Task<ReadArticle> GetSingleArticle(int articleId)
@@ -147,5 +159,12 @@ namespace Pressford.News.Services
 				return (validationResults, articleToUpdate);
 			}
 		}
-	}
+
+        public async Task<IList<ReadArticle>> GetArticleCollection(IEnumerable<int> articleIds)
+        {
+			var entityArticles = await _userRepository.GetArticleCollection(articleIds);
+			var artcilesList = _mapper.Map<IList<ReadArticle>>(entityArticles);
+			return artcilesList;
+        }
+    }
 }
