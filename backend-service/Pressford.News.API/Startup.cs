@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -10,7 +12,6 @@ using Pressford.News.Services.Dependencies;
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
-using Microsoft.AspNetCore.Http;
 
 namespace Pressford.News.API
 {
@@ -44,9 +45,43 @@ namespace Pressford.News.API
 				//setupAction.Conventions.Add(new ProducesAttributeConvention());
 
 			}).AddNewtonsoftJson()
-			  .AddXmlDataContractSerializerFormatters();
+			  .AddXmlDataContractSerializerFormatters()
+			  .ConfigureApiBehaviorOptions( setupAction =>
+			  {
+                  setupAction.InvalidModelStateResponseFactory = context =>
+                  {
+                      // create a validation problem details object
+                      var problemDetailsFactory = context.HttpContext.RequestServices
+                          .GetRequiredService<ProblemDetailsFactory>();
 
-			services.AddHttpContextAccessor();
+                      var validationProblemDetails = problemDetailsFactory
+                          .CreateValidationProblemDetails(
+                              context.HttpContext,
+                              context.ModelState);
+
+                      // add additional info not added by default
+                      validationProblemDetails.Detail =
+                          "See the errors field for details.";
+                      validationProblemDetails.Instance =
+                          context.HttpContext.Request.Path;
+
+                      // report invalid model state responses as validation issues
+                      validationProblemDetails.Type =
+                          "https://PressfordNews.com/modelvalidationproblem";
+                      validationProblemDetails.Status =
+                          StatusCodes.Status422UnprocessableEntity;
+                      validationProblemDetails.Title =
+                          "One or more validation errors occurred.";
+
+                      return new UnprocessableEntityObjectResult(
+                          validationProblemDetails)
+                      {
+                          ContentTypes = { "application/problem+json" }
+                      };
+                  };
+              });
+
+            services.AddHttpContextAccessor();
 			ServiceConfigurationManager.ConfigureAuthentication(services, Configuration);
 
 			services.AddSwaggerGen(c =>

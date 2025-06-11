@@ -1,9 +1,12 @@
-﻿using System;
+﻿using Pressford.News.API.ValidationAttributes;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Pressford.News.Model
 {
-	public class ArticleBase
+	//[ArticleBodyMustBeDifferentFromTitle] //Not using but left for reference
+	public class ArticleBase : IValidatableObject
 	{
 		[Required(ErrorMessage = "Article Name is required.")]
 		//[StringLength(20, MinimumLength = 5, ErrorMessage = "Article Name must be between 5 and 10 characters long.")]
@@ -13,6 +16,15 @@ namespace Pressford.News.Model
 
 		[Required(ErrorMessage = "Article Body is required.")]
 		public string Body { get; set; }
+
+		public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+		{
+            if(Title == Body)
+			{
+				yield return new ValidationResult("The Article body should be different from the title.",
+					new[] { "Article" });
+			}
+		}
 	}
 
 	public class ReadArticle : ArticleBase

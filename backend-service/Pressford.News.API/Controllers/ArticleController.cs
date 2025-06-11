@@ -131,8 +131,18 @@ namespace Pressford.News.API.Controllers
 		[HttpOptions]
 		public IActionResult GetArticleOptions()
 		{
-			Response.Headers.Add("Allow", "GET,OPTIONS,POST");
+			Response.Headers.Add("Allow", "GET,HEAD,POST,DELETE,OPTIONS");
 			return Ok();
 		}
-	}
+
+        //public override ActionResult ValidationProblem(
+        //    [ActionResultObjectValue] ModelStateDictionary modelStateDictionary)
+        //{
+        //    var options = HttpContext.RequestServices
+        //        .GetRequiredService<IOptions<ApiBehaviorOptions>>();
+
+        //    return (ActionResult)options.Value
+        //        .InvalidModelStateResponseFactory(ControllerContext);
+        //}
+    }
 }
