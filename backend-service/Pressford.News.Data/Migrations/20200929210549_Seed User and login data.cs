@@ -9,7 +9,7 @@ namespace Pressford.News.Data.Migrations
 			migrationBuilder.InsertData(
 				table: "User",
 				columns: new[] { "Id", "Email", "FirstName", "LastName" },
-				values: new object[] { 1, "w.Pressford@pressford.com", "W", "Pressford " });
+				values: new object[] { 1, "w.Pressford@pressford.com", "W", "Pressford" });
 
 			migrationBuilder.InsertData(
 				table: "User",

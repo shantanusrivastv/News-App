@@ -16,24 +16,25 @@ namespace Pressford.News.API.Controllers
 			_likeService = likeService;
 		}
 
+		//todo maybe we can toggle it
 		[Authorize]
-		[HttpPost("[action]/{articleId:int}")]
+		[HttpPut("[action]/{articleId:int}")]
 		public async Task<IActionResult> LikeArticle(int articleId)
 		{
 			var user = await _likeService.LikeArticle(articleId);
 			if (!user)
-				return BadRequest();
-			return Ok("Article Like was successfully updated");
-		}
+                return BadRequest(new { success = false, message = "Unable to process like request" });
+            return Ok(new { success = true, message = "Article unlike status updated successfully" });
+        }
 
 		[Authorize]
-		[HttpDelete("[action]/{articleId:int}")]
+		[HttpPut("[action]/{articleId:int}")]
 		public async Task<IActionResult> UnlikeArticle(int articleId)
 		{
 			var user = await _likeService.UnLikeArticle(articleId);
 			if (!user)
-				return BadRequest();
-			return Ok("Article UnLike was successfully updated");
-		}
-	}
+                return BadRequest(new { success = false, message = "Unable to process unlike request" });
+            return Ok(new { success = true, message = "Article unlike status updated successfully" });
+        }
+    }
 }

@@ -90,7 +90,7 @@ namespace Pressford.News.Data
 			//modelBuilder.Entity<User>().Property<DateTime>("LastUpdated");
 
 			modelBuilder.Entity<User>().HasData(
-				new User { Id = 1, FirstName = "W", LastName = "Pressford ", Email = "w.Pressford@pressford.com" },
+				new User { Id = 1, FirstName = "W", LastName = "Pressford", Email = "w.Pressford@pressford.com" },
 				new User { Id = 2, FirstName = "Admin", LastName = "User", Email = "adminUser@pressford.com" },
 				new User { Id = 3, FirstName = "Normal", LastName = "User", Email = "normalUser@pressford.com" });
 

@@ -78,7 +78,7 @@ namespace Pressford.News.Data.Migrations
                             Id = 1,
                             Email = "w.Pressford@pressford.com",
                             FirstName = "W",
-                            LastName = "Pressford "
+                            LastName = "Pressford"
                         },
                         new
                         {
