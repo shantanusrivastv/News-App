@@ -14,13 +14,18 @@ namespace Pressford.News.Services.Mapper
 					  opt => opt.MapFrom(readArticle => readArticle.ArticleId))
 			.ReverseMap();
 
-			CreateMap<model.ArticleBase, entity.Article>()
+			CreateMap<model.CreateArticle, entity.Article>()
 			.ReverseMap();
 
 			CreateMap<model.UpdateArticle, entity.Article>()
 			 .ForMember(dest => dest.DateModified,
 						opt => opt.Ignore())
-		
+			 .ReverseMap();
+
+			CreateMap<model.PatchArticle, entity.Article>()
+			 .ForMember(dest => dest.DateModified,
+						opt => opt.Ignore())
+
 		     .ForMember(dest => dest.Id,
 						opt => opt.MapFrom(updatedArticle => updatedArticle.ArticleId))
 
@@ -28,10 +33,7 @@ namespace Pressford.News.Services.Mapper
 						opt => opt.Ignore())
 						.ReverseMap();
 			
-			//CreateMap<entity.Article, model.UpdateArticle>();
-
-			CreateMap<model.ReadArticle, model.UpdateArticle>()
-			.ReverseMap();
+			CreateMap<model.ReadArticle, model.UpdateArticle>().ReverseMap();
 
 			CreateMap<entity.UserLogin, model.UserInfo>()
 			.ForMember(dest => dest.Name,

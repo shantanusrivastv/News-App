@@ -8,7 +8,7 @@ namespace Pressford.News.Services.Interfaces
 {
 	public interface IArticleServices
 	{
-		Task<ReadArticle> CreateArticle(ArticleBase article);
+		Task<ReadArticle> CreateArticle(CreateArticle article);
 
 		Task<IList<ReadArticle>> GetAllArticles();
 
@@ -18,10 +18,10 @@ namespace Pressford.News.Services.Interfaces
 
 		Task<bool> RemoveArticle(int articleId);
 
-		Task<(ReadArticle, IEnumerable<ValidationResult>)> PatchArticle(int articleId, JsonPatchDocument<UpdateArticle> patchDoc);
+		Task<(ReadArticle, IEnumerable<ValidationResult>)> PatchArticle(int articleId, JsonPatchDocument<PatchArticle> patchDoc);
 
 		//Todo refactor to its own svc 
-        Task<IEnumerable<ReadArticle>> CreateArticlCollection(IEnumerable<ArticleBase> articlecollection);
+        Task<IEnumerable<ReadArticle>> CreateArticlCollection(IEnumerable<CreateArticle> articlecollection);
         Task<IList<ReadArticle>> GetArticleCollection(IEnumerable<int> articleIds);
     }
 }

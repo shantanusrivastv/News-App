@@ -82,7 +82,6 @@ namespace Pressford.News.Data
             {
                 _context.Update(entity);
                 await _context.SaveChangesAsync();
-
                 return entity;
             }
             catch (Exception)

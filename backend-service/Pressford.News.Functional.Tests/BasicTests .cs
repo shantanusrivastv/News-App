@@ -36,7 +36,7 @@ namespace Pressford.News.Functional.Tests
 			// Act
 			var response = await _client.GetAsync("api/Article");
 			var stringResponse = await response.Content.ReadAsStringAsync();
-			var result = JsonConvert.DeserializeObject<ArticleBase[]>(stringResponse);
+			var result = JsonConvert.DeserializeObject<ReadArticle[]>(stringResponse);
 
 			// Assert
 			result.Should().NotBeNull();
@@ -62,7 +62,7 @@ namespace Pressford.News.Functional.Tests
 
 			client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Test");
 
-			var article = new ArticleBase()
+			var article = new CreateArticle()
 			{
 				Title = "Test Title",
 				Body = "Test Body"
@@ -86,7 +86,7 @@ namespace Pressford.News.Functional.Tests
 			// Act
 			var response = await client.GetAsync("api/Article");
 			var stringResponse = await response.Content.ReadAsStringAsync();
-			var result = JsonConvert.DeserializeObject<ArticleBase[]>(stringResponse);
+			var result = JsonConvert.DeserializeObject<ReadArticle[]>(stringResponse);
 
 			// Assert
 			result.Should().NotBeNull();

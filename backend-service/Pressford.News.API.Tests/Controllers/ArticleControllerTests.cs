@@ -78,14 +78,14 @@ namespace Pressford.News.API.Tests.Controllers
 		public async Task Should_Create_New_Article()
 		{
 			// Arrange
-			_articleServices.Setup(x => x.CreateArticle(It.IsAny<ReadArticle>()))
+			_articleServices.Setup(x => x.CreateArticle(It.IsAny<CreateArticle>()))
 							.ReturnsAsync(MockArticleResults().First());
 
 			//Act
-			var result = await _sut.CreateNewArticle(MockArticleResults().First()) as ObjectResult;
+			var result = await _sut.CreateNewArticle(MockCreateArticle().First()) as ObjectResult;
 
 			//Assert
-			_articleServices.Verify(x => x.CreateArticle(It.IsAny<ReadArticle>()), Times.Once);
+			_articleServices.Verify(x => x.CreateArticle(It.IsAny<CreateArticle>()), Times.Once);
 			result.Should().NotBeNull();
 			result.Value.Should().BeOfType<ReadArticle>();
 			//Ideally the status code should be 201 , some implementation code is commented for reference
@@ -165,8 +165,17 @@ namespace Pressford.News.API.Tests.Controllers
 		{
 			return
 			[
-			   new ReadArticle() { ArticleId =1, Author = "Author1"},
-			   new ReadArticle() { ArticleId =2, Author = "Author2"}
+			   new ReadArticle() {  ArticleId = 1,  Title = "Article 1 Title", Body = "Article 1 Body"},
+			   new ReadArticle() { ArticleId = 2,   Title = "Article 2 Title", Body = "Article 2 Body"}
+			];
+		}
+
+		private static List<CreateArticle> MockCreateArticle()
+		{
+			return
+			[
+			   new CreateArticle() {Title = "Article 1 Title", Body = "Article 1 Body"},
+			   new CreateArticle() {Title = "Article 2 Title", Body = "Article 2 Body"}
 			];
 		}
 

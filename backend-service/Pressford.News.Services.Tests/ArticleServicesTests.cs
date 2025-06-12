@@ -63,12 +63,12 @@ namespace Pressford.News.Services.Tests
 			result.Author.Should().Be("Author1");
 		}
 
-		private static IEnumerable<model.ReadArticle> MockArticleModels()
+		private static IEnumerable<model.CreateArticle> MockArticleModels()
 		{
 			return
 			[
-			   new model.ReadArticle() { ArticleId =1, Author = "Author1"},
-			   new model.ReadArticle() { ArticleId =2, Author = "Author2"}
+			   new model.CreateArticle() { Title = "Article 1", Body = "Article 1 Body"},
+			   new model.CreateArticle() { Title = "Article 2", Body = "Article 2 Body"}
 			];
 		}
 

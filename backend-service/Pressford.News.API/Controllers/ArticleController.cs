@@ -64,7 +64,7 @@ namespace Pressford.News.API.Controllers
 		[ProducesResponseType(typeof(ReadArticle), StatusCodes.Status201Created)]
 		[ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
 		[Consumes("application/json")]
-		public async Task<IActionResult> CreateNewArticle([FromBody] ArticleBase article)
+		public async Task<IActionResult> CreateNewArticle([FromBody] CreateArticle article)
 		{
 			var result = await _articleServices.CreateArticle(article);
 			return CreatedAtRoute("GetArticle", new { articleId = result.ArticleId }, result);
@@ -85,7 +85,7 @@ namespace Pressford.News.API.Controllers
 		[Authorize(Roles = "Publisher")]
 		[HttpPatch]
 		[ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
-		public async Task<IActionResult> PatchArticle([FromBody] JsonPatchDocument<UpdateArticle> patchArticle)
+		public async Task<IActionResult> PatchArticle([FromBody] JsonPatchDocument<PatchArticle> patchArticle)
 		{
 			var idOperation = patchArticle.Operations.FirstOrDefault(op => op.path.Equals("/articleId", StringComparison.OrdinalIgnoreCase));
 			if (idOperation == null || !int.TryParse(idOperation.value?.ToString(), out int id))

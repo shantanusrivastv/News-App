@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Pressford.News.API.ModelBinder;
 using Pressford.News.Model;
-using Pressford.News.Model.Updated;
 using Pressford.News.Services;
 using Pressford.News.Services.Interfaces;
 using System;
@@ -45,7 +44,7 @@ namespace Pressford.News.API.Controllers
         [ProducesResponseType(typeof(IList<ReadArticle>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
         [Consumes("application/json")]
-        public async Task<IActionResult> CreateNewArticle( IEnumerable<ArticleBase> articlelist)
+        public async Task<IActionResult> CreateNewArticle(IEnumerable<CreateArticle> articlelist)
         {
             var articles =  await _articleServices.CreateArticlCollection(articlelist);
             var articleIds = string.Join(",", articles.Select(a => a.ArticleId));

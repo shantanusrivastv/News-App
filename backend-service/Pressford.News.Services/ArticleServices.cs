@@ -13,7 +13,7 @@ using Pressford.News.Entities;
 using Pressford.News.Model;
 using Pressford.News.Services.Interfaces;
 using entity = Pressford.News.Entities;
-using JsonPatchArticle = Microsoft.AspNetCore.JsonPatch.JsonPatchDocument<Pressford.News.Model.UpdateArticle>;
+using JsonPatchArticle = Microsoft.AspNetCore.JsonPatch.JsonPatchDocument<Pressford.News.Model.PatchArticle>;
 
 namespace Pressford.News.Services
 {
@@ -35,7 +35,7 @@ namespace Pressford.News.Services
 			_userName = httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 		}
 
-		public async Task<ReadArticle> CreateArticle(ArticleBase article)
+		public async Task<ReadArticle> CreateArticle(CreateArticle article)
 		{
 			var articleEntity = _mapper.Map<entity.Article>(article);
 			articleEntity.Author = _userName ?? throw new ApplicationException("User is not logged in");
@@ -43,7 +43,7 @@ namespace Pressford.News.Services
 			return _mapper.Map<ReadArticle>(result);
 		}
 
-		public async Task<IEnumerable<ReadArticle>> CreateArticlCollection(IEnumerable<ArticleBase> articlecollection)
+		public async Task<IEnumerable<ReadArticle>> CreateArticlCollection(IEnumerable<CreateArticle> articlecollection)
 		{
 			var articleEntity = _mapper.Map<IEnumerable<entity.Article>>(articlecollection);
 			if(_userName  == null)
@@ -97,9 +97,12 @@ namespace Pressford.News.Services
 			{
 				return null;
 			}
-			var entityArticle = _mapper.Map<entity.Article>(article);
-			entityArticle.Author = _userName;
-			var updatedArticle = await _repository.UpdateAsync(entityArticle);
+
+			var articleToUpdate = (await _repository.FindByAsync(x => x.Id == article.ArticleId)).SingleOrDefault();
+            articleToUpdate = _mapper.Map<UpdateArticle, entity.Article>(article, articleToUpdate);
+            articleToUpdate.Author = _userName;
+			articleToUpdate.DateModified = DateTime.UtcNow;
+			var updatedArticle = await _repository.UpdateAsync(articleToUpdate);
 			return _mapper.Map<ReadArticle>(updatedArticle);
 		}
 
@@ -117,7 +120,7 @@ namespace Pressford.News.Services
 			if (existingArticle == null)
 				return (null, validationResults);
 
-			var articleToUpdate = _mapper.Map<UpdateArticle>(existingArticle);
+			var articleToUpdate = _mapper.Map<PatchArticle>(existingArticle);
 
 			var (validationResult, patchedArticle) = ValidateAndPatchDocument(patchArticle, articleToUpdate, validationResults);
 
@@ -137,8 +140,8 @@ namespace Pressford.News.Services
 		}
 
 		//Todo: We can make it to a generic async method
-		private (IEnumerable<ValidationResult>, UpdateArticle) ValidateAndPatchDocument(JsonPatchArticle patchArticle,
-																						UpdateArticle articleToUpdate,
+		private (IEnumerable<ValidationResult>, PatchArticle) ValidateAndPatchDocument( JsonPatchArticle patchArticle,
+																						PatchArticle articleToUpdate,
 																						List<ValidationResult> validationResults)
 		{
 			try
