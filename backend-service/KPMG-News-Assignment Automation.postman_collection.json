@@ -1,0 +1,1544 @@
+{
+	"info": {
+		"_postman_id": "af3d4620-eb46-4994-9165-7c1ded4af5ba",
+		"name": "KPMG-News-Assignment Automation",
+		"description": "KPMG Coding Test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "1636528"
+	},
+	"item": [
+		{
+			"name": "Token",
+			"item": [
+				{
+					"name": "Get Token for Normal User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const responseJson = pm.response.json();\r",
+									"// Test that all required fields are present in the response\r",
+									"pm.test(\"Response should contain all required authentication fields\", function () {\r",
+									"    pm.expect(responseJson).to.have.property('name');\r",
+									"    pm.expect(responseJson).to.have.property('username');\r",
+									"    pm.expect(responseJson).to.have.property('role');\r",
+									"    pm.expect(responseJson).to.have.property('token');\r",
+									"});\r",
+									"\r",
+									"// Test that the name field contains expected user display name\r",
+									"pm.test(\"Name field should contain proper user display name\", function () {\r",
+									"    pm.expect(responseJson.name).to.equal(\"Normal User\");\r",
+									"    pm.expect(responseJson.name).to.be.a('string');\r",
+									"    pm.expect(responseJson.name.length).to.be.above(0);\r",
+									"});\r",
+									"\r",
+									"// Test that the returned username matches what we sent in the request\r",
+									"pm.test(\"Username should match the requested username\", function () {\r",
+									"    const requestBody = JSON.parse(pm.request.body.raw);\r",
+									"    pm.expect(responseJson.username).to.equal(requestBody.username);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"// Test response values\r",
+									"pm.test(\"response values\", function () {\r",
+									"    pm.expect(responseJson.name).to.equal(\"Normal User\");\r",
+									"    pm.expect(responseJson.role).to.equal(\"User\");\r",
+									"    pm.expect(responseJson.token).to.exist;\r",
+									"    pm.expect(responseJson.token).to.be.a('string');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"// Test to decode and validate JWT payload content\r",
+									"pm.test(\"JWT token should contain correct user claims\", function () {\r",
+									"    const token = responseJson.token;\r",
+									"    const payload = JSON.parse(atob(token.split('.')[1])); // Decode JWT payload\r",
+									"    \r",
+									"    // Verify the token contains expected claims\r",
+									"    pm.expect(payload).to.have.property('unique_name');\r",
+									"    pm.expect(payload).to.have.property('role');\r",
+									"    pm.expect(payload).to.have.property('nameid');\r",
+									"    pm.expect(payload).to.have.property('exp'); // Expiration time\r",
+									"    pm.expect(payload).to.have.property('iat'); // Issued at time\r",
+									"    \r",
+									"    // Verify claim values match our expectations\r",
+									"    pm.expect(payload.unique_name).to.equal(\"Normal User\");\r",
+									"    pm.expect(payload.role).to.equal(\"User\");\r",
+									"    pm.expect(payload.nameid).to.equal(\"normalUser@pressford.com\");\r",
+									"\r",
+									"    //token expiration is set to a future date\r",
+									"    const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds\r",
+									"    pm.expect(payload.exp).to.be.above(currentTime);\r",
+									"\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"normalUser@pressford.com\",\r\n    \"password\": \"user\" \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:{{port}}/api/account/authenticate",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"account",
+								"authenticate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Token Mr Pressford",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const responseJson = pm.response.json();\r",
+									"// Test that all required fields are present in the response\r",
+									"pm.test(\"Response should contain all required authentication fields\", function () {\r",
+									"    pm.expect(responseJson).to.have.property('name');\r",
+									"    pm.expect(responseJson).to.have.property('username');\r",
+									"    pm.expect(responseJson).to.have.property('role');\r",
+									"    pm.expect(responseJson).to.have.property('token');\r",
+									"});\r",
+									"\r",
+									"// Test that the returned username matches what we sent in the request\r",
+									"pm.test(\"Username should match the requested username\", function () {\r",
+									"    const requestBody = JSON.parse(pm.request.body.raw);\r",
+									"    pm.expect(responseJson.username).to.equal(requestBody.username);\r",
+									"    pm.expect(responseJson.name).to.be.a('string');\r",
+									"    pm.expect(responseJson.name.length).to.be.above(0);\r",
+									"});\r",
+									"\r",
+									"// Test to decode and validate JWT payload content\r",
+									"pm.test(\"JWT token should contain correct user claims\", function () {\r",
+									"    const token = responseJson.token;\r",
+									"    const payload = JSON.parse(atob(token.split('.')[1])); // Decode JWT payload\r",
+									"    \r",
+									"    // Verify the token contains expected claims\r",
+									"    pm.expect(payload).to.have.property('unique_name');\r",
+									"    pm.expect(payload).to.have.property('role');\r",
+									"    pm.expect(payload).to.have.property('nameid');\r",
+									"    pm.expect(payload).to.have.property('exp'); // Expiration time\r",
+									"    pm.expect(payload).to.have.property('iat'); // Issued at time\r",
+									"    \r",
+									"    // Verify claim values match our expectations\r",
+									"    pm.expect(payload.unique_name).to.equal(\"W Pressford\");\r",
+									"    pm.expect(payload.role).to.equal(\"Publisher\");\r",
+									"    pm.expect(payload.nameid).to.equal(\"w.Pressford@pressford.com\");\r",
+									"\r",
+									"    //token expiration is set to a future date\r",
+									"    const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds\r",
+									"    pm.expect(payload.exp).to.be.above(currentTime);\r",
+									"});\r",
+									"\r",
+									"pm.collectionVariables.set('token', responseJson.token);\r",
+									"pm.collectionVariables.set('article-author', responseJson.username);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"w.Pressford@pressford.com\",\r\n    \"password\": \"admin\" \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:{{port}}/api/account/authenticate",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"account",
+								"authenticate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Admin Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"const responseJson = pm.response.json();\r",
+									"// Test that all required fields are present in the response\r",
+									"pm.test(\"Response should contain all required authentication fields\", function () {\r",
+									"    pm.expect(responseJson).to.have.property('name');\r",
+									"    pm.expect(responseJson).to.have.property('username');\r",
+									"    pm.expect(responseJson).to.have.property('role');\r",
+									"    pm.expect(responseJson).to.have.property('token');\r",
+									"});\r",
+									"\r",
+									"// Test that the returned username matches what we sent in the request\r",
+									"pm.test(\"Username should match the requested username\", function () {\r",
+									"    const requestBody = JSON.parse(pm.request.body.raw);\r",
+									"    pm.expect(responseJson.username).to.equal(requestBody.username);\r",
+									"    pm.expect(responseJson.name).to.be.a('string');\r",
+									"    pm.expect(responseJson.name.length).to.be.above(0);\r",
+									"});\r",
+									"\r",
+									"// Test to decode and validate JWT payload content\r",
+									"pm.test(\"JWT token should contain correct user claims\", function () {\r",
+									"    const token = responseJson.token;\r",
+									"    const payload = JSON.parse(atob(token.split('.')[1])); // Decode JWT payload\r",
+									"    \r",
+									"    // Verify the token contains expected claims\r",
+									"    pm.expect(payload).to.have.property('unique_name');\r",
+									"    pm.expect(payload).to.have.property('role');\r",
+									"    pm.expect(payload).to.have.property('nameid');\r",
+									"    pm.expect(payload).to.have.property('exp'); // Expiration time\r",
+									"    pm.expect(payload).to.have.property('iat'); // Issued at time\r",
+									"    \r",
+									"    // Verify claim values match our expectations\r",
+									"    pm.expect(payload.unique_name).to.equal(\"Admin User\");\r",
+									"    pm.expect(payload.role).to.equal(\"Publisher\");\r",
+									"    pm.expect(payload.nameid).to.equal(\"adminUser@pressford.com\");\r",
+									"\r",
+									"    //token expiration is set to a future date\r",
+									"    const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds\r",
+									"    pm.expect(payload.exp).to.be.above(currentTime);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.collectionVariables.set('article-author', responseJson.username);\r",
+									"\r",
+									"var data = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set('token', data.token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"adminUser@pressford.com\",\r\n    \"password\": \"admin\" \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:{{port}}/api/account/authenticate",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"account",
+								"authenticate"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Articles",
+			"item": [
+				{
+					"name": "POST Article",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"const responseJson = pm.response.json();\r",
+									"// Test that all required fields are present in the response\r",
+									"pm.test(\"Response should contain all fields\", function () {\r",
+									"    pm.expect(responseJson).to.have.property('articleId');\r",
+									"    pm.expect(responseJson).to.have.property('author');\r",
+									"    pm.expect(responseJson).to.have.property('title');\r",
+									"    pm.expect(responseJson).to.have.property('body');\r",
+									"});\r",
+									"\r",
+									"// Test that the name field contains expected values \r",
+									"pm.test(\"Name field should contain proper user display name\", function () {\r",
+									"    pm.expect(responseJson.title).to.equal(pm.collectionVariables.get(\"article-title\"));\r",
+									"    pm.expect(responseJson.body).to.equal(pm.collectionVariables.get(\"article-body\"));\r",
+									"});\r",
+									"\r",
+									"pm.collectionVariables.set(\"article-id\", responseJson.articleId);\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"{{article-title}}\",\r\n    \"body\": \"{{article-body}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:{{port}}/api/Article",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"Article"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Options",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Primary test to verify the Allow header contains expected methods\r",
+									"pm.test(\"Allow header should contain expected HTTP methods\", function () {\r",
+									"    pm.expect(pm.response.headers.has('Allow'), 'Allow header should be present').to.be.true;\r",
+									"    \r",
+									"    const allowHeader = pm.response.headers.get('Allow');\r",
+									"    const allowedMethods = allowHeader.split(',').map(method => method.trim().toUpperCase());\r",
+									"    \r",
+									"    // Test that all expected methods are present\r",
+									"    const expectedMethods = ['GET', 'HEAD', 'POST', 'DELETE', 'OPTIONS'];\r",
+									"    expectedMethods.forEach(method => {\r",
+									"        pm.expect(allowedMethods, `${method} should be allowed`).to.include(method);\r",
+									"    });    \r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "OPTIONS",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:{{port}}/api/Article/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"Article",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get by Id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const responseJson = pm.response.json();\r",
+									"// Test that all required fields are present in the response\r",
+									"pm.test(\"Response should contain all fields\", function () {\r",
+									"    pm.expect(responseJson).to.have.property('articleId');\r",
+									"    pm.expect(responseJson).to.have.property('author');\r",
+									"    pm.expect(responseJson).to.have.property('title');\r",
+									"    pm.expect(responseJson).to.have.property('body');\r",
+									"});\r",
+									"\r",
+									"// Test that the name field contains expected values \r",
+									"pm.test(\"Name field should contain valid values\", function () {\r",
+									"    pm.expect(responseJson.author).to.equal(pm.collectionVariables.get(\"article-author\"));\r",
+									"    pm.expect(responseJson.title).to.equal(pm.collectionVariables.get(\"article-title\"));\r",
+									"    pm.expect(responseJson.body).to.equal(pm.collectionVariables.get(\"article-body\"));\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:{{port}}/api/Article/{{article-id}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"Article",
+								"{{article-id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "View All Articles",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "HEAD",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:{{port}}/api/Article",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"Article"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Article",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:{{port}}/api/Article",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"Article"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Article",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const responseJson = pm.response.json();\r",
+									"// Test that all required fields are present in the response\r",
+									"pm.test(\"Response should contain all fields\", function () {\r",
+									"    pm.expect(responseJson).to.have.property('articleId');\r",
+									"    pm.expect(responseJson).to.have.property('author');\r",
+									"    pm.expect(responseJson).to.have.property('title');\r",
+									"    pm.expect(responseJson).to.have.property('body');\r",
+									"});\r",
+									"\r",
+									"// Test that the name field contains expected values \r",
+									"pm.test(\"Name field should contain proper user display name\", function () {\r",
+									"    pm.expect(responseJson.title).to.equal(pm.collectionVariables.get(\"article-title\"));\r",
+									"    pm.expect(responseJson.body).to.equal(pm.collectionVariables.get(\"article-body\"));\r",
+									"    pm.expect(responseJson.articleId).to.equal(pm.collectionVariables.get(\"article-id\"));\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"article-title\", \"updated-article-title\");\r",
+									"pm.collectionVariables.set(\"article-body\", \"updated-article-body\");"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"articleId\": {{article-id}},\r\n    \"title\": \"{{article-title}}\",\r\n    \"body\": \"{{article-body}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:{{port}}/api/Article",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"Article"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify Article Updated",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const responseJson = pm.response.json();",
+									"// Test that all required fields are present in the response",
+									"pm.test(\"Response should contain all fields\", function () {",
+									"    pm.expect(responseJson).to.have.property('articleId');",
+									"    pm.expect(responseJson).to.have.property('author');",
+									"    pm.expect(responseJson).to.have.property('title');",
+									"    pm.expect(responseJson).to.have.property('body');",
+									"});",
+									"",
+									"// Test that the name field contains expected values ",
+									"pm.test(\"Name field should contain proper user display name\", function () {",
+									"    pm.expect(responseJson.title).to.equal(pm.collectionVariables.get(\"article-title\"));",
+									"    pm.expect(responseJson.body).to.equal(pm.collectionVariables.get(\"article-body\"));",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:{{port}}/api/Article/{{article-id}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"Article",
+								"{{article-id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Patch Article",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json-patch+json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n        \"op\": \"test\",\r\n        \"path\": \"/articleId\",\r\n        \"value\": {{article-id}}\r\n    },\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/Title\",\r\n        \"value\": \"{{patched-article-title}}\"\r\n    }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:{{port}}/api/Article",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"Article"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get by Id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Title matches patch update\", () => {\r",
+									"  const expectedTitle = pm.collectionVariables.get(\"patched-article-title\");\r",
+									"  console.log(expectedTitle);\r",
+									"  const actualTitle = pm.response.json().title;\r",
+									"console.log(actualTitle);\r",
+									"  pm.expect(actualTitle).to.eql(expectedTitle);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:{{port}}/api/Article/{{article-id}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"Article",
+								"{{article-id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deleted Article",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 202\", function () {\r",
+									"    pm.response.to.have.status(202);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:{{port}}/api/Article/{{article-id}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"Article",
+								"{{article-id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify Article Deleted",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:{{port}}/api/Article/{{article-id}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"Article",
+								"{{article-id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Bad POST Article",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"New title\",\r\n    \"body\": \"New body\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:{{port}}/api/Article",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"Article"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Another Article",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"var response = pm.response.json();\r",
+									"pm.collectionVariables.set(\"article-id\", response.articleId);\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"New title\",\r\n    \"body\": \"New body\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:{{port}}/api/Article",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"Article"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid Patch Article",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json-patch+json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n        \"op\": \"test\",\r\n        \"path\": \"/Id\",\r\n        \"value\": {{article-id}}\r\n    },\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/Title\",\r\n        \"value\": \"________\"\r\n    },\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/UnkownTitle\",\r\n        \"value\": \"Patched Title\"\r\n    },\r\n\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/body\",\r\n        \"value\": null\r\n    },\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/Idiot\",\r\n        \"value\": \"Patched Title\"\r\n    }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:{{port}}/api/Article",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"Article"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Article Collection",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									" const requestBody = JSON.parse(pm.request.body.raw)\r",
+									" const responseBody = pm.response.json();\r",
+									"\r",
+									"// Check if both are arrays and have the same length\r",
+									"pm.test(\"Response contains same number of elements as request\", function () {\r",
+									"    pm.expect(Array.isArray(requestBody)).to.be.true;\r",
+									"    pm.expect(Array.isArray(responseBody)).to.be.true;\r",
+									"    pm.expect(responseBody.length).to.equal(requestBody.length);\r",
+									"});\r",
+									"\r",
+									"const articleIdsCSV = responseBody.map(item => item.articleId).join(',');\r",
+									"console.log(articleIdsCSV);\r",
+									"\r",
+									"pm.collectionVariables.set(\"article-ids\", articleIdsCSV);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n        \"title\": \"New title 1\",\r\n        \"body\": \"New body 1\"\r\n    },\r\n    {\r\n        \"title\": \"New title 2\",\r\n        \"body\": \"New body 2\"\r\n    },\r\n    {\r\n        \"title\": \"New title 3\",\r\n        \"body\": \"New body 3\"\r\n    },\r\n    {\r\n        \"title\": \"New title 4\",\r\n        \"body\": \"New body 4\"\r\n    },\r\n    {\r\n        \"title\": \"New title 5\",\r\n        \"body\": \"New body 5\"\r\n    }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:{{port}}/api/articlecollection",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"articlecollection"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Article Collection",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Query-string IDs count matches response array length\", () => {\r",
+									"    // 1. Grab the 'ids' query-param (comma-separated)\r",
+									"    const idsParam = pm.request.url.query.get(\"articleIds\") || \"\";\r",
+									"    const idsCount = idsParam ? idsParam.split(\",\").length : 0;\r",
+									"\r",
+									"\r",
+									"    // 2. Parse the JSON response (must be an array)\r",
+									"    const responseData = pm.response.json();\r",
+									"    pm.expect(responseData).to.be.an(\"array\");\r",
+									"\r",
+									"    // 3. Assert lengths match\r",
+									"    pm.expect(Array.isArray(responseData)).to.be.true;\r",
+									"    pm.expect(responseData.length, `Expected ${idsCount} items in response`).to.eql(idsCount);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:{{port}}/api/articlecollection?articleIds={{article-ids}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"articlecollection"
+							],
+							"query": [
+								{
+									"key": "articleIds",
+									"value": "{{article-ids}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Article-Likes",
+			"item": [
+				{
+					"name": "Like An Article",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:{{port}}/api/LikeArticle/{{article-id}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"LikeArticle",
+								"{{article-id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unlike article",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:{{port}}/api/UnLikeArticle/{{article-id}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"UnLikeArticle",
+								"{{article-id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Dashboard",
+			"item": [
+				{
+					"name": "Get Publisher Dashboard",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:{{port}}/api/Dashboard/GetPublisherDashboard",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"Dashboard",
+								"GetPublisherDashboard"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Dashboard",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:{{port}}/api/Dashboard/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"Dashboard",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Publisher Dashboard  Mr Pressford",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:{{port}}/api/Dashboard/GetPublisherDashboard",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"Dashboard",
+								"GetPublisherDashboard"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": "WRONG",
+			"type": "string"
+		},
+		{
+			"key": "patched-article-title",
+			"value": "Patched Title",
+			"type": "string"
+		},
+		{
+			"key": "port",
+			"value": "31960",
+			"type": "string"
+		},
+		{
+			"key": "article-id",
+			"value": "-1",
+			"type": "string"
+		},
+		{
+			"key": "article-title",
+			"value": "Article-Title-Automation",
+			"type": "string"
+		},
+		{
+			"key": "article-body",
+			"value": "Article-Body-Automation",
+			"type": "string"
+		},
+		{
+			"key": "article-author",
+			"value": "s",
+			"type": "string"
+		},
+		{
+			"key": "article-ids",
+			"value": "1,2,3",
+			"type": "string"
+		},
+		{
+			"key": "articleIds",
+			"value": ""
+		},
+		{
+			"key": "{article-ids",
+			"value": ""
+		},
+		{
+			"key": "{article-ids}",
+			"value": ""
+		}
+	]
+}
