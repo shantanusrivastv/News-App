@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Pressford.News.Model;
+using Pressford.News.Model.ResourceParameters;
 using Pressford.News.Services.Interfaces;
 using System;
 using System.Linq;
@@ -28,9 +29,9 @@ namespace Pressford.News.API.Controllers
 		/// </summary>
 		/// <returns></returns>
 		[HttpGet, HttpHead] // GET /api/article
-        public async Task<IActionResult> GetAllArticles()
+        public async Task<IActionResult> GetAllArticles([FromQuery] ArticleResourceParameters articleResource)
 		{
-			var articles = await _articleServices.GetAllArticles();
+			var articles = await _articleServices.GetAllArticles(articleResource);
 			return Ok(articles);
 		}
 

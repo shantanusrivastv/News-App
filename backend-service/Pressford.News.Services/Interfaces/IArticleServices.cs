@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.JsonPatch;
+using Pressford.News.Model;
+using Pressford.News.Model.ResourceParameters;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.JsonPatch;
-using Pressford.News.Model;
 
 namespace Pressford.News.Services.Interfaces
 {
@@ -10,7 +11,7 @@ namespace Pressford.News.Services.Interfaces
 	{
 		Task<ReadArticle> CreateArticle(CreateArticle article);
 
-		Task<IList<ReadArticle>> GetAllArticles();
+		Task<IList<ReadArticle>> GetAllArticles(ArticleResourceParameters articleResource);
 
 		Task<ReadArticle> GetSingleArticle(int articleId);
 

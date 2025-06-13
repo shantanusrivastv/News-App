@@ -38,3 +38,4 @@ https://jasonwatmore.com/post/2020/01/03/aspnet-core-ef-core-migrations-for-mult
 18. We need to define hierarchical routing if we want to structure endpoints for authors and their articles,such as: 
 	[Route("api/author/{authorId}/article")]
 19. Have a look at PATCH and then impove it further using PS course files
+20. Author should be the name instead of email address adminUser@pressford.com or something better.

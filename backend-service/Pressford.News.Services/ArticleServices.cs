@@ -1,17 +1,19 @@
-﻿using System;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Pressford.News.Data;
+using Pressford.News.Entities;
+using Pressford.News.Model;
+using Pressford.News.Model.ResourceParameters;
+using Pressford.News.Services.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using AutoMapper;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using Pressford.News.Data;
-using Pressford.News.Entities;
-using Pressford.News.Model;
-using Pressford.News.Services.Interfaces;
 using entity = Pressford.News.Entities;
 using JsonPatchArticle = Microsoft.AspNetCore.JsonPatch.JsonPatchDocument<Pressford.News.Model.PatchArticle>;
 
@@ -62,12 +64,25 @@ namespace Pressford.News.Services
 			return (_mapper.Map<ReadArticle>(result));
 		}
 
-		public async Task<IList<ReadArticle>> GetAllArticles()
+		public async Task<IList<ReadArticle>> GetAllArticles(ArticleResourceParameters articleResource)
 		{
 			// GetAuthorWithinRange();
-			await GetAuthorWithTitle();
-			var entityArticles = await _repository.GetAll().ToListAsync();
-			return _mapper.Map<IList<ReadArticle>>(entityArticles);
+			//var res = await GetAuthorWithTitle();
+
+			var queryableArticles = _repository.GetAll(); //There is no issue in running this first as I am using IQueryable
+														  //this greatly simplify the optional serarcha nd filter query
+
+			if (!string.IsNullOrEmpty(articleResource.FilterQuery)) //We decide FilterQuery is filterted against which entity 
+            {
+				queryableArticles = queryableArticles.Where(x => x.Author == articleResource.FilterQuery.Trim());
+            }
+
+            if (!string.IsNullOrEmpty(articleResource.SearchQuery)) //We decide FilterQuery is filterted against which entity 
+            {
+                queryableArticles = queryableArticles.Where(x => EF.Functions.Like(x.Title, $"%{articleResource.SearchQuery.Trim()}%"));
+            }
+
+            return _mapper.Map<IList<ReadArticle>>(await queryableArticles.ToListAsync());
 		}	
 		
 		public async Task<IList<User>> GetAuthorWithinRange()

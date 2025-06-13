@@ -28,13 +28,13 @@ namespace Pressford.News.API.Tests.Controllers
 		public async Task Should_Return_All_Articles()
 		{
 			// Arrange
-			_articleServices.Setup(x => x.GetAllArticles()).ReturnsAsync(MockArticleResults());
+			_articleServices.Setup(x => x.GetAllArticles(null)).ReturnsAsync(MockArticleResults());
 
 			//Act
-			var result = await _sut.GetAllArticles() as OkObjectResult;
+			var result = await _sut.GetAllArticles(null) as OkObjectResult;
 
 			//Assert
-			_articleServices.Verify(x => x.GetAllArticles(), Times.Once);
+			_articleServices.Verify(x => x.GetAllArticles(null), Times.Once);
 			result.Should().NotBeNull();
 			result.Value.Should().BeOfType<List<ReadArticle>>().Which.Count.Should().Be(2);
 			result.Should().BeOfType<OkObjectResult>().Which.StatusCode.Should().Be(200);
