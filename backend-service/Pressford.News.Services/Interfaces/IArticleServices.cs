@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.JsonPatch;
 using Pressford.News.Model;
+using Pressford.News.Model.Helpers;
 using Pressford.News.Model.ResourceParameters;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,7 +12,7 @@ namespace Pressford.News.Services.Interfaces
 	{
 		Task<ReadArticle> CreateArticle(CreateArticle article);
 
-		Task<IList<ReadArticle>> GetAllArticles(ArticleResourceParameters articleResource);
+		Task<PagedList<ReadArticle>> GetAllArticles(ArticleResourceParameters articleResource);
 
 		Task<ReadArticle> GetSingleArticle(int articleId);
 

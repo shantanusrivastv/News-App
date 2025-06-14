@@ -1,13 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using Pressford.News.API.Controllers;
 using Pressford.News.Model;
+using Pressford.News.Model.Helpers;
+using Pressford.News.Model.ResourceParameters;
 using Pressford.News.Services.Interfaces;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Pressford.News.API.Tests.Controllers
 {
@@ -27,16 +29,23 @@ namespace Pressford.News.API.Tests.Controllers
 		[Test]
 		public async Task Should_Return_All_Articles()
 		{
-			// Arrange
-			_articleServices.Setup(x => x.GetAllArticles(null)).ReturnsAsync(MockArticleResults());
+			// Arrange 
+			_articleServices.Setup(x => x.GetAllArticles(It.IsAny<ArticleResourceParameters>())).ReturnsAsync(MockArticleResults());
+			var input = new ArticleResourceParameters
+			{
+				PageNumber = 1,
+				FilterQuery = "w.Pressford@pressford.com",
+				PageSize = 20,
+				SearchQuery = "Expresso"
+			};
 
-			//Act
-			var result = await _sut.GetAllArticles(null) as OkObjectResult;
+            //Act
+            var result = await _sut.GetAllArticles(input) as OkObjectResult;
 
 			//Assert
-			_articleServices.Verify(x => x.GetAllArticles(null), Times.Once);
+			_articleServices.Verify(x => x.GetAllArticles(input), Times.Once);
 			result.Should().NotBeNull();
-			result.Value.Should().BeOfType<List<ReadArticle>>().Which.Count.Should().Be(2);
+			result.Value.Should().BeOfType<PagedList<ReadArticle>>().Which.Count.Should().Be(2);
 			result.Should().BeOfType<OkObjectResult>().Which.StatusCode.Should().Be(200);
 		}
 
@@ -161,13 +170,15 @@ namespace Pressford.News.API.Tests.Controllers
 			result.Should().BeOfType<UnauthorizedObjectResult>().Which.StatusCode.Should().Be(401);
 		}
 
-		private static List<ReadArticle> MockArticleResults()
+		private static PagedList<ReadArticle> MockArticleResults()
 		{
-			return
-			[
-			   new ReadArticle() {  ArticleId = 1,  Title = "Article 1 Title", Body = "Article 1 Body"},
+			var articles = new List<ReadArticle>
+			{
+			   new ReadArticle() { ArticleId = 1,  Title = "Article 1 Title", Body = "Article 1 Body"},
 			   new ReadArticle() { ArticleId = 2,   Title = "Article 2 Title", Body = "Article 2 Body"}
-			];
+			};
+
+			return new PagedList<ReadArticle>(articles, 2, 1, 10);
 		}
 
 		private static List<CreateArticle> MockCreateArticle()

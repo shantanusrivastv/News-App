@@ -5,7 +5,9 @@ using Microsoft.IdentityModel.Tokens;
 using Pressford.News.Data;
 using Pressford.News.Entities;
 using Pressford.News.Model;
+using Pressford.News.Model.Helpers;
 using Pressford.News.Model.ResourceParameters;
+using Pressford.News.Services.Extensions;
 using Pressford.News.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -64,26 +66,36 @@ namespace Pressford.News.Services
 			return (_mapper.Map<ReadArticle>(result));
 		}
 
-		public async Task<IList<ReadArticle>> GetAllArticles(ArticleResourceParameters articleResource)
+		public async Task<PagedList<ReadArticle>> GetAllArticles(ArticleResourceParameters articleResource)
 		{
 			// GetAuthorWithinRange();
 			//var res = await GetAuthorWithTitle();
 
-			var queryableArticles = _repository.GetAll(); //There is no issue in running this first as I am using IQueryable
-														  //this greatly simplify the optional serarcha nd filter query
+			//There is no issue in running this first as I am using IQueryable
+			//this greatly simplify the optional serarcha nd filter query
 
-			if (!string.IsNullOrEmpty(articleResource.FilterQuery)) //We decide FilterQuery is filterted against which entity 
+			var queryableArticles = _repository.GetAll();
+
+            // Apply filtering
+            if (!string.IsNullOrWhiteSpace(articleResource.FilterQuery)) //We decide FilterQuery is filterted against which entity 
             {
 				queryableArticles = queryableArticles.Where(x => x.Author == articleResource.FilterQuery.Trim());
             }
 
-            if (!string.IsNullOrEmpty(articleResource.SearchQuery)) //We decide FilterQuery is filterted against which entity 
+            // Apply searching
+            if (!string.IsNullOrWhiteSpace(articleResource.SearchQuery)) //We decide FilterQuery is filterted against which entity 
             {
                 queryableArticles = queryableArticles.Where(x => EF.Functions.Like(x.Title, $"%{articleResource.SearchQuery.Trim()}%"));
             }
 
-            return _mapper.Map<IList<ReadArticle>>(await queryableArticles.ToListAsync());
-		}	
+			var pagedEntityArticles = await queryableArticles.ToPageListAsync<Article>(articleResource.PageNumber, articleResource.PageSize);
+			var mappedReadArticles = _mapper.Map<List<ReadArticle>>(pagedEntityArticles);
+			var result = new PagedList<ReadArticle>(mappedReadArticles, pagedEntityArticles.TotalCount,
+																		articleResource.PageNumber,
+																		pagedEntityArticles.PageSize);
+			return result;
+
+        }	
 		
 		public async Task<IList<User>> GetAuthorWithinRange()
 		{

@@ -28,11 +28,12 @@ namespace Pressford.News.API.Controllers
 		/// Get all articles
 		/// </summary>
 		/// <returns></returns>
-		[HttpGet, HttpHead] // GET /api/article
+		[HttpGet, HttpHead(Name = "GetArticles")] // GET /api/article
         public async Task<IActionResult> GetAllArticles([FromQuery] ArticleResourceParameters articleResource)
 		{
 			var articles = await _articleServices.GetAllArticles(articleResource);
-			return Ok(articles);
+            this.AddPaginationHeaders(articles, articleResource, "GetArticles");
+            return Ok(articles);
 		}
 
 		[HttpGet("{articleId:int}", Name = "GetArticle")] // GET /api/article/1
