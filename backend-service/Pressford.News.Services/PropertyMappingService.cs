@@ -37,25 +37,6 @@ namespace Pressford.News.Services
             return matchingMapping.MappingDictionary;
         }
 
-        public List<string> ValidateSortFieldsForArticle(string orderBy)
-        {
-            if (string.IsNullOrWhiteSpace(orderBy))
-                return new List<string>();
-
-            var invalids = new List<string>();
-
-            var orderByFields = orderBy.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(f => f.Trim().ToLower());
-
-            foreach (var field in orderByFields)
-            {
-                var fieldName = field.Split(' ')[0];
-                if (!MappingDictionary.ContainsKey(fieldName))
-                    invalids.Add(fieldName);
-            }
-
-            return invalids;
-        }
-
         public List<string> ValidateSortFields<TSource, TDestination>(string orderBy)
         {
             if (string.IsNullOrWhiteSpace(orderBy))

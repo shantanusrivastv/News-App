@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Pressford.News.Model.Helpers;
-using Pressford.News.Services.Mapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Linq.Dynamic.Core;
+using Pressford.News.Services.Mapper;
 
 namespace Pressford.News.Services.Extensions
 {
@@ -52,7 +52,7 @@ namespace Pressford.News.Services.Extensions
                 if (!mappingDictionary.TryGetValue(field, out var map))
                     throw new ArgumentException($"Cannot sort by '{field}'");
 
-                var effective = map.RevertDirection
+                var effective = map.ReverseDirection
                                 ? (direction == "asc" ? "desc" : "asc")
                                 : direction;
 
