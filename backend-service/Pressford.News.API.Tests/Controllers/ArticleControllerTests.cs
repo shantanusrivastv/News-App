@@ -38,7 +38,7 @@ namespace Pressford.News.API.Tests.Controllers
 				FilterQuery = "w.Pressford@pressford.com",
 				PageSize = 20,
 				SearchQuery = "Expresso",
-				OrderBY = "title"
+				OrderBy = "title"
 			};
 
             //Act

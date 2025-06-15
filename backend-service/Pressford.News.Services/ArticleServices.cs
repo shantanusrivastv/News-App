@@ -98,9 +98,9 @@ namespace Pressford.News.Services
             }
 
             //Apply Sorting
-            if (!string.IsNullOrWhiteSpace(articleResource.OrderBY))
+            if (!string.IsNullOrWhiteSpace(articleResource.OrderBy))
             {
-                queryableArticles = queryableArticles.ApplySorting<Article, ReadArticle>(articleResource.OrderBY, MappingDictionary);
+                queryableArticles = queryableArticles.ApplySorting<Article, ReadArticle>(articleResource.OrderBy, MappingDictionary);
 
             }
 

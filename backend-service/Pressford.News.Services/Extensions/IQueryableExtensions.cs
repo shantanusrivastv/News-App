@@ -25,6 +25,12 @@ namespace Pressford.News.Services.Extensions
             return new PagedList<T>(items, totalCount, pageNumber, pageSize);
         }
 
+        /*
+         * Interesting fact is that we can use the same technique for filtering if we want to allow it on all fields.
+         * We could use the mapping table to find out how a property on a resource maps to the underlying store and 
+         * use dynamic link to create the Where clauses. 
+         * So this approach is pretty flexible and can be used for more than just sorting..
+         * */
         public static IQueryable<TSource> ApplySorting<TSource, TDest>(
             this IQueryable<TSource> source,
             string orderBy,
