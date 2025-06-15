@@ -24,5 +24,7 @@ namespace Pressford.News.Model.ResourceParameters
             get => _pageSize;
             set => _pageSize = value < 1 ? 1 : Math.Min(value, maxPagesize);
         }
+
+        public string OrderBY { get; set; } = "title"; //Default Sorting
     }
 }

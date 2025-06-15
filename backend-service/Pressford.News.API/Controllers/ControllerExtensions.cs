@@ -28,47 +28,6 @@ namespace Pressford.News.API.Controllers
                                                          : null
             };
 
-            // Generate navigation links using the controller's URL helper
-           // var routeValues = new RouteValueDictionary(routeParameters);
-
-            
-
-            //if (metadata.HasPreviousPage)
-            {
-               // var previousRouteValues = new RouteValueDictionary(routeParameters);
-                //previousRouteValues["pageNumber"] = metadata.CurrentPage - 1;
-
-                //metadata.PreviousPageLink = controller.Url.Link(routeName,
-                //    new
-                //    {
-                //        pageNumber = metadata.CurrentPage - 1,
-                //        pageSize = metadata.PageSize,
-                //        filterQuery = "FilterQuery", // Include all relevant query parameters
-                //        searchQuery = "SearchQuery"
-                //    });
-
-
-               // metadata.PreviousPageLink = pagedList.HasPreviousPage
-               //? controller.GeneratePageLink(routeName, routeParameters, pagedList.CurrentPage - 1)
-               //: null;
-
-
-
-            }
-
-            //if (metadata.HasNextPage)
-            //{
-            //    //var nextRouteValues = new RouteValueDictionary(routeParameters);
-            //    //nextRouteValues["pageNumber"] = metadata.CurrentPage + 1;
-            //    metadata.NextPageLink = controller.Url.Link(routeName,
-            //        new
-            //        {
-            //            pageNumber = metadata.CurrentPage + 1,
-            //            pageSize = metadata.PageSize,
-            //            filterQuery = "FilterQuery", // Include all relevant query parameters
-            //            searchQuery = "SearchQuery"
-            //        });
-            //}
 
             controller.Response?.Headers?.Add("X-Pagination",
             JsonSerializer.Serialize(metadata, new JsonSerializerOptions

@@ -31,6 +31,12 @@ namespace Pressford.News.API.Controllers
 		[HttpGet, HttpHead(Name = "GetArticles")] // GET /api/article
         public async Task<IActionResult> GetAllArticles([FromQuery] ArticleResourceParameters articleResource)
 		{
+			var invalids = _articleServices.ValidateSortFieldsForArticle(articleResource.OrderBY);
+			if (invalids.Any())
+			{
+				return BadRequest($"Invalid sort fields: {string.Join(", ", invalids)}");
+			}
+
 			var articles = await _articleServices.GetAllArticles(articleResource);
             this.AddPaginationHeaders(articles, articleResource, "GetArticles");
             return Ok(articles);

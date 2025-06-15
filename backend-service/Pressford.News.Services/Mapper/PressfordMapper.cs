@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Pressford.News.Model.Helpers;
 using entity = Pressford.News.Entities;
 using model = Pressford.News.Model;
 
@@ -9,10 +10,11 @@ namespace Pressford.News.Services.Mapper
 		public PressfordMapper()
 		{
 			//we probbably need to add some ignore like.ForMember(dest => dest.Id, opt => opt.Ignore());
-			CreateMap<model.ReadArticle, entity.Article>()
-				.ForMember(dest => dest.Id,
-					  opt => opt.MapFrom(readArticle => readArticle.ArticleId))
-			.ReverseMap();
+			CreateMap<entity.Article, model.ReadArticle>()
+				.ForMember(dest => dest.ArticleId, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.DatePublished.GetCurrentAge()))
+                .ForMember(dest => dest.TitleWithBody, opt => opt.MapFrom(src => $"{src.Title}, {src.Body}"))
+            .ReverseMap();
 
 			CreateMap<model.CreateArticle, entity.Article>()
 			.ReverseMap();
@@ -25,10 +27,8 @@ namespace Pressford.News.Services.Mapper
 			CreateMap<model.PatchArticle, entity.Article>()
 			 .ForMember(dest => dest.DateModified,
 						opt => opt.Ignore())
-
 		     .ForMember(dest => dest.Id,
 						opt => opt.MapFrom(updatedArticle => updatedArticle.ArticleId))
-
 			 .ForMember(dest => dest.DatePublished,
 						opt => opt.Ignore())
 						.ReverseMap();
@@ -47,6 +47,7 @@ namespace Pressford.News.Services.Mapper
 
 			.ForMember(dest => dest.Token,
 					  opt => opt.MapFrom(userLogin => userLogin.Token));
-		}
+
+        }
 	}
 }

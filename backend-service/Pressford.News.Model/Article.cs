@@ -62,5 +62,10 @@ namespace Pressford.News.Model
         public string Author { get; set; }
         public DateTime DatePublished { get; set; }
         public DateTime DateModified { get; set; }
+
+        //Added these 2 prop Age and TitleWithBody to set advanced sorting ideally this sud 
+        // be part of author but we do not have endpoints for it.
+        public int Age { get; set; }
+        public string TitleWithBody { get; set; }
     }
 }

@@ -31,12 +31,14 @@ namespace Pressford.News.API.Tests.Controllers
 		{
 			// Arrange 
 			_articleServices.Setup(x => x.GetAllArticles(It.IsAny<ArticleResourceParameters>())).ReturnsAsync(MockArticleResults());
+			_articleServices.Setup(x => x.ValidateSortFieldsForArticle(It.IsAny<string>())).Returns(new List<string>());
 			var input = new ArticleResourceParameters
 			{
 				PageNumber = 1,
 				FilterQuery = "w.Pressford@pressford.com",
 				PageSize = 20,
-				SearchQuery = "Expresso"
+				SearchQuery = "Expresso",
+				OrderBY = "title"
 			};
 
             //Act

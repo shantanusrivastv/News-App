@@ -25,5 +25,6 @@ namespace Pressford.News.Services.Interfaces
 		//Todo refactor to its own svc 
         Task<IEnumerable<ReadArticle>> CreateArticlCollection(IEnumerable<CreateArticle> articlecollection);
         Task<IList<ReadArticle>> GetArticleCollection(IEnumerable<int> articleIds);
+        List<string> ValidateSortFieldsForArticle(string orderBy);
     }
 }
