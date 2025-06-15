@@ -12,7 +12,7 @@ using Pressford.News.Model;
 using Pressford.News.Services.Interfaces;
 using entity = Pressford.News.Entities;
 
-namespace Pressford.News.Services
+namespace Pressford.News.Services.Services
 {
 	public class UserService : IUserService
 	{
@@ -44,7 +44,7 @@ namespace Pressford.News.Services
 		private entity.UserLogin VerifyAndGetUserDetails(Credentials credentials)
 		{
 			Expression<Func<entity.UserLogin, bool>> predicate = (x)
-							 => (x.Username == credentials.Username && x.Password == credentials.Password);
+							 => x.Username == credentials.Username && x.Password == credentials.Password;
 
 			return _repository.FindBy(predicate, x => x.User).SingleOrDefault();
 		}

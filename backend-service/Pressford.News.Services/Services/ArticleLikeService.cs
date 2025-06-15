@@ -6,7 +6,7 @@ using Pressford.News.Data;
 using Pressford.News.Entities;
 using Pressford.News.Services.Interfaces;
 
-namespace Pressford.News.Services
+namespace Pressford.News.Services.Services
 {
 	public class ArticleLikeService : IArticleLikeService
 	{

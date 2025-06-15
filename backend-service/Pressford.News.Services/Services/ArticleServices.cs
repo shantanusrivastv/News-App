@@ -20,17 +20,17 @@ using System.Threading.Tasks;
 using entity = Pressford.News.Entities;
 using JsonPatchArticle = Microsoft.AspNetCore.JsonPatch.JsonPatchDocument<Pressford.News.Model.PatchArticle>;
 
-namespace Pressford.News.Services
+namespace Pressford.News.Services.Services
 {
     public class ArticleServices : IArticleServices
     {
-        private readonly IRepository<entity.Article> _repository;
+        private readonly IRepository<Article> _repository;
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly string _userName = string.Empty;
         private readonly IPropertyMappingService _propertyMappingService;
 
-        public ArticleServices(IRepository<entity.Article> repository,
+        public ArticleServices(IRepository<Article> repository,
                                IUserRepository userRepository,
                                IMapper mapper,
                                IHttpContextAccessor httpContextAccessor,
@@ -45,7 +45,7 @@ namespace Pressford.News.Services
 
         public async Task<ReadArticle> CreateArticle(CreateArticle article)
         {
-            var articleEntity = _mapper.Map<entity.Article>(article);
+            var articleEntity = _mapper.Map<Article>(article);
             articleEntity.Author = _userName ?? throw new ApplicationException("User is not logged in");
             var result = await _repository.AddAsync(articleEntity);
             return _mapper.Map<ReadArticle>(result);
@@ -53,7 +53,7 @@ namespace Pressford.News.Services
 
         public async Task<IEnumerable<ReadArticle>> CreateArticlCollection(IEnumerable<CreateArticle> articlecollection)
         {
-            var articleEntity = _mapper.Map<IEnumerable<entity.Article>>(articlecollection);
+            var articleEntity = _mapper.Map<IEnumerable<Article>>(articlecollection);
             if (_userName == null)
                 throw new ApplicationException("User is not logged in");
 
@@ -65,9 +65,9 @@ namespace Pressford.News.Services
 
         public async Task<ReadArticle> GetSingleArticle(int articleId)
         {
-            Expression<Func<entity.Article, bool>> predicate = (x) => x.Id == articleId;
+            Expression<Func<Article, bool>> predicate = (x) => x.Id == articleId;
             var result = await _repository.FindBy(predicate).SingleOrDefaultAsync();
-            return (_mapper.Map<ReadArticle>(result));
+            return _mapper.Map<ReadArticle>(result);
         }
 
         public async Task<PagedList<ReadArticle>> GetAllArticles(ArticleResourceParameters articleResource)
@@ -99,7 +99,7 @@ namespace Pressford.News.Services
                 queryableArticles = queryableArticles.ApplySorting<Article, ReadArticle>(articleResource.OrderBy, mappingDictionary);
             }
 
-            var pagedEntityArticles = await queryableArticles.ToPageListAsync<Article>(articleResource.PageNumber, articleResource.PageSize);
+            var pagedEntityArticles = await queryableArticles.ToPageListAsync(articleResource.PageNumber, articleResource.PageSize);
             var mappedReadArticles = _mapper.Map<List<ReadArticle>>(pagedEntityArticles);
             var result = new PagedList<ReadArticle>(mappedReadArticles, pagedEntityArticles.TotalCount,
                                                                         articleResource.PageNumber,
@@ -137,7 +137,7 @@ namespace Pressford.News.Services
             }
 
             var articleToUpdate = (await _repository.FindByAsync(x => x.Id == article.ArticleId)).SingleOrDefault();
-            articleToUpdate = _mapper.Map<UpdateArticle, entity.Article>(article, articleToUpdate);
+            articleToUpdate = _mapper.Map(article, articleToUpdate);
             articleToUpdate.Author = _userName;
             articleToUpdate.DateModified = DateTime.UtcNow;
             var updatedArticle = await _repository.UpdateAsync(articleToUpdate);
@@ -152,7 +152,7 @@ namespace Pressford.News.Services
                 return (null, validationResults);
             }
 
-            Expression<Func<entity.Article, bool>> predicate = (x) => x.Id == articleId;
+            Expression<Func<Article, bool>> predicate = (x) => x.Id == articleId;
             var existingArticle = _repository.FindBy(predicate).SingleOrDefault();
 
             if (existingArticle == null)

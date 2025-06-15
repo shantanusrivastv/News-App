@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Pressford.News.Services
+namespace Pressford.News.Services.Services
 {
     public class PropertyMappingService : IPropertyMappingService
     {

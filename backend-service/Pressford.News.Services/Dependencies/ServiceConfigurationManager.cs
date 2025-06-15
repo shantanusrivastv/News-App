@@ -8,6 +8,7 @@ using Pressford.News.Data;
 using Pressford.News.Entities;
 using Pressford.News.Services.Interfaces;
 using Pressford.News.Services.Mapper;
+using Pressford.News.Services.Services;
 
 namespace Pressford.News.Services.Dependencies
 {

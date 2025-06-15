@@ -9,7 +9,7 @@ using Pressford.News.Services.Interfaces;
 using entity = Pressford.News.Entities;
 using model = Pressford.News.Model;
 
-namespace Pressford.News.Services
+namespace Pressford.News.Services.Services
 {
 	public class DashboardService : IDashboardService
 	{
