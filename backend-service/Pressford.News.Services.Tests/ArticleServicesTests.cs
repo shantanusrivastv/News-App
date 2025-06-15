@@ -9,6 +9,7 @@ using Moq;
 using NUnit.Framework;
 using Pressford.News.Data;
 using Pressford.News.Entities;
+using Pressford.News.Services.Interfaces;
 using Pressford.News.Services.Mapper;
 
 #pragma warning disable CS8981 // The type name only contains lower-cased ascii characters. Such names may become reserved for the language.
@@ -25,6 +26,7 @@ namespace Pressford.News.Services.Tests
 		private Mock<IUserRepository> _usrRepository;
 		private IMapper _mapper;
 		private Mock<IHttpContextAccessor> _httpContextAccessor;
+		private IPropertyMappingService _propertyMappingSvc;
 		private ArticleServices _sut;
 
 		[SetUp]
@@ -33,15 +35,16 @@ namespace Pressford.News.Services.Tests
 			_repository = new Mock<IRepository<Article>>();
 			_usrRepository = new Mock<IUserRepository>();
 			_httpContextAccessor = new Mock<IHttpContextAccessor>();
+			_propertyMappingSvc = new PropertyMappingService();
 
-			var configuration = new MapperConfiguration(cfg => cfg.AddProfile(new PressfordMapper()));
+            var configuration = new MapperConfiguration(cfg => cfg.AddProfile(new PressfordMapper()));
 			//Seeing Up AutoMapper Profile to easy setup and we don't have to mock all mappings
 			_mapper = new AutoMapper.Mapper(configuration);
 			var nameIdentifierClaim = new Claim(ClaimTypes.NameIdentifier, "Username");
 			_httpContextAccessor.Setup(x => x.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier))
 							.Returns(nameIdentifierClaim)
 							.Verifiable();
-			_sut = new ArticleServices(_repository.Object, _usrRepository.Object, _mapper, _httpContextAccessor.Object);
+			_sut = new ArticleServices(_repository.Object, _usrRepository.Object, _mapper, _httpContextAccessor.Object, _propertyMappingSvc);
 		}
 
 		[Test]

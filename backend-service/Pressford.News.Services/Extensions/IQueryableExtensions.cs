@@ -45,7 +45,7 @@ namespace Pressford.News.Services.Extensions
             foreach (var clause in sortClauses)
             {
                 var parts = clause.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                var field = parts[0].ToLower();
+                var field = parts[0];
                 var direction = parts.Length == 2 && parts[1].Equals("desc", StringComparison.OrdinalIgnoreCase)
                                 ? "desc" : "asc";
 

@@ -28,25 +28,20 @@ namespace Pressford.News.Services
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly string _userName = string.Empty;
+        private readonly IPropertyMappingService _propertyMappingService;
 
         public ArticleServices(IRepository<entity.Article> repository,
                                IUserRepository userRepository,
                                IMapper mapper,
-                               IHttpContextAccessor httpContextAccessor)
+                               IHttpContextAccessor httpContextAccessor,
+                               IPropertyMappingService propertyMappingService)
         {
             _repository = repository;
             _userRepository = userRepository;
             _mapper = mapper;
             _userName = httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            _propertyMappingService = propertyMappingService;
         }
-
-        public Dictionary<string, PropertyMappingValue> MappingDictionary { get; private set; } =
-            new Dictionary<string, PropertyMappingValue>
-            {
-                { "age", new PropertyMappingValue(new[] { "DatePublished" }, revert: true) },
-                { "titlewithbody", new PropertyMappingValue(new[] { "Title", "Body" }) },
-                { "title", new PropertyMappingValue(new[] { "title" })}
-        };
 
         public async Task<ReadArticle> CreateArticle(CreateArticle article)
         {
@@ -100,8 +95,8 @@ namespace Pressford.News.Services
             //Apply Sorting
             if (!string.IsNullOrWhiteSpace(articleResource.OrderBy))
             {
-                queryableArticles = queryableArticles.ApplySorting<Article, ReadArticle>(articleResource.OrderBy, MappingDictionary);
-
+                var mappingDictionary = _propertyMappingService.GetPropertyMapping<ReadArticle, Article>();
+                queryableArticles = queryableArticles.ApplySorting<Article, ReadArticle>(articleResource.OrderBy, mappingDictionary);
             }
 
             var pagedEntityArticles = await queryableArticles.ToPageListAsync<Article>(articleResource.PageNumber, articleResource.PageSize);
@@ -213,40 +208,9 @@ namespace Pressford.News.Services
             return artcilesList;
         }
 
-
-        //todo Move outside
-        public bool ValidMappingExistsFor<TSource, TDestination>(string orderBy)
-        {
-            if (string.IsNullOrWhiteSpace(orderBy)) return true;
-
-            var orderByFields = orderBy.Split(',').Select(f => f.Trim());
-
-            foreach (var field in orderByFields)
-            {
-                var fieldName = field.Split(' ')[0];
-                if (!MappingDictionary.ContainsKey(fieldName)) return false;
-            }
-
-            return true;
-        }
-
         public List<string> ValidateSortFieldsForArticle(string orderBy)
-        {
-            if (string.IsNullOrWhiteSpace(orderBy))
-                return new List<string>();
-
-            var invalids = new List<string>();
-
-            var orderByFields = orderBy.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(f => f.Trim().ToLower());
-
-            foreach (var field in orderByFields)
-            {
-                var fieldName = field.Split(' ')[0];
-                if (!MappingDictionary.ContainsKey(fieldName))
-                    invalids.Add(fieldName);
-            }
-
-            return invalids;
+        {            
+            return _propertyMappingService.ValidateSortFields<ReadArticle, Article>(orderBy);
         }
     }
 }
