@@ -35,6 +35,8 @@ namespace Pressford.News.Services.Extensions
             this IQueryable<TSource> source,
             string orderBy,
             Dictionary<string, PropertyMappingValue> mappingDictionary)
+                where TSource : class 
+                where TDest   : class
         {
             if (string.IsNullOrWhiteSpace(orderBy))
                 return source;

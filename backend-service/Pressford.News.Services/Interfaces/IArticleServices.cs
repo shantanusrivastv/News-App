@@ -12,7 +12,7 @@ namespace Pressford.News.Services.Interfaces
 	{
 		Task<ReadArticle> CreateArticle(CreateArticle article);
 
-		Task<PagedList<ReadArticle>> GetAllArticles(ArticleResourceParameters articleResource);
+        Task<PagedList<ReadArticle>> GetAllArticles(ArticleResourceParameters articleResource);
 
 		Task<ReadArticle> GetSingleArticle(int articleId);
 
@@ -26,5 +26,6 @@ namespace Pressford.News.Services.Interfaces
         Task<IEnumerable<ReadArticle>> CreateArticlCollection(IEnumerable<CreateArticle> articlecollection);
         Task<IList<ReadArticle>> GetArticleCollection(IEnumerable<int> articleIds);
         List<string> ValidateSortFieldsForArticle(string orderBy);
+        List<string> ValidateProjectionFieldsForArticle(string fields);
     }
 }

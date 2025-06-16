@@ -9,6 +9,7 @@ using Moq;
 using NUnit.Framework;
 using Pressford.News.Data;
 using Pressford.News.Entities;
+using Pressford.News.Model;
 using Pressford.News.Services.Interfaces;
 using Pressford.News.Services.Mapper;
 using Pressford.News.Services.Services;
@@ -30,8 +31,9 @@ namespace Pressford.News.Services.Tests
 		private Mock<IHttpContextAccessor> _httpContextAccessor;
 		private IPropertyMappingService _propertyMappingSvc;
 		private ArticleServices _sut;
+		
 
-		[SetUp]
+        [SetUp]
 		public void Setup()
 		{
 			_repository = new Mock<IRepository<Article>>();
@@ -46,7 +48,11 @@ namespace Pressford.News.Services.Tests
 			_httpContextAccessor.Setup(x => x.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier))
 							.Returns(nameIdentifierClaim)
 							.Verifiable();
-			_sut = new ArticleServices(_repository.Object, _usrRepository.Object, _mapper, _httpContextAccessor.Object, _propertyMappingSvc);
+			_sut = new ArticleServices(_repository.Object, 
+										_usrRepository.Object,
+										_mapper,
+										_httpContextAccessor.Object,
+										_propertyMappingSvc);
 		}
 
 		[Test]

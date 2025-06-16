@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using entity = Pressford.News.Entities;
@@ -30,11 +31,13 @@ namespace Pressford.News.Services.Services
         private readonly string _userName = string.Empty;
         private readonly IPropertyMappingService _propertyMappingService;
 
+
         public ArticleServices(IRepository<Article> repository,
                                IUserRepository userRepository,
                                IMapper mapper,
                                IHttpContextAccessor httpContextAccessor,
-                               IPropertyMappingService propertyMappingService)
+                               IPropertyMappingService propertyMappingService
+                               )
         {
             _repository = repository;
             _userRepository = userRepository;
@@ -102,8 +105,8 @@ namespace Pressford.News.Services.Services
             var pagedEntityArticles = await queryableArticles.ToPageListAsync(articleResource.PageNumber, articleResource.PageSize);
             var mappedReadArticles = _mapper.Map<List<ReadArticle>>(pagedEntityArticles);
             var result = new PagedList<ReadArticle>(mappedReadArticles, pagedEntityArticles.TotalCount,
-                                                                        articleResource.PageNumber,
-                                                                        pagedEntityArticles.PageSize);
+                                                    articleResource.PageNumber,
+                                                    pagedEntityArticles.PageSize);
             return result;
 
         }
@@ -212,5 +215,30 @@ namespace Pressford.News.Services.Services
         {            
             return _propertyMappingService.ValidateSortFields<ReadArticle, Article>(orderBy);
         }
+
+        //Might move to IDataShaper
+        public List<string> ValidateProjectionFieldsForArticle(string fields)
+        {
+            var invalidFields = new List<string>();
+
+            if (string.IsNullOrWhiteSpace(fields))
+            {
+                return invalidFields; // No fields provided, so no invalid ones.
+            }
+
+            var properties = typeof(ReadArticle).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var fieldsAfterSplit = fields.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                                         .Select(f => f.Trim());
+
+            foreach (var field in fieldsAfterSplit)
+            {
+                if (!properties.Any(p => p.Name.Equals(field, StringComparison.OrdinalIgnoreCase)))
+                {
+                    invalidFields.Add(field);
+                }
+            }
+            return invalidFields;
+        }
+        
     }
 }

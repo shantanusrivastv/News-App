@@ -18,12 +18,14 @@ namespace Pressford.News.API.Tests.Controllers
 	{
 		private ArticleController _sut;
 		private Mock<IArticleServices> _articleServices;
+        private Mock<IDataShaper<ReadArticle>> _mockDataShaper;
 
-		[SetUp]
+        [SetUp]
 		public void Setup()
 		{
 			_articleServices = new Mock<IArticleServices>();
-			_sut = new ArticleController(_articleServices.Object);
+			_mockDataShaper = new Mock<IDataShaper<ReadArticle>>();
+            _sut = new ArticleController(_articleServices.Object, _mockDataShaper.Object);
 		}
 
 		[Test]
@@ -32,7 +34,9 @@ namespace Pressford.News.API.Tests.Controllers
 			// Arrange 
 			_articleServices.Setup(x => x.GetAllArticles(It.IsAny<ArticleResourceParameters>())).ReturnsAsync(MockArticleResults());
 			_articleServices.Setup(x => x.ValidateSortFieldsForArticle(It.IsAny<string>())).Returns(new List<string>());
-			var input = new ArticleResourceParameters
+            _articleServices.Setup(x => x.ValidateProjectionFieldsForArticle(It.IsAny<string>())).Returns(new List<string>());
+
+            var input = new ArticleResourceParameters
 			{
 				PageNumber = 1,
 				FilterQuery = "w.Pressford@pressford.com",

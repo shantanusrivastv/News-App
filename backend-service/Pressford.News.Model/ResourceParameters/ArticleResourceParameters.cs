@@ -26,5 +26,6 @@ namespace Pressford.News.Model.ResourceParameters
         }
 
         public string OrderBy { get; set; } = "title"; //Default Sorting
+        public string Fields { get; set; } = String.Empty;
     }
 }

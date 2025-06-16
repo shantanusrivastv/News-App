@@ -1,14 +1,15 @@
-﻿using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Pressford.News.Data;
 using Pressford.News.Entities;
+using Pressford.News.Model;
 using Pressford.News.Services.Interfaces;
 using Pressford.News.Services.Mapper;
 using Pressford.News.Services.Services;
+using System.Text;
 
 namespace Pressford.News.Services.Dependencies
 {
@@ -53,7 +54,8 @@ namespace Pressford.News.Services.Dependencies
             //The service layer is stateless hence transient
             //services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
 
-            services.AddSingleton<IPropertyMappingService, PropertyMappingService>(); //Check if tranisent make sense check automapper implementation
+            services.AddSingleton<IPropertyMappingService, PropertyMappingService>(); //It makes sense for singleton as even automapper is the same.
+            services.AddSingleton<IDataShaper<ReadArticle>, DataShaper<ReadArticle>>();
             services.AddTransient<IArticleServices, ArticleServices>();
 			services.AddTransient<IUserService, UserService>();
 			services.AddTransient<IArticleLikeService, ArticleLikeService>();
