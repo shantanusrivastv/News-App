@@ -7,6 +7,7 @@ using Pressford.News.Model;
 using Pressford.News.Model.Helpers;
 using Pressford.News.Model.ResourceParameters;
 using Pressford.News.Services.Interfaces;
+using Pressford.News.Services.Services;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -62,8 +63,11 @@ namespace Pressford.News.API.Tests.Controllers
 			_articleServices.Setup(x => x.GetSingleArticle(It.IsAny<int>()))
 							.ReturnsAsync(MockArticleResults().First());
 
-			//Act
-			var result = await _sut.GetSingleArticle(2) as ObjectResult;
+            _articleServices.Setup(x => x.ValidateProjectionFieldsForArticle(It.IsAny<string>()))
+                            .Returns(new List<string>());
+
+            //Act
+            var result = await _sut.GetSingleArticle(2) as ObjectResult;
 
 			//Assert
 			_articleServices.Verify(x => x.GetSingleArticle(It.IsAny<int>()), Times.Once);
@@ -79,8 +83,11 @@ namespace Pressford.News.API.Tests.Controllers
 			_articleServices.Setup(x => x.GetSingleArticle(It.IsAny<int>()))
 							.ReturnsAsync((ReadArticle)null);
 
-			//Act
-			var result = await _sut.GetSingleArticle(222) as NotFoundResult;
+			_articleServices.Setup(x => x.ValidateProjectionFieldsForArticle(It.IsAny<string>()))
+							.Returns(new List<string>());
+
+            //Act
+            var result = await _sut.GetSingleArticle(222) as NotFoundResult;
 
 			//Assert
 			_articleServices.Verify(x => x.GetSingleArticle(It.IsAny<int>()), Times.Once);
