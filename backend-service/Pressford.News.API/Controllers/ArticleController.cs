@@ -58,11 +58,22 @@ namespace Pressford.News.API.Controllers
         }
 
         [HttpGet("{articleId:int}", Name = "GetArticle")] // GET /api/article/1
-        public async Task<IActionResult> GetSingleArticle(int articleId)
+        public async Task<IActionResult> GetSingleArticle(int articleId, string fields = "")
         {
+            var invalids = _articleServices.ValidateProjectionFieldsForArticle(fields);
+            if (invalids.Any())
+            {
+                return BadRequest($"Invalid projection fields provided: {string.Join(", ", invalids)}");
+            }
+
             var article = await _articleServices.GetSingleArticle(articleId);
             if (article == null)
                 return NotFound();
+            if(!string.IsNullOrWhiteSpace(fields))
+            {
+                return Ok(_articleShaper.ShapeData(article, fields));
+            }
+
             return Ok(article);
         }
 
