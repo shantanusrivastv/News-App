@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Pressford.News.Entities;
 using Pressford.News.Model;
 using Pressford.News.Model.ResourceParameters;
@@ -20,11 +21,15 @@ namespace Pressford.News.API.Controllers
     {
         private readonly IArticleServices _articleServices;
         private readonly IDataShaper<ReadArticle> _articleShaper;
+        private readonly ProblemDetailsFactory _problemDetailsFactory;
 
-        public ArticleController(IArticleServices articleServices, IDataShaper<ReadArticle> articleShaper)
+        public ArticleController(IArticleServices articleServices,
+                                 IDataShaper<ReadArticle> articleShaper,
+                                 ProblemDetailsFactory problemDetailsFactory)
         {
             _articleServices = articleServices;
             _articleShaper = articleShaper;
+            _problemDetailsFactory = problemDetailsFactory;
         }
 
         /// <summary>
@@ -63,13 +68,16 @@ namespace Pressford.News.API.Controllers
             var invalids = _articleServices.ValidateProjectionFieldsForArticle(fields);
             if (invalids.Any())
             {
-                return BadRequest($"Invalid projection fields provided: {string.Join(", ", invalids)}");
+                return BadRequest(
+                _problemDetailsFactory.CreateProblemDetails(HttpContext,
+                    statusCode: 400,
+                    detail: $"Invalid projection fields provided: {string.Join(", ", invalids)}"));
             }
 
             var article = await _articleServices.GetSingleArticle(articleId);
             if (article == null)
                 return NotFound();
-            if(!string.IsNullOrWhiteSpace(fields))
+            if (!string.IsNullOrWhiteSpace(fields))
             {
                 return Ok(_articleShaper.ShapeData(article, fields));
             }
