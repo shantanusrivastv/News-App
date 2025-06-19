@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +12,7 @@ using Microsoft.OpenApi.Models;
 using Pressford.News.Services.Dependencies;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 
 namespace Pressford.News.API
@@ -138,7 +140,20 @@ namespace Pressford.News.API
 				});
 			});
 
-			ServiceConfigurationManager.ConfigurePersistence(services, Configuration);
+            services.Configure<MvcOptions>(config =>
+            {
+                var newtonsoftJsonOutputFormatter = config.OutputFormatters
+                      .OfType<NewtonsoftJsonOutputFormatter>()?.FirstOrDefault();
+
+                if (newtonsoftJsonOutputFormatter != null)
+                {
+                    newtonsoftJsonOutputFormatter.SupportedMediaTypes
+                        .Add("application/vnd.kumar.hateoas+json");
+                }
+            });
+
+
+            ServiceConfigurationManager.ConfigurePersistence(services, Configuration);
 			ServiceConfigurationManager.ConfigureServiceLifeTime(services);
 		}
 

@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Moq;
 using NUnit.Framework;
 using Pressford.News.API.Controllers;
@@ -20,13 +21,15 @@ namespace Pressford.News.API.Tests.Controllers
 		private ArticleController _sut;
 		private Mock<IArticleServices> _articleServices;
         private Mock<IDataShaper<ReadArticle>> _mockDataShaper;
+		private Mock<ProblemDetailsFactory> _problemDetailsFactory;
 
         [SetUp]
 		public void Setup()
 		{
 			_articleServices = new Mock<IArticleServices>();
 			_mockDataShaper = new Mock<IDataShaper<ReadArticle>>();
-            _sut = new ArticleController(_articleServices.Object, _mockDataShaper.Object);
+			_problemDetailsFactory = new Mock<ProblemDetailsFactory>();
+            _sut = new ArticleController(_articleServices.Object, _mockDataShaper.Object, _problemDetailsFactory.Object);
 		}
 
 		[Test]

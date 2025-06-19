@@ -3,11 +3,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Routing;
 using Pressford.News.Entities;
 using Pressford.News.Model;
 using Pressford.News.Model.ResourceParameters;
 using Pressford.News.Services.Interfaces;
 using System;
+using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -37,6 +40,7 @@ namespace Pressford.News.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet, HttpHead(Name = "GetArticles")] // GET /api/article
+        [Produces("application/json", "application/vnd.kumar.hateoas+json")]
         public async Task<IActionResult> GetAllArticles([FromQuery] ArticleResourceParameters articleResource)
         {
             var invalids = _articleServices.ValidateSortFieldsForArticle(articleResource.OrderBy);
@@ -54,15 +58,54 @@ namespace Pressford.News.API.Controllers
 
             var articles = await _articleServices.GetAllArticles(articleResource);
             this.AddPaginationHeaders(articles, articleResource, "GetArticles");
+            IEnumerable<ExpandoObject> shapedArticle = null;
             if (!String.IsNullOrWhiteSpace(articleResource.Fields))
             {
-                return Ok(_articleShaper.ShapeData(articles, articleResource.Fields));
+                shapedArticle = _articleShaper.ShapeData(articles, articleResource.Fields);
+               
             }
 
-            return Ok(articles);
+            //todo we are currently always doing shapeDat
+            if (Request.Headers["Accept"].ToString().Contains("application/vnd.kumar.hateoas+json"))
+            {
+                var shapedArticleWithLinks = _articleShaper.ShapeData(articles, articleResource.Fields).Select(article =>
+                {
+                    var articleAsDictionary = article as IDictionary<string, object?>;
+                    var perArticleLink = this.GenerateLinksPerResource("Article", (int)articleAsDictionary["ArticleId"]);
+                    articleAsDictionary.Add("links", perArticleLink);
+                    return articleAsDictionary;
+                });
+
+                // create Collection links
+                var links = this.GeneratePaginationLinks(articleResource, "GetArticles",
+                                                          articleResource,
+                                                          articles.HasNextPage,
+                                                          articles.HasPreviousPage);
+
+                var linkedCollectionResource = new
+                {
+                    value = shapedArticleWithLinks,
+                    ParentLink = links
+                };
+
+                Response.ContentType = "application/vnd.kumar.hateoas+json";
+                return Ok(linkedCollectionResource);
+            }
+
+            if (shapedArticle?.Count() > 1 )
+            {
+                return Ok(shapedArticle);
+            }
+            else
+            {
+                return Ok(articles);
+            }
+            
+
         }
 
         [HttpGet("{articleId:int}", Name = "GetArticle")] // GET /api/article/1
+        [Produces("application/json", "application/vnd.kumar.hateoas+json")]
         public async Task<IActionResult> GetSingleArticle(int articleId, string fields = "")
         {
             var invalids = _articleServices.ValidateProjectionFieldsForArticle(fields);
@@ -77,9 +120,39 @@ namespace Pressford.News.API.Controllers
             var article = await _articleServices.GetSingleArticle(articleId);
             if (article == null)
                 return NotFound();
+
+            ExpandoObject shapedArticle = null;
+
             if (!string.IsNullOrWhiteSpace(fields))
             {
-                return Ok(_articleShaper.ShapeData(article, fields));
+                shapedArticle = _articleShaper.ShapeData(article, fields);
+            }
+
+
+            //var paginationLinks = this.GeneratePaginationLinks("GetArticles",
+            //    new { pageNumber, pageSize }, metadata);
+
+            // Add collection-specific links
+            //var collectionLinks = this.GenerateLink("Article",
+
+            // var allLinks = paginationLinks.Concat(collectionLinks).ToList();
+
+            if (Request.Headers["Accept"].ToString().Contains("application/vnd.kumar.hateoas+json"))
+            {
+
+                var links = this.GenerateLinksForSinlgeResource("Article", articleId, fields);
+
+                var shapedArtcile = _articleShaper.ShapeData(article, fields) as IDictionary<string, object>;
+                shapedArtcile.Add("links", links);
+
+                //var response = new { article, _links = links };
+                Response.ContentType = "application/vnd.kumar.hateoas+json";
+                return Ok(shapedArtcile);
+            }
+
+            if(shapedArticle is not null)
+            {
+                return Ok(shapedArticle);
             }
 
             return Ok(article);
@@ -102,7 +175,7 @@ namespace Pressford.News.API.Controllers
         /// <response code="201">Returns the newly created item</response>
         /// <response code="400">For Invalid Input</response>
         [Authorize(Roles = "Publisher")]
-        [HttpPost]
+        [HttpPost(Name = "CreateArticle")]
         [ProducesResponseType(typeof(ReadArticle), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
         [Consumes("application/json")]
@@ -113,7 +186,7 @@ namespace Pressford.News.API.Controllers
         }
 
         [Authorize(Roles = "Publisher")]
-        [HttpPut]
+        [HttpPut(Name = "UpdateArticle")]
         public async Task<IActionResult> UpdateArticle([FromBody] UpdateArticle article)
         {
             var result = await _articleServices.UpdateArticle(article);
@@ -125,7 +198,7 @@ namespace Pressford.News.API.Controllers
         //It is suggested to passing the id in the URL,I am not doing it since I don't want to change
         // since it matches with existing Update method need to think again
         [Authorize(Roles = "Publisher")]
-        [HttpPatch]
+        [HttpPatch(Name = "PatchArticle")]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> PatchArticle([FromBody] JsonPatchDocument<PatchArticle> patchArticle)
         {
@@ -160,7 +233,7 @@ namespace Pressford.News.API.Controllers
         }
 
         [Authorize(Roles = "Publisher")]
-        [HttpDelete("{articleId:int}")]
+        [HttpDelete("{articleId:int}", Name = "DeleteArticle")]
         public async Task<IActionResult> DeleteArticle(int articleId)
         {
             if (await _articleServices.RemoveArticle(articleId))
