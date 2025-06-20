@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Moq;
@@ -30,7 +31,15 @@ namespace Pressford.News.API.Tests.Controllers
 			_mockDataShaper = new Mock<IDataShaper<ReadArticle>>();
 			_problemDetailsFactory = new Mock<ProblemDetailsFactory>();
             _sut = new ArticleController(_articleServices.Object, _mockDataShaper.Object, _problemDetailsFactory.Object);
-		}
+
+            // Mock HttpContext with header
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["Accept"] = "application/json";
+            _sut.ControllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext
+            };
+        }
 
 		[Test]
 		public async Task Should_Return_All_Articles()

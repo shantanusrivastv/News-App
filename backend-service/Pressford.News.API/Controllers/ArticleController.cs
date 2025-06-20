@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Marvin.Cache.Headers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +19,9 @@ namespace Pressford.News.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    //[ResponseCache(CacheProfileName = "240SecondsCacheProfile")]
+    [HttpCacheExpiration(CacheLocation = CacheLocation.Public)]
+    [HttpCacheValidation(MustRevalidate = true)]
     [Produces("application/json", "application/xml")]
     //TOOD: Add versioning of the API
     public class ArticleController : ControllerBase
@@ -39,7 +43,10 @@ namespace Pressford.News.API.Controllers
         /// Get all articles
         /// </summary>
         /// <returns></returns>
+        //[ResponseCache(Duration = 120)]
         [HttpGet, HttpHead(Name = "GetArticles")] // GET /api/article
+        [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 1000)]
+        [HttpCacheValidation(MustRevalidate = false)]
         [Produces("application/json", "application/vnd.kumar.hateoas+json")]
         public async Task<IActionResult> GetAllArticles([FromQuery] ArticleResourceParameters articleResource)
         {
