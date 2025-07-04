@@ -25,7 +25,7 @@ namespace Pressford.News.Model
     public class CreateArticle : ArticleBase
     {
         [Required(ErrorMessage = "Article Title is required")]
-        [StringLength(100, MinimumLength = 5)]
+        [StringLength(100, MinimumLength = 5, ErrorMessage = "{0} must be between {2} and {1} characters long.")]
         public override string Title { get; set; }
 
         [Required(ErrorMessage = "Article Body is required")]
