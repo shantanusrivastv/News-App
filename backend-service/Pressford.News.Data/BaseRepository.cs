@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 
 namespace Pressford.News.Data
 {
@@ -21,6 +22,18 @@ namespace Pressford.News.Data
             try
             {
                 return _context.Set<TEntity>();
+            }
+            catch (Exception)
+            {
+                throw new Exception("Couldn't retrieve entities");
+            }
+        }
+
+        public async Task<IEnumerable<TEntity>> GetAllAsync()
+        {
+            try
+            {
+                return await _context.Set<TEntity>().ToListAsync();
             }
             catch (Exception)
             {

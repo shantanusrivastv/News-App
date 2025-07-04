@@ -823,6 +823,76 @@
 					"response": []
 				},
 				{
+					"name": "Get by Id with Projection",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Title matches patch update\", () => {\r",
+									"  const expectedTitle = pm.collectionVariables.get(\"patched-article-title\");\r",
+									"  console.log(expectedTitle);\r",
+									"  const actualTitle = pm.response.json().Title;\r",
+									"console.log(actualTitle);\r",
+									"  pm.expect(actualTitle).to.eql(expectedTitle);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:{{port}}/api/Article/{{article-id}}?fields=author, age,title",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"Article",
+								"{{article-id}}"
+							],
+							"query": [
+								{
+									"key": "Accept",
+									"value": "application/xml",
+									"disabled": true
+								},
+								{
+									"key": "fields",
+									"value": "author, age,title"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Deleted Article",
 					"event": [
 						{
@@ -1241,6 +1311,922 @@
 								{
 									"key": "articleIds",
 									"value": "{{article-ids}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Article with Filter",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Response status code is 200', function () {\r",
+									"    pm.expect(pm.response.code).to.equal(200);\r",
+									"})\r",
+									"\r",
+									"pm.test('Response is an array with at least one element', function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    pm.expect(responseData).to.be.an('array').that.is.not.empty;\r",
+									"})\r",
+									"\r",
+									"pm.test('Each article object contains the required fields', function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    pm.expect(responseData).to.be.an('array').that.is.not.empty;\r",
+									"    responseData.forEach(article => {\r",
+									"        pm.expect(article).to.be.an('object');\r",
+									"        pm.expect(article).to.have.all.keys('articleId', 'author', 'datePublished', 'dateModified', 'age','title', 'body', 'titleWithBody');\r",
+									"    });\r",
+									"})\r",
+									"\r",
+									"pm.test('Title and Body must be non-empty strings', function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    pm.expect(responseData).to.be.an('array').that.is.not.empty;\r",
+									"    responseData.forEach(article => {\r",
+									"        pm.expect(article.title).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, 'Title should not be empty');\r",
+									"        pm.expect(article.body).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, 'Body should not be empty');\r",
+									"    });\r",
+									"})\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:{{port}}/api/Article?filterQuery=adminUser@pressford.com",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"Article"
+							],
+							"query": [
+								{
+									"key": "filterQuery",
+									"value": "adminUser@pressford.com"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Article with Filter and Search",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Response status code is 200', function () {\r",
+									"    pm.expect(pm.response.code).to.equal(200);\r",
+									"})\r",
+									"\r",
+									"pm.test('Response is an array with at least one element', function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    pm.expect(responseData).to.be.an('array').that.is.not.empty;\r",
+									"})\r",
+									"\r",
+									"pm.test('Each article object contains the required fields', function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    pm.expect(responseData).to.be.an('array').that.is.not.empty;\r",
+									"    responseData.forEach(article => {\r",
+									"            pm.expect(article).to.have.all.keys('articleId', 'author', 'datePublished', 'dateModified', 'age','title', 'body', 'titleWithBody');\r",
+									"    });\r",
+									"})\r",
+									"\r",
+									"pm.test('Title must be a non-empty string', function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    pm.expect(responseData).to.be.an('array').that.is.not.empty;\r",
+									"    responseData.forEach(article => {\r",
+									"        pm.expect(article.title).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, 'Title should not be empty');\r",
+									"    });\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:{{port}}/api/Article?filterQuery=w.Pressford@pressford.com&searchQuery=Expresso",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"Article"
+							],
+							"query": [
+								{
+									"key": "filterQuery",
+									"value": "w.Pressford@pressford.com"
+								},
+								{
+									"key": "searchQuery",
+									"value": "Expresso"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Article with OrderBY",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:{{port}}/api/Article?PageNumber=1&PageSize=2&orderBy=Title asc, age desc,TitleWithBody desc",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"Article"
+							],
+							"query": [
+								{
+									"key": "PageNumber",
+									"value": "1"
+								},
+								{
+									"key": "PageSize",
+									"value": "2"
+								},
+								{
+									"key": "orderBy",
+									"value": "Title asc, age desc,TitleWithBody desc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Article with Paging Filter Search OrderBy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:{{port}}/api/Article?PageNumber=1&filterQuery=w.Pressford@pressford.com&searchQuery=B New title&orderBy=title asc, age desc&PageSize=50",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"Article"
+							],
+							"query": [
+								{
+									"key": "PageNumber",
+									"value": "1"
+								},
+								{
+									"key": "filterQuery",
+									"value": "w.Pressford@pressford.com"
+								},
+								{
+									"key": "searchQuery",
+									"value": "B New title"
+								},
+								{
+									"key": "orderBy",
+									"value": "title asc, age desc"
+								},
+								{
+									"key": "PageSize",
+									"value": "50"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Article with OrderBY with Invalids",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:{{port}}/api/Article?PageNumber=1&PageSize=50&orderBy=badTitle",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"Article"
+							],
+							"query": [
+								{
+									"key": "PageNumber",
+									"value": "1"
+								},
+								{
+									"key": "PageSize",
+									"value": "50"
+								},
+								{
+									"key": "orderBy",
+									"value": "badTitle"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Article with Paging",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Response status code is 200', function () {\r",
+									"    pm.expect(pm.response.code).to.equal(200);\r",
+									"})\r",
+									"\r",
+									"pm.test('Response is an array with at least one element', function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    pm.expect(responseData).to.be.an('array').that.is.not.empty;\r",
+									"})\r",
+									"\r",
+									"pm.test('Each article object has the required fields', function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    pm.expect(responseData).to.be.an('array').that.is.not.empty;\r",
+									"    responseData.forEach(article => {\r",
+									"        pm.expect(article).to.have.all.keys('articleId', 'author', 'datePublished', 'dateModified', 'age','title', 'body', 'titleWithBody');\r",
+									"    });\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:{{port}}/api/Article?PageNumber=1&PageSize=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"Article"
+							],
+							"query": [
+								{
+									"key": "PageNumber",
+									"value": "1"
+								},
+								{
+									"key": "PageSize",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Article with Paging Filter and Search",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Response status code is 200', function () {\r",
+									"    pm.expect(pm.response.code).to.equal(200);\r",
+									"})\r",
+									"\r",
+									"pm.test('Response is an array with at least one element', function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    pm.expect(responseData).to.be.an('array').that.is.not.empty;\r",
+									"})\r",
+									"\r",
+									"pm.test('Each article object has the required fields', function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    pm.expect(responseData).to.be.an('array').that.is.not.empty;\r",
+									"    responseData.forEach(article => {\r",
+									"        pm.expect(article).to.have.all.keys('articleId', 'author', 'datePublished', 'dateModified', 'age','title', 'body', 'titleWithBody');\r",
+									"    });\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:{{port}}/api/Article?PageNumber=1&PageSize=20&filterQuery=w.Pressford@pressford.com&searchQuery=Expresso",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"Article"
+							],
+							"query": [
+								{
+									"key": "PageNumber",
+									"value": "1"
+								},
+								{
+									"key": "PageSize",
+									"value": "20"
+								},
+								{
+									"key": "filterQuery",
+									"value": "w.Pressford@pressford.com"
+								},
+								{
+									"key": "searchQuery",
+									"value": "Expresso"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Article with Projection",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Response status code is 200', function () {\r",
+									"    pm.expect(pm.response.code).to.equal(200);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:{{port}}/api/Article?fields=Author&PageNumber=4&PageSize=5&OrderBy=Age",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"Article"
+							],
+							"query": [
+								{
+									"key": "fields",
+									"value": "Author"
+								},
+								{
+									"key": "PageNumber",
+									"value": "4"
+								},
+								{
+									"key": "PageSize",
+									"value": "5"
+								},
+								{
+									"key": "OrderBy",
+									"value": "Age"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Article with Invalid Projection",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Response status code is 400', function () {\r",
+									"    pm.expect(pm.response.code).to.equal(400);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:{{port}}/api/Article?fields=badAuthor&PageNumber=4&PageSize=5&OrderBy=Age",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"Article"
+							],
+							"query": [
+								{
+									"key": "fields",
+									"value": "badAuthor"
+								},
+								{
+									"key": "PageNumber",
+									"value": "4"
+								},
+								{
+									"key": "PageSize",
+									"value": "5"
+								},
+								{
+									"key": "OrderBy",
+									"value": "Age"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Article with Paging Filter Search OrderBy Projection Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Response status code is 200', function () {\r",
+									"    pm.expect(pm.response.code).to.equal(200);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:{{port}}/api/Article?PageNumber=1&filterQuery=w.Pressford@pressford.com&searchQuery=B New title&orderBy=title asc, age desc&PageSize=50&fields=age,articleId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"Article"
+							],
+							"query": [
+								{
+									"key": "PageNumber",
+									"value": "1"
+								},
+								{
+									"key": "filterQuery",
+									"value": "w.Pressford@pressford.com"
+								},
+								{
+									"key": "searchQuery",
+									"value": "B New title"
+								},
+								{
+									"key": "orderBy",
+									"value": "title asc, age desc"
+								},
+								{
+									"key": "PageSize",
+									"value": "50"
+								},
+								{
+									"key": "fields",
+									"value": "age,articleId"
 								}
 							]
 						}
