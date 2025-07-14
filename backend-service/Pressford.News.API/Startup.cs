@@ -115,30 +115,8 @@ namespace Pressford.News.API
             {
                 // add a custom operation filter which sets default values
                 c.OperationFilter<SwaggerDefaultValues>();
-
-               // var provider = services.BuildServiceProvider()
-               //.GetRequiredService<IApiVersionDescriptionProvider>();
-
-               // foreach (var description in provider.ApiVersionDescriptions)
-               // {
-               //     c.SwaggerDoc(description.GroupName, new OpenApiInfo
-               //     {
-               //         Title = $"Pressford.News API {description.ApiVersion}",
-               //         Version = description.ApiVersion.ToString(),
-               //         Description = "Through this API you can Publish, Read News Articles and many more.",
-               //         Contact = new OpenApiContact()
-               //         {
-               //             Email = "shantanusrivastv@gmail.com",
-               //             Name = "Kumar Shantanu",
-               //             Url = new Uri("http://uk.linkedin.com/in/shaan")
-               //         },
-               //         License = new OpenApiLicense()
-               //         {
-               //             Name = "MIT License",
-               //             Url = new Uri("https://opensource.org/licenses/MIT")
-               //         }
-               //     });
-               // }
+                //We can use this to configure the swagger Tags
+                //c.OperationFilter<CustomTagOperationFilter>();
 
                 var xmlCommentsFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlCommentsFullPath = System.IO.Path.Combine(AppContext.BaseDirectory, xmlCommentsFile);
@@ -185,7 +163,6 @@ namespace Pressford.News.API
                         .Add("application/vnd.kumar.hateoas+json");
                 }
             });
-
 
             ServiceConfigurationManager.ConfigurePersistence(services, Configuration);
             ServiceConfigurationManager.ConfigureServiceLifeTime(services);
