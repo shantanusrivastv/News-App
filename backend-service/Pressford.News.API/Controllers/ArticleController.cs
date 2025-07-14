@@ -1,4 +1,5 @@
-﻿using Marvin.Cache.Headers;
+﻿using Asp.Versioning;
+using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
@@ -18,12 +19,12 @@ using System.Threading.Tasks;
 namespace Pressford.News.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/Article")]
+    [ApiVersion("1.0")]
     //[ResponseCache(CacheProfileName = "240SecondsCacheProfile")]
     [HttpCacheExpiration(CacheLocation = CacheLocation.Public)]
     [HttpCacheValidation(MustRevalidate = true)]
     [Produces("application/json", "application/xml")]
-    //TOOD: Add versioning of the API
     public class ArticleController : ControllerBase
     {
         private readonly IArticleServices _articleServices;

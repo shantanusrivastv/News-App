@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Pressford.News.Services.Dependencies;
 using System;
@@ -44,6 +46,7 @@ namespace Pressford.News.API
             {
                 // Return 406 Not Acceptable if the client requests a format the server does not support
                 setupAction.ReturnHttpNotAcceptable = true;
+                setupAction.RespectBrowserAcceptHeader = true;
                 //setupAction.Conventions.Add(new ProducesAttributeConvention());
                 setupAction.CacheProfiles.Add("240SecondsCacheProfile",
                                               new() { Duration = 240 });
@@ -84,6 +87,22 @@ namespace Pressford.News.API
                       };
                   };
               });
+
+            services.AddApiVersioning(options =>
+            {
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.DefaultApiVersion = new ApiVersion(1, 0);
+                options.ReportApiVersions = true;
+                options.ApiVersionReader = ApiVersionReader.Combine(
+                                    new HeaderApiVersionReader("Api-Version"),
+                                    new MediaTypeApiVersionReader("version"));
+            })
+
+             .AddApiExplorer(options =>
+             {
+                 options.GroupNameFormat = "'v'VVV"; // Format: v1, v2, etc.
+                 options.SubstituteApiVersionInUrl = false;
+             });
 
             services.AddHttpContextAccessor();
             ServiceConfigurationManager.ConfigureAuthentication(services, Configuration);

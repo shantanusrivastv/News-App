@@ -39,3 +39,7 @@ https://jasonwatmore.com/post/2020/01/03/aspnet-core-ef-core-migrations-for-mult
 	[Route("api/author/{authorId}/article")]
 19. Have a look at PATCH and then impove it further using PS course files
 20. Author should be the name instead of email address adminUser@pressford.com or something better.
+21. Use OpenID to allow login using FB, Gmail etc with MS Identity, ChaptGPT suggested me to use OpenIddict or Duende IdentityServe
+	1. MS Idenetiy gives all the methods to mange identiy like registration, duplicate registration detection
+	1. Password management, backed by EF Core to save everyhting in DB
+	1. Refresh token

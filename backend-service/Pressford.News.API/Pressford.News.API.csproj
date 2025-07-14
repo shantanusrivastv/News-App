@@ -11,6 +11,8 @@
 		<PublishProfile>DefaultContainer</PublishProfile>
 	</PropertyGroup>
 	<ItemGroup>
+		<PackageReference Include="Asp.Versioning.Mvc" Version="8.1.0" />
+		<PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0" />
 		<PackageReference Include="Marvin.Cache.Headers" Version="7.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="8.0.8" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.8" />
