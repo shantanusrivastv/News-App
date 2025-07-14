@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Pressford.News.Services.Dependencies;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -108,31 +109,36 @@ namespace Pressford.News.API
             services.AddHttpContextAccessor();
             ServiceConfigurationManager.ConfigureAuthentication(services, Configuration);
 
+            services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+
             services.AddSwaggerGen(c =>
             {
-                var provider = services.BuildServiceProvider()
-               .GetRequiredService<IApiVersionDescriptionProvider>();
+                // add a custom operation filter which sets default values
+                c.OperationFilter<SwaggerDefaultValues>();
 
-                foreach (var description in provider.ApiVersionDescriptions)
-                {
-                    c.SwaggerDoc(description.GroupName, new OpenApiInfo
-                    {
-                        Title = $"Pressford.News API {description.ApiVersion}",
-                        Version = description.ApiVersion.ToString(),
-                        Description = "Through this API you can Publish, Read News Articles and many more.",
-                        Contact = new OpenApiContact()
-                        {
-                            Email = "shantanusrivastv@gmail.com",
-                            Name = "Kumar Shantanu",
-                            Url = new Uri("http://uk.linkedin.com/in/shaan")
-                        },
-                        License = new OpenApiLicense()
-                        {
-                            Name = "MIT License",
-                            Url = new Uri("https://opensource.org/licenses/MIT")
-                        }
-                    });
-                }
+               // var provider = services.BuildServiceProvider()
+               //.GetRequiredService<IApiVersionDescriptionProvider>();
+
+               // foreach (var description in provider.ApiVersionDescriptions)
+               // {
+               //     c.SwaggerDoc(description.GroupName, new OpenApiInfo
+               //     {
+               //         Title = $"Pressford.News API {description.ApiVersion}",
+               //         Version = description.ApiVersion.ToString(),
+               //         Description = "Through this API you can Publish, Read News Articles and many more.",
+               //         Contact = new OpenApiContact()
+               //         {
+               //             Email = "shantanusrivastv@gmail.com",
+               //             Name = "Kumar Shantanu",
+               //             Url = new Uri("http://uk.linkedin.com/in/shaan")
+               //         },
+               //         License = new OpenApiLicense()
+               //         {
+               //             Name = "MIT License",
+               //             Url = new Uri("https://opensource.org/licenses/MIT")
+               //         }
+               //     });
+               // }
 
                 var xmlCommentsFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlCommentsFullPath = System.IO.Path.Combine(AppContext.BaseDirectory, xmlCommentsFile);
