@@ -1,4 +1,5 @@
 using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -109,23 +110,29 @@ namespace Pressford.News.API
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo
+                var provider = services.BuildServiceProvider()
+               .GetRequiredService<IApiVersionDescriptionProvider>();
+
+                foreach (var description in provider.ApiVersionDescriptions)
                 {
-                    Title = "Publish News ",
-                    Version = "1",
-                    Description = "Through this API you can Publish, Read News Articles and many more.",
-                    Contact = new OpenApiContact()
+                    c.SwaggerDoc(description.GroupName, new OpenApiInfo
                     {
-                        Email = "shantanusrivastv@gmail.com",
-                        Name = "Kumar Shantanu",
-                        Url = new Uri("http://uk.linkedin.com/in/shaan")
-                    },
-                    License = new OpenApiLicense()
-                    {
-                        Name = "MIT License",
-                        Url = new Uri("https://opensource.org/licenses/MIT")
-                    }
-                });
+                        Title = $"Pressford.News API {description.ApiVersion}",
+                        Version = description.ApiVersion.ToString(),
+                        Description = "Through this API you can Publish, Read News Articles and many more.",
+                        Contact = new OpenApiContact()
+                        {
+                            Email = "shantanusrivastv@gmail.com",
+                            Name = "Kumar Shantanu",
+                            Url = new Uri("http://uk.linkedin.com/in/shaan")
+                        },
+                        License = new OpenApiLicense()
+                        {
+                            Name = "MIT License",
+                            Url = new Uri("https://opensource.org/licenses/MIT")
+                        }
+                    });
+                }
 
                 var xmlCommentsFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlCommentsFullPath = System.IO.Path.Combine(AppContext.BaseDirectory, xmlCommentsFile);
@@ -192,7 +199,7 @@ namespace Pressford.News.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider)
         {
             if (env.IsDevelopment())
             {
@@ -217,7 +224,13 @@ namespace Pressford.News.API
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "News API v1");
+                foreach (var description in provider.ApiVersionDescriptions)
+                {
+                    c.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json",
+                                       description.GroupName.ToUpperInvariant());
+                }
+
+                //c.SwaggerEndpoint("/swagger/v1/swagger.json", "News API v1");
                 c.RoutePrefix = string.Empty;
             });
 

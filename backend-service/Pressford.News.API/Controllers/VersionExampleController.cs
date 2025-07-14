@@ -59,7 +59,7 @@
             #region Version 2.0 Methods
 
             /// <summary>
-            /// Get users - Version 2.0 (Enhanced with email and additional fields)
+            /// Get users - Version 2.0
             /// </summary>
             /// <returns>List of users with enhanced info</returns>
             [HttpGet("users")]

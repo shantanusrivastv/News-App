@@ -107,8 +107,7 @@ namespace Pressford.News.API.Controllers
             else
             {
                 return Ok(articles);
-            }
-            
+            }          
 
         }
 
