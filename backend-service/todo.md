@@ -43,3 +43,5 @@ https://jasonwatmore.com/post/2020/01/03/aspnet-core-ef-core-migrations-for-mult
 	1. MS Idenetiy gives all the methods to mange identiy like registration, duplicate registration detection
 	1. Password management, backed by EF Core to save everyhting in DB
 	1. Refresh token
+22. Implement ErrorHandlingMiddleware
+23. Add your custom model validation.
