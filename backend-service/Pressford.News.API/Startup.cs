@@ -188,6 +188,11 @@ namespace Pressford.News.API
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                //app.UseHttpsRedirection(); //this is temp redirection
+                //app.UseHsts(); //This is permanent redirection
+            }
             app.UseExceptionHandler(app =>
             {
                 app.Run(async context =>
