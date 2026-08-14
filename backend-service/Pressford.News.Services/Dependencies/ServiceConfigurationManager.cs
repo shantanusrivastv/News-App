@@ -18,14 +18,15 @@ namespace Pressford.News.Services.Dependencies
 		public static void ConfigurePersistence(IServiceCollection services, IConfiguration config)
 		{
 			
-			string envt = config.GetValue<string>("ASPNETCORE_ENVIRONMENT");
+			//Defaults to DEVELOPMENT so design-time tools (dotnet ef) work without the variable set
+			string envt = config.GetValue<string>("ASPNETCORE_ENVIRONMENT") ?? "DEVELOPMENT";
 
 			if (envt.Trim().ToUpper() == "DEVELOPMENT")
 			{
 				services.AddDbContext<PressfordNewsContext>(options =>
 								{
 									options.EnableSensitiveDataLogging();//Disable in production
-									options.UseSqlServer(config.GetConnectionString("PressfordNewsContext"));
+									options.UseSqlServer(config.GetConnectionString("SqlLocalDb"));
 									//Moved the logic to appsettings.Development.json
 									//options.LogTo(System.Console.WriteLine, 
 									//		new[]
